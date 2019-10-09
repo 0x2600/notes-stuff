@@ -1,0 +1,142 @@
+1. C 存储类
+# auto, register, static, extern
+ auto 是 局部变量默认的存储类
+ rigister 类定义变量可能存储在寄存器中
+ static
+ 修饰全局变量时，使变量的作用域限制在声明它的文件内，全局变量的默认行为。
+ 修饰局部变量时，不要使其进入和离开作用域时创建和销毁，如函数中，重复调用不会让其重新初始化。
+ extern 提供其他文件或位置变量的引用
+ /* 
+  * extern 示例1
+  */
+ #include <stdio.h>
+ int x, y;
+ int add2num(){
+    extern int x, y;
+    x = 1, y = 2;
+    return x + y;
+ }
+int main(){
+    printf("%d\n", add2num());
+    return 0;
+}
+
+/*
+ * static 示例 
+ */
+#include <stdio.h>
+static int count = 10;
+void func(){
+	static int thingy = 5; // 只会初始化一次
+	thingy ++;
+	printf("%d %d\n", count, thingy);
+}
+
+int main(){
+	while(count --){
+		func();
+	}
+}
+
+/*
+ * extern 示例2
+ */
+
+// file 1: main.c
+#include <stdio.h>
+int count = 5;
+extern void write_extern();
+int main(){
+	write_extern();
+}
+
+// file 2: support.c
+#include <stdio.h>
+extern int count;
+void write_extern(){
+	printf("%d\n", count);
+}
+// compile: gcc main.c support.c -o extern_1-1
+
+2. C 运算符
+算术运算符 + - * / % ++ --
+关系运算符 == != > >= < <= 
+逻辑运算符 && || !
+位运算符 & | ^ ~ << >>
+赋值运算符 = += -= *= /= %= <<= >>= &= ^= |=
+杂项运算符 sizeof(), &, *, ?:(a>b?a:b)
+运算符优先级和结合性
+
+3. 函数参数，形式参数
+传值调用
+引用调用
+
+4. C 数组
+C 传递数组给函数
+函数形式参数:
+方式 1: void func(int *p)
+方式 2: void func(int array[10])
+方式 3: void func(int array[])
+/*
+ * C 从函数返回数组
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+int *getrandom(){
+	static int r[10];
+	int i;
+	srand((unsigned)time(NULL));
+	for(i = 0; i<10;i++){
+		r[i] = rand();
+	}
+	return r;
+}
+
+int main(){
+	int *p = getrandom();
+	int i;
+	for(i = 0; i<10; i++){
+		printf("%d ", *(p++));
+	}
+	return 0;
+}
+
+5. C enum(枚举)
+/*
+ * 枚举变量
+ */
+#include <stdio.h>
+int main(){
+
+	enum weekday{Mon =1, Tue, Wed, Thu, Fri, Sat, Sun};
+	enum weekday day;
+	scanf("%d", &day);
+	switch(day){
+	case Mon: puts("Mon");break;
+	}
+	return 0;
+}
+
+// 整形转为枚举
+int i = 1;
+enum weekday day = (enum weekday)i;
+
+6. C 指针
+C 指针的算术运算
+++ -- + - < <= > >= == !=
+C 指针数组 int *p[3]
+/* 
+ * 
+ */
+#include <stdio.h>
+int main(){
+	int *p[3];
+	int a = 1, b=2, c=3;
+	p[0] = &a;
+	p[1] = &b;
+	p[2] = &c;
+	printf("%d %d %d\n", *(p[0]), *(p[1]), *(p[2]));
+	return 0;
+}
+
