@@ -125,7 +125,8 @@ enum weekday day = (enum weekday)i;
 6. C 指针
 C 指针的算术运算
 ++ -- + - < <= > >= == !=
-C 指针数组 int *p[3]
+C 指针数组 int *p[3], char *name = "Jerry", char *names[] = {"One", "Two"}
+
 /* 
  * 
  */
@@ -139,4 +140,35 @@ int main(){
 	printf("%d %d %d\n", *(p[0]), *(p[1]), *(p[2]));
 	return 0;
 }
+C 指向指针的指针
+int var = 10;
+int *pvar = &var;
+int **ppvar = &pvar;
+// access 
+var, *pvar, **ppvar
 
+C 传递指针给函数，引用赋值
+C 从函数返回指针。不允许返回函数内局部变量的地址，除非定义局部变量为 static 变量
+
+7. C 函数指针与回调函数
+C 函数指针
+int max(int, int);
+int (*p)(int, int) = &max; //& 可以省略
+函数调用, p(a, b);
+
+回调函数， 函数指针作为某个函数的参数
+/* 
+ *
+ */ 
+void populate_array(int *array, size_t array_size, int (*getnextvalue)(void)){
+	for(size_t i = 0; i< array_size, i++){
+		array[i] = getnextvalue();
+	}
+}
+
+int getrandomvalue(){
+	return rand();
+}
+
+int arr[10];
+populate_array(arr, 10, getrandomvalue);
