@@ -172,3 +172,151 @@ int getrandomvalue(){
 
 int arr[10];
 populate_array(arr, 10, getrandomvalue);
+
+8. C 字符串
+#include <string.h>
+strcat, strcpy, strlen, strcmp, strstr(s1, s2), strchr(s1, ch)
+
+9. C 结构体
+struct{
+int a;
+char b;
+double c;
+} s1;
+
+struct SIMPLE{
+int a;
+char b;
+double c
+};
+struct SIMPLE t1, t2[20], *t3;
+
+typedef struct{
+int a;
+char b;
+double c;
+} SIMPLE2;
+SIMPLE2 u1, u2[20], *u3;
+
+struct COMPLEX{
+char string[100];
+struct SIMPLE a;
+};
+
+struct NODE{
+char string[100];
+struct NODE *next_node;
+};
+
+// 两个结构体相互包含，需要对其中一个结构体进行不完整声明
+struct B;
+struct A{
+struct B *pb;
+// other member;
+};
+struct B{
+struct A *pa;
+// other member;
+};
+
+结构体作为函数参数
+void printbook(struct Book book); // 示例函数声明，调用: printbook(book)
+void printbook(struct Book *pbook); // 这样的声明也可以,调用: printbook(&book)
+指向结构的指针
+struct Book *pbook;
+pbook = &book1;
+pbook->title;
+
+位域，划分几个比特位为不同的区域
+struct bs{
+int a:8;
+int b:2;
+int c:6;
+} data;
+无名位域，作填充
+位域指针，用法和结构体相似
+10. 共用体
+union Data{
+	int i;
+	float f;
+	char str[20];
+}data;
+共用体占据的内存由成员中占据最大内存的成员决定
+
+访问成员， .
+多次赋值，成员的值会损坏
+同一时间只使用一个变量，共用体的正确使用
+// 老师，学生示例程序
+
+11. C typedef
+typedef unsigned char BYTE;
+
+typedef struct Books{
+char title[50];
+char author[50];
+} Book;
+Book book1, book2; // 使用
+
+typedef vs #define
+typedef 编译器， #define 预处理器
+#define N 10;
+typedef unsigned int UINT;
+
+12. C 输入与输出
+scanf, printf, getchar, putchar, gets, puts
+
+13. C 文件读写
+打开文件 FILE *fopen(const char *filename, const char *mode);
+关闭文件 int fclose(FILE *fp);
+写入文件 int fputc(int c, FILE *fp);
+int fputs(const char *s, FILE *fp);
+int fprintf(FILE *fp, const char *format);
+读取文件
+int fgetc(FILE *fp);
+char *fgets(char *buf, int n, FILE *fp);
+int fscanf(FILE *fp, const char *format);
+
+二进制IO函数 fread, fwrite
+
+14. C 预处理器
+预处理器CPP指令
+#define #undef
+#include 
+#ifdef
+#ifndef
+#if #endif
+#else
+#elif
+#error
+#pragma
+
+// ex. 
+#undef FILE_SIZE
+#define FILE_SIZE 42
+
+// ex.
+#ifndef MSG
+#define MSG "You wish!"
+#endif
+
+// ex. gcc -DDEBUG
+#ifdef DEBUG
+/* Your debugging statements here */
+#endif
+
+预定义宏
+__DATE__ __TIME__ __FILE__ __LINE__ __STDC__
+MMM DD YYYY HH:MM:SS string 
+预处理器运算符
+宏延续运算符 \
+#define message_for(a, b) \
+	printf(#a " and " #b ": We love you!\n)
+字符串常量化运算符 #
+标记粘贴运算符 ##
+#define tokenpaster(n) printf("token " #n "= %d", token##n)
+int token34 = 40;
+tokenpaster(34);
+// output: token34 = 40
+
+#defined() 运算符
+
