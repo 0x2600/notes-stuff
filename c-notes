@@ -319,4 +319,31 @@ tokenpaster(34);
 // output: token34 = 40
 
 #defined() 运算符
+#if !defined MSG
+#define MSG "You wish."
+#endif
+
+参数化的宏
+15. C 头文件
+只引用一次头文件
+#ifndef HEADER_FILE
+#define HEADER_FILE
+the entire header file
+#endif
+有条件引用
+#if SYSTEM_1
+#include "system_1.h"
+#elif SYSTEM_2
+#include "system_2.h"
+#elif SYSTEM_3
+...
+#endif
+
+#define SYSTEM_H "system_1.h"
+#include SYSTEM_H
+
+16. C 强制类型转换
+17. C 错误处理
+#include <errno.h>
+errno, perror(), strerror()
 
