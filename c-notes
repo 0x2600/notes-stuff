@@ -1,3 +1,4 @@
+容易忘：文件读写， 内存管理，枚举，指针数组 int *p[2], 数组指针(我又忘了怎么写...), 函数指针 int (* fun)(int, int)，错误处理，
 1. C 存储类
 # auto, register, static, extern
  auto 是 局部变量默认的存储类
@@ -346,4 +347,26 @@ the entire header file
 17. C 错误处理
 #include <errno.h>
 errno, perror(), strerror()
+exit(EXIT_FAILURE) // include stdlib.h
+exit(EXIT_SUCCESS)
+18. C 递归
+阶乘
+斐波那契数列
+19. C 可变参数
+#include <stdarg.h>
+double average(int num,...){
+	double sum;
+	va_list valist;
+	va_start(valist, num);
+	for(int i=0;i<num;i++){
+		sum += va_arg(valist, int);
+	}
+	va_end(valist);
+	return sum/num;
+}
+average(2,1,2); // 1.5
+20. 内存管理
+#include <stdlib.h>
+
+
 
