@@ -1,5 +1,7 @@
 容易忘：文件读写， 内存管理，枚举，指针数组 int *p[2], 数组指针(我又忘了怎么写...), 函数指针 int (* fun)(int, int)，错误处理，
 格式控制符
+回文数
+
 1. C 存储类
 # auto, register, static, extern
  auto 是 局部变量默认的存储类
@@ -446,4 +448,23 @@ int get_GCD(int x, int y){
 		gcd --;
 	return gcd;
 }
+4) LCM 最小公倍数
+/*
+ *
+ */
+int get_LCM(int a, int b){
+	return a*b/get_GCD(a, b);
+}
+
+5) 判断是几位数
+int judge(int a){
+	int re = 1;
+	while(a/10!=0){
+		re ++;
+		a /= 10;
+	}
+	return re;
+}
+6) n! 循环， 递归， math.h double pow(double base, double)
+7) 回文数 
 

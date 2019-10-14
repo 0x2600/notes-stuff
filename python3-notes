@@ -1,0 +1,75 @@
+1. 基本数据类型
+Number, String, Tuple
+List, Set, Dictionary
+
+Number:(type()函数查看变量所指的对象类型) int , float, bool, complex
+或者 isinstance() 函数, a = 1; isinstance(a, int)
+type() 和 isinstance() 区别:
+type() 不会认为子类是一种父类类型, isinstance() 会
+当指定一个值时，Number 对象就会被创建，可以使用 del 删除对象引用
+var = 1; del var
+数值运算: + - * / // % **
+
+String
+
+List: reverselist = somelist[::-1]
+mylist = input().split(" ")
+reverselist = mylist[::-1]
+
+Tuple: mutable
+
+Set: {}, set() 创建，用于成员关系测试，删除重复元素。{} 创建空字典, 空 set 使用 set() 创建。
+成员测试: 'Rose' in castset
+集合运算: seta - setb, seta | setb, seta & setb, seta ^ setb, 差集，并集，交集，a, b 不同时存在的元素
+
+Dictionary: 无序的 key-value 集合
+key 不可变类型， 且唯一
+dict['one'], dict[2], dict.keys(), dict.values()
+使用 dict() 构造函数
+
+dict([('one', 1), (2, 'two')])
+dict(runoob=1, google=2)
+dict([(1, 'one'), ('two', 2)])
+
+数据类型转换
+int(x, [,base])
+float(x)
+complex(x[,y])
+str(x)
+repr(x)
+eval(x)
+tuple(x)
+list(s)
+set(s)
+dict(s)
+frozenset(s)
+chr(x)
+ord(x)
+hex(x)
+oct(x)
+
+2. 运算符
+算术运算符
+比较运算符: == != < > <= >=
+赋值运算符: = += -+ *= /+= %= **= //=
+位运算符: & | ^ ~ << >>
+逻辑运算符: and or not
+成员运算符: in, not in
+身份运算符: is, is not
+x is y, id(x) == id(y), id()用于获取对象内存地址
+运算符优先级
+
+3. 数字 Number
+num1 = 0xf # 15
+num2 = 0o10 # 8
+complex: a +bj, complex(a, b)
+
+数字类型转换 int(x[, base]) float() complex(x) complex(x, y)
+数字运算(算术运算符) + - * / // % **
+交互模式下, 最后被输出的表达式结果被赋值给 _
+
+数学函数
+abs(x) ceil(x) cmp(x, y) exp(x) fabs(x) floor(x) log(x) log10(x) max(x1, x2, ...) min(x1, x2, ...) modf(x) pow(x, y) round(x[, n]) sqrt(x)
+
+随机数函数
+
