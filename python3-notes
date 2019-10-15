@@ -68,8 +68,94 @@ complex: a +bj, complex(a, b)
 数字运算(算术运算符) + - * / // % **
 交互模式下, 最后被输出的表达式结果被赋值给 _
 
-数学函数
+数学函数 import math
 abs(x) ceil(x) cmp(x, y) exp(x) fabs(x) floor(x) log(x) log10(x) max(x1, x2, ...) min(x1, x2, ...) modf(x) pow(x, y) round(x[, n]) sqrt(x)
+三角函数
+acos asin atan...
 
-随机数函数
+随机数函数 import random
+choice(seq) 
+randrange([start,] stop[, step])
+random() [0, 1)
+seed([x])
+shuffle(list)
+uniform(x, y) [x,y]
+
+数字常量 pi e
+
+4. 字符串
+转义字符
+\ \\ \' \" \a \b \000 \n \t \v \r \n \f \oyy \xyy 
+字符串运算符
++ * [] [:] in, not in, r/, R/ %
+字符串格式化
+%c %s %d %u %o %x %X %f %e %E %g %G %p
+三引号
+''' """
+字符串内建函数
+capitalize()
+center()
+count()
+bytes.decode
+encode
+endswith
+find
+index
+isalnum
+isalpha
+isdigit
+isnumeric
+isspace
+istitle
+isupper
+join
+len
+ljust
+lower
+lstrip
+maketrans
+max
+min
+replace
+rfind
+rindex
+rjust
+rstrip
+split
+splitlines
+startswith
+strip
+swapcase
+title
+upper
+translate
+zfill
+isdecimal
+
+5. 列表
+序列都可进行的操作: 索引, 切片, 加，乘，检查成员
+内置确定序列的长度和最大最小元素
+更新列表: append
+删除列表元素: del list[2]
+列表函数方法
+len max min list()
+append count extend index insert pop remove reverse sort clear copy
+
+6. 元组
+删除元组， 元组元素不能删除，可以使用 del 删除整个元组
+
+元组内置函数 len max min tuple()
+
+7. 字典
+删除字典元素
+del dict['somekey']
+dict.clear() # 	清空内容
+del dict # 删除对象引用
+字典的 key 必须唯一， 不可变
+字典内置函数
+len str(dict) type() 
+clear() copy() fromkeys() get(), key in dict, iterms() keys() setdefault() update values() pop(key) popitem
+
+
+
 
