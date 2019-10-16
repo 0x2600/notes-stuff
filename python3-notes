@@ -1,3 +1,4 @@
+ 易忘: 函数形参， 迭代器与生成器
 1. 基本数据类型
 Number, String, Tuple
 List, Set, Dictionary
@@ -251,5 +252,90 @@ if __name == "__main__":
 
 生成器， 返回迭代器的函数。调用生成器函数，返回的是一个迭代器对象
 
+13. 函数
+参数传递: 分可变类型与不可变类型 mutable immutable
+不可变类型: 类似值传递，如 Number, String, Tuple
+可变类型: 引用传递
+函数形参: 必需参数，关键字参数，默认参数，不定长参数
+必须参数: 调用时须以声明时的顺序传入参数
+关键字参数: 函数调用时参数的顺序可以和声明时的顺序不一致
+def PrintInfo(name, age):
+	print(name, age)
+# 调用: PrintInfo(age=22, name="Jerry")
+output: Jerry 22
+默认参数: 位于最后
+可变参数: def fun(arg1, *arg_tuple) # 元组形式传入
+def fun(arg1, **arg_dict) # 字典形式传入 fun(1, a=1, b=2)
 
+匿名函数 lambda
+语法: lambda [arg1[,arg2,...argn]]:expression
+mysum = lambda arg1, arg2: arg1 + arg2
+
+return 语句，不带参数值的 return 语句返回 None
+
+14. py3 数据结构
+列表
+
+list.append(x) 
+list.extend(x)
+list.insert(i, x)
+list.remove(x)
+list.pop([i])
+list.clear()
+list.index(x)
+list.count(x)
+list.sort(x)
+list.reverse()
+list.copy()
+
+列表当作堆栈使用 append(), pop
+
+列表当作队列使用
+from collections import deque
+queue = deque(['a', 'b', 'c'])
+queue.append('c')
+queue.append('d')
+queue.popleft() # 'a'
+queue.popleft() # 'b'
+
+列表推导式
+vec = [2, 4, 6]
+[3*x for x in vec] # [6, 12, 18]
+[[x, x**2] for x in vec] # [[2, 4], [4, 16], [6, 36]]
+过滤器
+[3*x for x in vec if x>3] # [12, 18]
+# 100 以内素数
+[x for x in range(2, 101) if not [y for y in range(2, x) if x % y == 0]]
+
+# 嵌套列表
+matrix = [[1,2,3],[4,5,6],[7,8,9]]
+[[row[i] for row in matrix] for i in range(3)] # [[1, 4, 7], [2, 5, 8], [3, 6, 9]]
+元组和序列
+
+集合
+集合推导式
+a = {x for x in 'abc' if x not in 'ab'} # {'c'}
+
+字典
+字典推导式
+{x: x**2 for x in (2, 4, 6)} # {2: 4, 4: 16, 6: 36}
+dic(sape=1, guido=2, jack=3) # {"sape": 1, "guido": 2, "jack": 3}
+遍历技巧
+# 字典遍历 key 和 value
+for k,v in MyDict.items():
+	print(k, v)
+# 序列遍历索引位置和值
+for i, v in enumerate([3,2,1])
+	print(i, v)
+# output 0 3\n1 2\n2 1
+
+同时遍历多个序列
+q = ['name', 'age']
+a = ['jerry', 22]
+for q_, a_ in zip(q, a):
+	print(q_, a_)
+# output: name gary\nage 22\n
+
+15. 模块
+模块搜索路径 sys.path, 第一个空串，表示当前目录
 
