@@ -539,3 +539,95 @@ class SingBird(Bird):
 
 notes 2:
 refer to super_.py
+
+类属性与方法
+类的私有属性
+__private_attrs, 两个下划线开头，不能在类的外部使用, 可在类内部使用
+类的方法，def 关键字定义， 必须包含第一个参数 self
+类的私有方法， __private_mothod， 外部不能调用私有方法，类内部的公有方法可以调用私有方法，再被外部调用
+
+类的专有方法:
+__init__ 构造方法，生成对象时使用
+__del__ 析构函数，释放对象时使用
+__repr__
+__setitem__
+__getitem__
+__len__
+__cmp__
+__call__
+__add__
+__sub__
+__mul__
+__truediv__
+__mod__
+__pow__
+
+运算符重载
+class Vec:
+	a = 0
+	b = 0
+
+	def __init__(self, c, d):
+		self.a = c
+		self.b = d
+	def __add__(self, other):
+		return Vec(self.a + other.a, self.b + other.b)
+
+
+vec = Vec(1, 2) + Vec(3, 4)
+print(vec.a, vec.b) # 4 6
+
+
+21. 命名空间和作用域
+命名空间 namespace
+内置名称 built-in namespace, Python 内置的名称, abs, char, BaseException, Exception
+全局名称 global namespace, 模块中定义的名称
+局部名称 local namespace, 函数中定义的名称
+命名空间查找顺序: local->global->built-in
+
+作用域 scope: local->enclosing->global->built-in
+内置作用域通过 builtins 模块
+import builtins
+dir(builtins)
+
+Python 只有模块 module, class, def, lambda 才会引入新的作用域, if/elif/else, try/except, for/while 不会引入作用域
+ex.
+if True:
+    msg = 'I'
+print(msg) # I\n
+
+函数外->全局变量和函数内->局部变量
+
+global 和 nonlocal 关键字
+''' 函数内修改全局变量 '''
+num = 1
+def fun():
+    global num # 声明这是一个全局变量
+    num = 2
+
+fun()
+print(num) # 2
+
+''' 嵌套函数修改外层函数数据 '''
+def out():
+    num = 1
+    def inner():
+        nonlocal num
+        num = 2
+    inner()
+
+out() # num = 2
+
+''' 错误, 未定义的局部变量 '''
+a = 10
+def fun():
+    a = a + 1
+    print(a)
+
+test()
+
+
+22. 标准库概览
+
+
+23. 
