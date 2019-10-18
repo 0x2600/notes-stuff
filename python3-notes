@@ -628,6 +628,32 @@ test()
 
 
 22. 标准库概览
+os, shutil, glob, sys.argv, sys.stdout.write(), re, math, random, urllib.request, smtplib, datetime, 
+
+#
+from datetime import date
+now = date.today()
+birth = date(1997, 4, 15)
+diff = now - birth
+diff.days # days
+#
+
+数据压缩 zlib
+打包和压缩格式: zlib, gzip, bz2, zipfile, tarfile 
+
+性能度量
+timeit.Timer
+profile, pstats
+
+测试模块
+doctest
+unittest
 
 
-23. 
+23. 实例
+# 三角形面积
+def area(a, b, c):
+    s = (a + b + c) / 2
+    return (s * (s - a) * (s - b) * (s - c)) ** 0.5
+# I almost forget.
+
