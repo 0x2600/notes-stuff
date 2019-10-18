@@ -1,4 +1,9 @@
 def is_num(s):
+    ''' 
+    is_num("1.1") # True
+    is_num("四") # True
+    is_num("1e3") # True
+    '''
     try:
         float(s)
         return True

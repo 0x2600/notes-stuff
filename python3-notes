@@ -657,3 +657,35 @@ def area(a, b, c):
     return (s * (s - a) * (s - b) * (s - c)) ** 0.5
 # I almost forget.
 
+math.factorial(x) # x 不能是负数，非整形
+
+# 判断字符串是否是数字
+def is_num(s):
+    """
+    is_num('四') # True
+    is_num('1.1') # True
+    is_num('1e3') # True
+    """
+    try:
+        float(s)
+        return True
+    except ValueError:
+        pass
+
+    try:
+        import unicodedata
+        unicodedata.numeric(s)
+        return True
+    except (TypeError, ValueError):
+        pass
+    return False
+
+# 9 * 9 
+for i in range(1, 10):
+    for j in range(1, i+1):
+        print("{} * {} = {}".format(j, i, j * i), end = " ")
+    print()
+
+# calendar.month
+print(calendar.month(1997, 5))
+
