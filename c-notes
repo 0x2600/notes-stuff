@@ -12,6 +12,7 @@
  extern 提供其他文件或位置变量的引用
  /* 
   * extern 示例1
+  * output: 3
   */
  #include <stdio.h>
  int x, y;
@@ -48,17 +49,17 @@ int main(){
 
 // file 1: main.c
 #include <stdio.h>
-int count = 5;
-extern void write_extern();
-int main(){
-	write_extern();
+    int count = 5;
+    extern void write_extern();
+    int main(){
+	    write_extern();
 }
 
 // file 2: support.c
 #include <stdio.h>
-extern int count;
-void write_extern(){
-	printf("%d\n", count);
+    extern int count;
+    void write_extern(){
+	    printf("%d\n", count);
 }
 // compile: gcc main.c support.c -o extern_1-1
 
@@ -112,12 +113,11 @@ int main(){
  */
 #include <stdio.h>
 int main(){
-
 	enum weekday{Mon =1, Tue, Wed, Thu, Fri, Sat, Sun};
 	enum weekday day;
 	scanf("%d", &day);
 	switch(day){
-	case Mon: puts("Mon");break;
+	    case Mon: puts("Mon");break;
 	}
 	return 0;
 }

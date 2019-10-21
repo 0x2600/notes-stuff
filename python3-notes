@@ -319,7 +319,7 @@ a = {x for x in 'abc' if x not in 'ab'} # {'c'}
 字典
 字典推导式
 {x: x**2 for x in (2, 4, 6)} # {2: 4, 4: 16, 6: 36}
-dic(sape=1, guido=2, jack=3) # {"sape": 1, "guido": 2, "jack": 3}
+dict(sape=1, guido=2, jack=3) # {"sape": 1, "guido": 2, "jack": 3}
 遍历技巧
 # 字典遍历 key 和 value
 for k,v in MyDict.items():
@@ -688,4 +688,46 @@ for i in range(1, 10):
 
 # calendar.month
 print(calendar.month(1997, 5))
+
+# 将字符串内容作为代码执行
+def exec_code():
+    code = '''
+def fact():
+    fact = 1
+    for i in range(1, 6):
+        fact *= i
+    print(fact)
+fact()
+'''
+    exec(code)
+
+exec_code() # 120 
+
+24. 内置函数
+1) abs() 与 fabs(): abs 可以计算复数，返回模大小。fabs要从 math
+模块导入，不能计算复数。
+2) dict() 用于创建字典。
+mydict = dict() # {} 空字典
+mydict = dict(a=1, b=2) # {'a': 1, 'b': 2} 传入关键字
+mydict =  dict(zip(['one', 'two'], [1, 2])) 映射函数
+mydict = dict([('one', 1), ('two', 2)]) 可迭代对象
+3) help, help([ogject])
+help(math)
+help(str)
+help(mydict.keys)
+help(mydict)
+4) min()
+5) setattr(object, name, value)
+class A(object):
+    name = ''
+    age = 0
+a = A()
+setattr(a, name, 'jerry')
+getattr(a, name)
+6) all(), 判断可迭代参数的元素是否都是 True,除了0,空,None, False外
+空列表，空元组返回 True
+7) dir([object])
+8) hex() 返回给定 Number 的十六进制表示，字符串类型
+9) next()
+
 
