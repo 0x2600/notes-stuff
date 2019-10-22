@@ -1,0 +1,121 @@
+1. 快速上手
+
+发送请求
+import requests
+r = requests.get('https://api.github.com/events') # GET
+r = requests.post('http://httpbin.org/post', data={'key': 'value'})# POST
+
+传递 URL 参数， params 关键字
+payload = {'key1': 'value1', 'key2': 'value2'}
+r = requests.get('http://httpbin.org/get', params = payload)
+print(r.url) # http://httpbin.org/get?key2=value2&key1=value1
+列表作为值传入，多映射字典
+payload = {'key1': 'value1', 'key2': ['value2', 'value3']}
+r = requests.get(url, params = payload)
+print(r.url) # http://httpbin.org/get?key1=value1&key2=value2&key2=value3
+
+响应内容
+import requests
+r = requests.get('https://api.github.com/events')
+r.text
+基于头部对响应的编码作出有根据的推测，访问 r.text 之时，使用其推测的文本编码
+r.encoding # 返回其编码，亦可设置编码
+
+二进制响应内容，以字节的方式访问请求响应体
+r.content # 会自动解码 gzip, deflate 传输编码的响应数据
+
+JSON 响应内容， 内置 JSON 解码器
+import requests
+r = requests.get('https://api.github.com/events')
+r.json()
+如果 JSON　解码失败, r.json() 抛出异常，ValueError: No JSON object could be decoded
+
+原始响应内容 r.raw, 必须设置 stream=True
+r = requests.get('https://api.github.com/events', stream=True)
+r.raw
+r.raw.read(10)
+文件流保存到文件:
+with open(filename, 'wb') as fd:
+    for chunk in r.iter_content(chunk_size):
+        fd.write(chunk)
+
+定制请求头 传递 dict 给 headers 参数
+url = 'https://api.github.com/some/endpoint'
+headers = {'user-agent': 'my-app/0.0.1'}
+r = requests.get(url, headers = headers)
+
+更加复杂的 POST 请求 传递 dict 给 data 参数
+payload = {'key1': 'value1', 'key2': 'value2'}
+r = requests.post('http://httpbin.org/post', data=payload)
+data 传入元组列表
+payload = (('key1', 'value1'), ('key1', 'value2')) # 表单多个元素使用同一 key
+传递 string
+import json
+payload = {'some': 'data'}
+r = requests.post(url, data=json.dumps(payload))
+或者简单点，直接使用 json 关键字参数
+r = requests.post(url, json=payload)
+
+POST 一个多部分编码 Multipart-Encoded 文件 , files 关键字
+files = {'files': open('report.xls', 'rb')}
+r = requests.post(url, files=files)
+
+响应状态码
+r.status_code == requests.codes.ok
+
+响应头
+字典形式
+r.headers['content-type']
+
+Cookie
+响应中包含 cookie, 访问 cookie
+url = 'http://example.com/some/cookie/setting/url'
+r = requests.get(url)
+r.cookies['example_cookie_name'] # 'example_cookie_value'
+发送你的 cookies 到服务器，使用 cookies 关键字
+url = 'http://httpbin.org/cookies'
+cookies = dict(cookies_are='working')
+r = requests.get(url, cookies = cookies)
+Cookie 的返回对象是 RequestsCookieJar, 适合跨域名跨路径使用
+jar = requests.cookies.RequestsCookieJar()
+jar.set('tasty_cookie', 'yum', domain = 'httpbin.org', path='/cookies')
+jar.set('gross_cookie', 'blech', domain = 'httpbin.org', path='/elsewhere')
+url = 'http://httpbin.org/cookies'
+r = requests.get(url, cookies=jar)
+
+重定向与请求历史 除 HEAD 外， 会自动处理所有重定向
+Response.history
+r = requests.get('http://github.com')
+r.url # https://github.com
+r.history # [<Response [301]>]
+GET, OPTIONS, POST, PUT, PATCH, DELETE, allow_redirects 参数禁用, 启用重定向处理
+
+超时 timeout, 设定秒数时间后停止等待响应
+
+
+2. 高级用法
+
+
+
+
+
+
+
+
+3. 身份认证
+1) 基本身份认证
+from requests.auth import HTTPBasicAuth
+requests.get("https://api.github.com/users", auth=HTTPBasicAuth('user', 'pass'))
+简单写法: 
+requests.get(url, auth('user', 'pass'))
+2) 摘要式身份认证
+from requests.auth import HTTPDigestAuth
+url = 'http://httpbin.org/digest-auth/auth/user/pass'
+requests.get(url, auth=HTTPDigestAuth('user', 'pass'))
+3) OAuth 1 认证
+import requests
+from requests_oauthlib import OAuth1
+url = 'https://api.twitter.com/1.1/account/verify_credentials.json'
+auth = OAuth1('YOUR_APP_KEY', 'YOUR_APP_SECRET', 'USER_OAUTH_TOKEN', 'USER_OAUTH_TOKEN_SECRET')
+requests.get(url, auth=auth)
+
