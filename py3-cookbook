@@ -64,6 +64,31 @@ for key in d:
     print(key, d[key])
 OrderedDict 内部维护一个根据键插入顺序排序的双向链表，对于一个已经存在的键的重复赋值不会改变键的顺序。一个 OrderedDict 的大小是普通字典的两倍，它的内部维护着另外一个链表。
 
+1.8 字典的运算
+prices = {'A': 2, 'B': 1}
+min_price = min(zip(prices.values(), prices.keys())) # (1, B)
+max_price = max(zip(prices.values(), prices.keys())) # (2, A)
+
+min(prices, key = lambda x: prices[x]) # B
+prices[min(prices, key = lambda x: prices[x])] # 1
+
+1.9 查找两字典的相同点
+a = {'x': 1, 'y': 2, 'z': 3}
+b = {'w': 10, 'x': 12, 'y': 2}
+# dict.keys() 返回类集合对象
+a.keys() & b.keys() # {'x', 'y'}
+a.keys() - b.keys() # {'z'}
+a.items() & b.items() # {'y': 2}
+
+# 过滤字典
+c = {key: a[key] for key in a.keys() - {'z', 'w'}} # {'x': 1, 'y': 2}
+
+dict.keys() 可以进行集合操作。 dict.items() 集合操作， 可以用来查找两个字典相同的键值对。 dict.values() 不能保证值互不相同，不建议集合操作。
+
+
+
+
+
 
 4.1 手动遍历迭代器
 with open('somefile', 'rt') as f:

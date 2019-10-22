@@ -729,5 +729,5 @@ getattr(a, name)
 7) dir([object])
 8) hex() 返回给定 Number 的十六进制表示，字符串类型
 9) next()
-
+10) zip(), zip(iter1[, iter2 [...]]) 返回每个可迭代对象元素组成的元组， 长度由最小可迭代对象决定。 zip(*) 解压
 
