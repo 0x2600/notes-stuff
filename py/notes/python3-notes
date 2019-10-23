@@ -1,7 +1,7 @@
  易忘: 函数形参， 迭代器与生成器
 1. 基本数据类型
-Number, String, Tuple
-List, Set, Dictionary
+Number, String, Tuple 不可变
+List, Set, Dictionary 可变
 
 Number:(type()函数查看变量所指的对象类型) int , float, bool, complex
 或者 isinstance() 函数, a = 1; isinstance(a, int)
@@ -14,7 +14,7 @@ var = 1; del var
 String
 
 List: reverselist = somelist[::-1]
-mylist = input().split(" ")
+mylist = input().split(" ") 空格分开传入的参数组成列表
 reverselist = mylist[::-1]
 
 Tuple: mutable
