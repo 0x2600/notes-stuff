@@ -52,7 +52,7 @@ oct(x)
 2. 运算符
 算术运算符
 比较运算符: == != < > <= >=
-赋值运算符: = += -+ *= /+= %= **= //=
+赋值运算符: = += -+ *= /= %= **= //=
 位运算符: & | ^ ~ << >>
 逻辑运算符: and or not
 成员运算符: in, not in
@@ -70,7 +70,7 @@ complex: a +bj, complex(a, b)
 交互模式下, 最后被输出的表达式结果被赋值给 _
 
 数学函数 import math
-abs(x) ceil(x) cmp(x, y) exp(x) fabs(x) floor(x) log(x) log10(x) max(x1, x2, ...) min(x1, x2, ...) modf(x) pow(x, y) round(x[, n]) sqrt(x)
+fabs(x) ceil(x) cmp(x, y) exp(x) floor(x) log(x) log10(x) max(x1, x2, ...) min(x1, x2, ...) modf(x) pow(x, y) round(x[, n]) sqrt(x)
 三角函数
 acos asin atan...
 
