@@ -1,0 +1,205 @@
+1. 快速上手
+
+发送请求
+import requests
+r = requests.get('https://api.github.com/events') # GET
+r = requests.post('http://httpbin.org/post', data={'key': 'value'})# POST
+
+传递 URL 参数， params 关键字
+payload = {'key1': 'value1', 'key2': 'value2'}
+r = requests.get('http://httpbin.org/get', params = payload)
+print(r.url) # http://httpbin.org/get?key2=value2&key1=value1
+列表作为值传入，多映射字典
+payload = {'key1': 'value1', 'key2': ['value2', 'value3']}
+r = requests.get(url, params = payload)
+print(r.url) # http://httpbin.org/get?key1=value1&key2=value2&key2=value3
+
+响应内容
+import requests
+r = requests.get('https://api.github.com/events')
+r.text
+基于头部对响应的编码作出有根据的推测，访问 r.text 之时，使用其推测的文本编码
+r.encoding # 返回其编码，亦可设置编码
+
+二进制响应内容，以字节的方式访问请求响应体
+r.content # 会自动解码 gzip, deflate 传输编码的响应数据
+
+JSON 响应内容， 内置 JSON 解码器
+import requests
+r = requests.get('https://api.github.com/events')
+r.json()
+如果 JSON　解码失败, r.json() 抛出异常，ValueError: No JSON object could be decoded
+
+原始响应内容 r.raw, 必须设置 stream=True
+r = requests.get('https://api.github.com/events', stream=True)
+r.raw
+r.raw.read(10)
+文件流保存到文件:
+with open(filename, 'wb') as fd:
+    for chunk in r.iter_content(chunk_size):
+        fd.write(chunk)
+
+定制请求头 传递 dict 给 headers 参数
+url = 'https://api.github.com/some/endpoint'
+headers = {'user-agent': 'my-app/0.0.1'}
+r = requests.get(url, headers = headers)
+
+更加复杂的 POST 请求 传递 dict 给 data 参数
+payload = {'key1': 'value1', 'key2': 'value2'}
+r = requests.post('http://httpbin.org/post', data=payload)
+data 传入元组列表
+payload = (('key1', 'value1'), ('key1', 'value2')) # 表单多个元素使用同一 key
+传递 string
+import json
+payload = {'some': 'data'}
+r = requests.post(url, data=json.dumps(payload))
+或者简单点，直接使用 json 关键字参数
+r = requests.post(url, json=payload)
+
+POST 一个多部分编码 Multipart-Encoded 文件 , files 关键字
+files = {'files': open('report.xls', 'rb')}
+r = requests.post(url, files=files)
+
+响应状态码
+r.status_code == requests.codes.ok
+
+响应头
+字典形式
+r.headers['content-type']
+
+Cookie
+响应中包含 cookie, 访问 cookie
+url = 'http://example.com/some/cookie/setting/url'
+r = requests.get(url)
+r.cookies['example_cookie_name'] # 'example_cookie_value'
+发送你的 cookies 到服务器，使用 cookies 关键字
+url = 'http://httpbin.org/cookies'
+cookies = dict(cookies_are='working')
+r = requests.get(url, cookies = cookies)
+Cookie 的返回对象是 RequestsCookieJar, 适合跨域名跨路径使用
+jar = requests.cookies.RequestsCookieJar()
+jar.set('tasty_cookie', 'yum', domain = 'httpbin.org', path='/cookies')
+jar.set('gross_cookie', 'blech', domain = 'httpbin.org', path='/elsewhere')
+url = 'http://httpbin.org/cookies'
+r = requests.get(url, cookies=jar)
+
+重定向与请求历史 除 HEAD 外， 会自动处理所有重定向
+Response.history
+r = requests.get('http://github.com')
+r.url # https://github.com
+r.history # [<Response [301]>]
+GET, OPTIONS, POST, PUT, PATCH, DELETE, allow_redirects 参数禁用, 启用重定向处理
+
+超时 timeout, 设定秒数时间后停止等待响应
+
+
+2. 高级用法
+请求与响应对象
+任何时候进行了类似 requests.get() 的调用， 1. 构建 Request 对象， 2. 一旦 requests 得到一个从服务器返回的响应就会产生一个 Response 对象。
+r = requests.get('http://en.wikipedia.org/wiki/Monty_Python')
+访问服务器返回给我们的响应头部
+r.headers # 字典
+发送到服务器的请求的头部
+r.request.headers
+
+SSL 证书验证 verify 关键字
+requests.get('https://github.com', verify=True)
+verify 传入 CA_BUNDLE 文件路径，或者包含可信任 CA 证书文件的文件夹路径
+requests.get('https://github.com', verify='/path/to/certfile')
+
+客户端证书 指定本地证书用作客户端证书，单个文件(包含密钥和证书)或一个包含两个文件路径的元组, 本地证书的私有 key 必须是解密状态。
+cert=('/path/client.cert', '/path/client.key')
+
+CA 证书
+Requests 默认自带它信任的根证书。
+建议 certifi 包
+
+响应体内容工作流
+默认情况下， 当你进行网络请求后，响应体会立即被下载。你可以通过 stream 参数覆盖这个行为，推迟下载响应体直到访问 Response.content 属性
+Requests 无法将连接释放回连接池，除非消耗了所有的数据或者调用 Response.close(), 建议使用 with 上下文管理器
+with requests.get(url, stream=True) as f:
+    # 处理响应
+
+保持活动状态 (持久连接)
+略
+
+流式上传
+发送大的数据流或文件无需先把它们读入内存
+with open('massive-body') as f:
+    requests.post(url, data=f)
+
+块编码请求
+data = gen() # gen() 生成器
+
+POST 多个分块编码的文件
+HTML 表单
+<input type="file" name="images" multiple="true" required="true">
+
+url = 'http://httpbin.org/post'
+multiple_files = [
+    ('images', ('foo.png', open('foo.png', 'rb'), 'image/png'))
+    ('images', ('bar.png', open('bar.png', 'rb'), 'image/png'))
+]
+r = requests.post(url, files=multiple_files)
+
+事件挂钩
+
+自定义身份验证
+
+流式请求
+使用 Response.iter_lines() 可以对流式 API 进行迭代, 设置 stream 为 True
+
+代理 proxies 关键字参数
+import requests
+proxies = {
+    'http': 'http://10.10.1.10:3128'
+    'https': 'http://10.10.1.10:1080'
+}
+requests.get(url, proxies = proxies)
+或者通过环境变量 HTTP_PROXY HTTPS_PROXY
+$ export HTTP_PROXY="http://10.10.1.10:3128"
+$ export HTTPS_PROXY="http://10.10.1.10:3128"
+$ python
+>>> import requests
+>>> requests.get(url)
+如果代理需要使用 HTTP Basic Auth, 使用 http://user:password@host/ 语法
+proxies = {
+    'http': 'http://user:pass@10.10.1.10:3128'
+}
+为某个特定的连接方式或者主机设置代理
+proxies = {
+    'http://10.20.1.128': 'http://10.10.1.10:5323'
+}
+
+SOCKS
+$ pip install requests[socks]
+proxies = {
+    'http': 'socks5://user:pass@host:port'
+    'https': 'socks5://user:pass@host:port'
+}
+
+编码方式
+收到一个响应时，检测头部是否存在指定的编码方式，调用 r.text 时解码， 如果不存在使用 charade 尝试猜测编码方式。可以手动设置 Response.encoding 属性，或者使用原始的 Response.content
+
+HTTP 动词
+
+
+
+
+i. 身份认证
+1) 基本身份认证
+from requests.auth import HTTPBasicAuth
+requests.get("https://api.github.com/users", auth=HTTPBasicAuth('user', 'pass'))
+简单写法: 
+requests.get(url, auth('user', 'pass'))
+2) 摘要式身份认证
+from requests.auth import HTTPDigestAuth
+url = 'http://httpbin.org/digest-auth/auth/user/pass'
+requests.get(url, auth=HTTPDigestAuth('user', 'pass'))
+3) OAuth 1 认证
+import requests
+from requests_oauthlib import OAuth1
+url = 'https://api.twitter.com/1.1/account/verify_credentials.json'
+auth = OAuth1('YOUR_APP_KEY', 'YOUR_APP_SECRET', 'USER_OAUTH_TOKEN', 'USER_OAUTH_TOKEN_SECRET')
+requests.get(url, auth=auth)
+
