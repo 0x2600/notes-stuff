@@ -468,3 +468,80 @@ int judge(int a){
 6) n! 循环， 递归， math.h double pow(double base, double)
 7) 回文数 
 
+other notes:
+字符串表示 字符数组 char mystr[10], 字符串常量 char *pstr = "hello"
+
+指针变量作为函数参数
+数组 字符串 动态分配的内存等数据集合，无法直接传入函数内部，可传递他们的指针
+为什么使用指针
+传参是赋值，集合数据内存拷贝效率低
+
+int max(int *parr, int len);
+int max(int arr[6], int len); 可传递多于6个元素的数组
+int max(int arr[], int len);
+
+数组指针引入后，访问数组元素
+1. 下标 arr[i] = p[i]
+2. 指针 *(p+i) = *(arr+i)
+
+返回值为指针的函数： 注意返回的指针不要指向函数内的局部变量， static 修饰的局部变量除外
+#include <stdlib.h>
+#include <stdio.h>
+int *getrandom(){
+    static int r(10)={0};
+    for(int i=0;i<10;i++){
+        *(r+i) = rand();
+    }
+    return r;
+}
+
+int main(){
+    // using getrandom function.
+    int *p = getrandom()
+    // now p point a array
+    for(int i=0;i<10;i++)
+        printf("%d\n", p[i]);
+    return 0;
+}
+
+指针数组，数组的每个元素都是指针
+int *p[3], int *(p[3])
+
+int a = 1, b =2, c = 3;
+int *p[] = {&a, &b, &c};
+
+二维数组指针, 数组的指针
+int a[3][4];
+int (*p)[4] = a;
+*(p+1) // a[1][0]
+*(*(p+1)+1) // a[1][1]
+
+函数指针
+函数占用一段连续的内存，函数名，内存区域首地址
+int max(int, int);
+int (*pmax)(int, int) = max
+pmax(1, 2); // call
+
+
+指针总结
+指针存放:
+基本数据类型， 数组（数组指针）， 函数（函数指针）， 指针变量（二级指针）
+
+int *p;
+int **p;
+int *p[N]; 指针数组
+int (*p)[N]; 数组指针
+int (*p)(); 函数指针
+int *p(); 返回值为int *的函数
+
+结构体指针
+struct stu{
+    int a;
+    double b
+} stu1, class[5], *pstu1 = &stu1; // & 必不可少
+访问结构体成员
+(*p).member // 括号不可少
+p->menber
+结构体指针作为函数参数， 结构体成员可能很多， 传指针效率高
+
+

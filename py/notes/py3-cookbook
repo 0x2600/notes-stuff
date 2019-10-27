@@ -148,6 +148,14 @@ def countdown(n):
     print('Done')
 
 4.4 实现迭代器协议
+5.3 使用其他分隔符或行终止符打印
+print() sep, end 参数
+print('ACME', 50, 91.5, sep=',', end='!!\n') # ACME,50,91.5!!
+str.join() 参数可迭代对象的元素必须是 string
+row = ('A', 1, 2.1)
+print(*row, sep=',') # A,1,2,1
+
+5.4 读写字节数据
 
 
 

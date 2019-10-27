@@ -14,10 +14,11 @@ var = 1; del var
 String
 
 List: reverselist = somelist[::-1]
-mylist = input().split(" ") 空格分开传入的参数组成列表
+mylist = input().split(" ") 空格分开传入的参数组成列表, input() 读入字符串,
+split() 函数 sep 关键字参数指定分隔字符
 reverselist = mylist[::-1]
 
-Tuple: mutable
+Tuple: immutable
 
 Set: {}, set() 创建，用于成员关系测试，删除重复元素。{} 创建空字典, 空 set 使用 set() 创建。
 成员测试: 'Rose' in castset
