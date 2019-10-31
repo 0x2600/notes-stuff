@@ -191,7 +191,7 @@ i. 身份认证
 from requests.auth import HTTPBasicAuth
 requests.get("https://api.github.com/users", auth=HTTPBasicAuth('user', 'pass'))
 简单写法: 
-requests.get(url, auth('user', 'pass'))
+requests.get(url, auth=('user', 'pass'))
 2) 摘要式身份认证
 from requests.auth import HTTPDigestAuth
 url = 'http://httpbin.org/digest-auth/auth/user/pass'
