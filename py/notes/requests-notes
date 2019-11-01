@@ -203,3 +203,26 @@ url = 'https://api.twitter.com/1.1/account/verify_credentials.json'
 auth = OAuth1('YOUR_APP_KEY', 'YOUR_APP_SECRET', 'USER_OAUTH_TOKEN', 'USER_OAUTH_TOKEN_SECRET')
 requests.get(url, auth=auth)
 
+## Download image using requests
+1. shutil.copyfileobj
+import requests
+import shutil
+
+r = requests.get('image_url')
+if r.status_code == requests.codes.ok:
+    with open(path, 'wb') as f:
+        r.raw.decode_content = True
+        shutil.copyfileobj(r.raw, f)
+
+2. 
+r = requests.get('image_url')
+if r.status_code == requests.codes.ok:
+    with open(path, 'wb') as f:
+        for chunk in r:
+            f.write(chunk)
+        ''' Or
+        for chunk in r.iter_cntent(1024):
+            f.write(chunk)
+
+## 
+
