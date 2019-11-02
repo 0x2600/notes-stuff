@@ -2,14 +2,16 @@
 格式控制符
 回文数
 
-1. C 存储类
-# auto, register, static, extern
- auto 是 局部变量默认的存储类
- register 类定义变量可能存储在寄存器中
+## 1. C 存储类
+auto, register, static, extern
+
+auto 是 局部变量默认的存储类
+register 类定义变量可能存储在寄存器中
  static
  修饰全局变量时，使变量的作用域限制在声明它的文件内，全局变量的默认行为。
  修饰局部变量时，不要使其进入和离开作用域时创建和销毁，如函数中，重复调用不会让其重新初始化。
  extern 提供其他文件或位置变量的引用
+ ```c
  /* 
   * extern 示例1
   * output: 3
@@ -25,7 +27,8 @@ int main(){
     printf("%d\n", add2num());
     return 0;
 }
-
+```
+```c
 /*
  * static 示例 
  */
@@ -42,7 +45,7 @@ int main(){
 		func();
 	}
 }
-
+```
 /*
  * extern 示例2
  */
