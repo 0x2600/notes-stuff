@@ -732,3 +732,17 @@ getattr(a, name)
 9) next()
 10) zip(), zip(iter1[, iter2 [...]]) 返回每个可迭代对象元素组成的元组， 长度由最小可迭代对象决定。 zip(*) 解压
 
+
+
+Python for the Web:
+Interacting with Websites and APIs Using Python
+requests
+
+Processing JSON in Python
+simplejson
+
+Scraping the Web Using Python
+lxml
+
+Python Web Sites
+Django
