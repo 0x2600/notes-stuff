@@ -62,39 +62,76 @@ x is y, id(x) == id(y), id()用于获取对象内存地址
 运算符优先级
 
 3. 数字 Number
+支持十六进制，八进制表示整数
 num1 = 0xf # 15
 num2 = 0o10 # 8
 complex: a +bj, complex(a, b)
 
 数字类型转换 int(x[, base]) float() complex(x) complex(x, y)
 数字运算(算术运算符) + - * / // % **
+>>> 7//2
+3
+>>> 7.0//2
+3.0
 交互模式下, 最后被输出的表达式结果被赋值给 _
 
 数学函数 import math
-fabs(x) ceil(x) cmp(x, y) exp(x) floor(x) log(x) log10(x) max(x1, x2, ...) min(x1, x2, ...) modf(x) pow(x, y) round(x[, n]) sqrt(x)
+fabs(x) abs() 是内置函数，math.fabs()  
+ceil(x) 上入整数
+exp(x) e ** x
+floor(x) 下舍整数 
+log(x) # math.log(math.e) = 1.0, math.log(100, 10) = 2.0
+log10(x) # math.log10(100) = 2.0
+max(x1, x2, ...) 
+min(x1, x2, ...) 
+modf(x) Return the fractional and integer parts of x. Both result carry the sign of x and are float.
+>>> math.modf(3.2)
+(0.200..., 3.0)
+pow(x, y) # 内置函数 pow(x, y, z=None, /) return x**y or x**y % z. math 模块pow(x, y, /) return x**Y.
+round(x[, n]) # 内置函数，round(number, ndigits=None) 省略 ndigits 返回整数，否则返回值有 number 相同的类型。四舍五入。
+sqrt(x) # 平方根
 三角函数
 acos asin atan...
 
-随机数函数 import random
-choice(seq) 
-randrange([start,] stop[, step])
-random() [0, 1)
-seed([x])
-shuffle(list)
-uniform(x, y) [x,y]
-
 数字常量 pi e
+
+随机数函数 import random
+choice(seq) # Choose a random element from a non-empty sequance.
+randrange(start, stop=None, step=1, _int=<class 'int'>) # Choose a random item from range(start, stop[, step]). This fixed the problem with randint() which includes the endpoint.
+random() [0, 1)
+seed(a=None, version=2) # No need if u don't understand. 
+shuffle(x, random=None) # Shuffle list x in place, and return None. 
+uniform(a, b) # [a, b) or [a, b]
+
 
 4. 字符串
 转义字符
 \ \\ \' \" \a \b \000 \n \t \v \r \n \f \oyy \xyy 
 字符串运算符
-+ * [] [:] in, not in, r/, R/ %
++ * [] [:] in, not in, r/, R/ 
+% # 格式字符串: print("%s %d" % ('aaa', 1))
 字符串格式化
 %c %s %d %u %o %x %X %f %e %E %g %G %p
-三引号
+格式化操作符辅助指令: 略
+三引号:  HTML/SQL
 ''' """
+
+f-string # py3.6 引入，字面量格式化字符串
+>>> name='ruby'
+>>>f'hello {name}'
+'hello ruby'
+
+py3.8 = 将表达式和结果连接起来
+>>> x=1
+>>> f'{x+1=}'
+'x+1=2'
+
 字符串内建函数
+str.join(iterable) # return a string. A TypeError will be raised if there are any non-string values in iterable, including bytes objects.
+>>> '.'.join(['1', '2'])
+'1.2'
+>>> ':'.join(['root', '/bin/bash'])
+'root:/bin/bash'
 capitalize()
 center()
 count()
