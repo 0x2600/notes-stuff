@@ -132,32 +132,59 @@ str.join(iterable) # return a string. A TypeError will be raised if there are an
 '1.2'
 >>> ':'.join(['root', '/bin/bash'])
 'root:/bin/bash'
-capitalize()
-center()
-count()
+
+# io.StringIO example usage:
+import io
+output=io.StringIO()
+output.write("First line.\n")
+print("Second line.", file=output)
+
+# Retrieve file contents -- this will be
+# 'First line.\nSecond line.\n'
+contents = output.getvalue()
+
+# Close object and discard memory buffer --
+# .getvalue() will now raise an exception.
+output.close()
+
+str.capitalize() 
+>>> 'python dev.'.capitalize()
+'Python dev.'
+str.center(width[, fillchar])
+>>> 'abs'.center(9, '+')
+'+++abs+++'
+str.count(sub[, start[, end]])
+
 bytes.decode
 encode
-endswith
-find
-index
-isalnum
-isalpha
-isdigit
-isnumeric
-isspace
-istitle
-isupper
-join
+str.endswith(suffix[, start[, end]])
+>>> 'windows'.endswith('ws')
+True
+
+str.find(sub[, start[, end]]) # Return the lowest index. Return -1 if sub is not found.
+Note: the find() method should be used only if you need to know the position of sub. To check if sub is a substring or not, use the in operator.
+>>> 'Py' in 'Python'
+True
+
+str.index(sub[, start[, end]]) # Like find(), but raise ValueError when the substring is not found.
+
+str.isalnum()  
+str.isalpha()
+str.isdigit()
+str.isnumeric()
+str.isspace()
+str.isupper()
+str.islower()
 len
-ljust
+str.just
 lower
 lstrip
-maketrans
 max
 min
-replace
-rfind
-rindex
+str.replace(old, new[, count]) # If the optional argument count is given, only the first count occurrences are replaced.
+
+str.rfind(sub, [start[, end]]) # Like find(), but return the highest index.
+str.rindex() # Like rfind() but raises ValueError when the substring is not found.
 rjust
 rstrip
 split

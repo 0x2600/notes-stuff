@@ -1,0 +1,112 @@
+3. Docker 入门
+3.1 确保 Docker 已经就绪
+$ sudo docker info
+
+3.2 运行我们的第一个容器
+$ sudo docker run -i -t ubuntu /bin/bash
+-i 标志 STDIN 是开启的， -t 分配伪 tty 终端
+
+3.3 使用第一个容器
+使用完成 exit 停止运行
+docker ps -a
+
+3.4 容器命名
+sudo docker run --name bob_the_container -i -t ubuntu /bin/bash
+docker rm 
+
+3.5 重新启动已经停止的容器
+sudo docker start bob_the_container
+sudo docker start <ID>
+or: docker restart
+Note: docker create 创建容器，并不运行
+3.6 附着到容器上
+Docker 容器重新启动的时候会沿用 docker run 命令时指定的参数来运行，因此我们的容器重新启动后会运行一个交互式会话 shell。
+附着正在运行的容器: docker attach bob_the_container/or: docker attach <ID>
+
+3.7 创建守护式容器(daemonized container)
+sudo docker run --name daemon_dave -d ubuntu /bin/sh -c 'while true; do echo hello world; sleep 1; done'
+Note: -d
+
+3.8 容器内部都在干什么
+获取守护式容器的日志: 
+sudo docker logs [-f] daemon_dave # ^ C 退出日志跟踪
+docker logs --tail 10 daemon_dave
+docker logs --tail 0 -f daemon_dave
+sudo docker logs -ft daemon_dave # -t 加时间戳
+
+3.9 Docker 日志驱动
+在容器级别启动 Syslog 将会禁用 docker logs
+sudo docker run --log-driver='syslog' --name daemon-dave -d ubuntu /bin/sh -c "<command>"
+默认 json-file
+
+3.10 查看容器内的进程
+查看守护式容器的进程
+sudo docker top daemon_dave
+
+3.11 Docker 统计信息
+sudo docker stats daemon_dave daemon_kate daemon_clare daemon_sarah
+
+3.12 在容器内部运行进程
+后台进程和交互式任务
+在容器内运行后台任务:
+sudo docker exec -d daemon_dave touch /etc/new_config_file
+-d 后台进程 
+
+在容器内运行交互命令
+sudo docker exec -t -i daemon_dave /bin/bash
+
+3.13 停止守护式容器
+sudo docker stop daemon_dave # or <ID>
+
+3.14 自动重启容器
+sudo docker run --restart=always --name daemon_dave -d ubuntu /bin/sh -c "<command>"
+or 指定重启次数 --restart=on-failure:5
+
+3.15 深入容器
+docker inspect
+
+sudo docker inspect --format='{{ .State.Running }}' daemon_dave
+sudo docker inspect --format='{{ .NetworkSettings.IPAddress }}' daemon_dave bob_the_container
+
+3.16 删除容器
+sudo docker rm <ID>
+删除所有容器:
+sudo docker rm `sudo docker ps -a -q` # -q 只返回容器的 ID
+
+
+4. 使用 Docker 镜像和仓库
+
+4.1 什么是 Docker 镜像
+
+4.2 列出镜像
+sudo docker images
+拉取镜像: sudo docker pull ubuntu:12.04
+运行一个带标签的 Docker 镜像
+sudo docker run -t -i --name new_container ubuntu:12.04 /bin/bash
+
+4.3 拉取镜像
+sudo docker pull fedora:20
+sudo docker images fedora
+sudo docker pull fedora:21
+
+4.4 查找镜像
+sudo docker search puppet
+sudo docker pull jamtur01/puppetmaster
+sudo docker run -i -t jamtur01/puppetmaster /bin/bash
+
+4.5 构建镜像
+1) docker commit
+2) docker build/Dockerfile
+
+4.5.1 创建 Docker Hub 账号
+sudo docker login
+
+4.5.2 用 Docker 的 commit 命令创建镜像
+
+
+
+
+
+
+
+
