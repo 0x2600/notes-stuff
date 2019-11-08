@@ -187,15 +187,13 @@ str.rfind(sub, [start[, end]]) # Like find(), but return the highest index.
 str.rindex() # Like rfind() but raises ValueError when the substring is not found.
 rjust
 rstrip
-split
-splitlines
-startswith
-strip
-swapcase
-title
-upper
-translate
-zfill
+str.split(sep=None, maxsplit=-1) # Return a list of the words in the string, using sep as the delimiter string. If maxsplit is given, at most maxsplit splits are done.
+str.splitlines
+str.startswith(prefix[, start[, end]])
+str.strip([chars]) # default remove whitespace, all combinations of chars values is tripped.
+
+str.swapcase()
+str.upper()
 isdecimal
 
 5. 列表
