@@ -102,7 +102,73 @@ sudo docker run -i -t jamtur01/puppetmaster /bin/bash
 sudo docker login
 
 4.5.2 用 Docker 的 commit 命令创建镜像
+先从创建容器开始
+sudo docker run -i -t ubuntu /bin/bash
+在容器中安装 Apache 
+apt-get -yqq update
+apt-get -y install apache2
 
+保存当前状态
+先 exit 从容器退出， 之后运行 docker commit
+sudo docker commit <container_ID> jamtur01/apache2
+
+查看新创建的镜像
+sudo docker images jamtur01/apache2
+
+提交镜像时指定更多的数据
+sudo docker commit -m "A new custom image" -a "James Turnbull "\
+<container_ID> jamtur01/apache2:webserver
+-m 提交信息
+-a 作者信息
+制定镜像的用户名仓库名标签
+
+查看该镜像的详细信息
+sudo docker inspect jamtur01/apache2:webserver
+从刚创建的镜像运行一个容器
+docker run -i -t jamtur01/apache2:webserver /bin/bash
+
+4.5.3 用 Dockerfile 构建镜像
+第一个 Dockerfile
+mkdir static_web
+cd static_web
+touch Dockerfile
+
+static_web (构建环境，构建上下文)
+
+Dockerfile 示例
+```
+# Version 0.0.1
+FROM ubuntu:14.04
+MAINTAINER James Turnbull "james@example.com"
+RUN apt-get update && apt-get install -y nginx
+RUN echo 'Hi, I am in your container' \
+> /usr/share/nginx/html/index.html
+EXPOSE 80
+```
+
+FROM 指定一个基础镜像
+默认情况下 RUN 会在 shell 里使用命令包装器 /bin/sh -c 来执行， 如果希望在不支持 shell 的平台或者不希望在 shell 运行，可以使用 exec 格式的 RUN 指令
+
+RUN ["apt-get", "install", "-y", "nginx"]
+
+4.5.4 基于 Dockerfile 构建新镜像
+cd static_web
+sudo docker built -t="jamtur01/static_web:v1" .
+
+-t 设置仓库和名称标签
+最后的 . 告诉 Docker 到本地目录 Dockerfile 文件。也可以指定一个 Git 仓库的源地址来指定 Dockerfile 的位置(前提是 Dockerfile 存在于这个仓库的根目录)
+sudo docker build -t="jamtur01/static_web:v1" git@github.com:jamtur01/docker-static_web
+也可以 -f 标志指定 Dockerfile 的位置
+
+如果在构建上下文的根目录存在以 .dockerignore 的文件，文件内容会被按行分割
+
+4.5.5 指令失败时会怎样
+
+调试失败
+docker run 基于最后一次构建成功的镜像 ID
+docker run -i -t <image_ID> /bin/bash
+
+4.5.6 Dockerfile 和构建缓存
 
 
 
