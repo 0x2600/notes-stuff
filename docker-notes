@@ -169,7 +169,43 @@ docker run 基于最后一次构建成功的镜像 ID
 docker run -i -t <image_ID> /bin/bash
 
 4.5.6 Dockerfile 和构建缓存
+不使用缓存: docker build --no-cache
+sudo docker build --no-cache -t="jamtur01/static_web"
 
+4.5.7 基于构建缓存的 Dockerfile 模板
+Dockerfile 文件顶部增加包仓库或者更新包，从而尽可能确保缓存命中
+···
+FROM ubuntu:14.04
+MAINTAINER James Turnbull "james@example.com"
+ENV REFRESHED_AT 2014-07-01
+RUN apt-get -qq update
+···
+ENV 在镜像中设置环境变量， REFRESHED_AT 表明该镜像模板最后的更新时间
+如果想刷新一个构建，只需修改 ENV 指令中的日期
+···
+FROM fedora:20
+RUN yum -q makecache
+···
+4.5.8 查看新镜像
+列出新的 Docker 镜像
+sudo docker images jamtur01/static_web
+sudo docker history <image_ID> # 查看构建的每一层
+4.5.9 从新镜像启动容器
+sudo docker run -d -p 80 --name static_web jamtur01/static_web nginx -g "daemon off;"
+-d detached 后台运行， 在容器中运行的命令 nginx -g "daemon off;" 以前台运行的方式启动 nginx, -p 控制 Docker 运行时公开哪些网络端口给外部，两种方法
+1. 在宿主机随机选择 32768 - 61000 的端口
+2. 在宿主机上指定一个具体的端口号来映射容器的 80 端口
+使用 docker ps 看容器的端口分配情况
+sudo docker ps -l
+sudo docker port <container_ID> 80
+sudo docker port static_web 80 # 使用容器名
+sudo docker run -d -p 80:80 --name static_web jamtur01/static_web nginx -g "daemon off;" # -p 指定将容器中的端口映射到宿主机的某一特定端口
+绑定到特定的网络接口(IP 地址)
+sudo docker run -d -p 127.0.0.1:80:80 --name static_web jamtur01/static_web nginx -g "daemon off;"
+-p 127.0.0.1::80 绑定到特定的网络接口的随机端口
+-P 对外公开在 Dockerfile 中通过 EXPOSE 指令公开的所有端口
+sudo docker run -d -P --name static_web ...
+4.5.10 Dockerfile 指令
 
 
 
