@@ -547,4 +547,13 @@ struct stu{
 p->menber
 结构体指针作为函数参数， 结构体成员可能很多， 传指针效率高
 
+Others:
+assert 是宏，不是函数,原型定义在 assert.h 中
+void assert(int expression);
+用于在函数开始处检验传入参数的合法性
+先计算表达式，然后判断
+为假 向 stderr 打印错误信息，然后 abort 终止程序运行
+为真 继续运行后面的程序
+assert 在 DEBUG 下生效。可以通过在 #include 之前插入 #define NDEBUG 禁用 assert 调用
+
 

@@ -206,9 +206,153 @@ sudo docker run -d -p 127.0.0.1:80:80 --name static_web jamtur01/static_web ngin
 -P 对外公开在 Dockerfile 中通过 EXPOSE 指令公开的所有端口
 sudo docker run -d -P --name static_web ...
 4.5.10 Dockerfile 指令
+1. CMD
+指定一个容器启动时要运行的命令。RUN 命令指定镜像被构建时要运行的命令
+RUN 可以覆盖 CMD 指令
+Dockerfile 中只能指定一条 CMD 指令，如果指定多条，也只有最后一条会被使用
 
+2. ENTRYPOINT
+ENTRYPOINT 指令提供的命令不容易在启动容器时被覆盖。实际上 docker run 命令行中指定的任何参数都会被当做参数再次传递给 ENTRYPOINT 指令中指定的命令
+ENTRYPOINT ["/usr/sbin/nginx"]
+类似于 CMD，可以在指令中通过数组的方式为命令指定相应的参数
+ENTRYPOINT ["/usr/sbin/nginx", "-g", "daemon off;"]
+例如:
+在 Dockerfile 中设置 ENTRYPOINT ["/usr/sbin/nginx"]
+sudo docker build -t="jamtur01/static_web" .
+然后基于该镜像启动一个容器
+sudo docker run -i -t jamtur01/static_web -g "daemon off;"
+-g "daemon off;" 会作为参数传递给 /usr/sbin/nginx
 
+ENTRYPOINT ["/usr/sbin/nginx"]
+CMD ["-h"]
+启动容器时，任何在命令行中指定的参数都会被传递给 nginx 守护进程。如果在启动时不加任何参数， 则在 CMD 中指定的 -h 参数将会被传递给 nginx 进程，即 /usr/sbin/nginx -h 
+也可以在运行时通过 docker run 的 --entrypoint 覆盖 ENTRYPOINT 指令
 
+3. WORKDIR
+从镜像船舰一个新容器时，指定一个工作目录, ENTRYPOINT CMD 指定的程序将会在这个目录下执行
+···
+WORKDIR /opt/webapp/db
+RUN bundle install 
+WORKDIR /opt/webapp
+ENTRYPOINT ["rackup"]
+···
+也可以在 docker run 通过 -w 指令 在运行时覆盖工作目录
+sudo docker run -ti -w /var/log ubuntu pwd
 
+4. ENV
+在镜像构建过程中设置环境变量
+ENV RVM_PATH /home/rvm
+设置多个变量
+ENV RVM_PATH=/home/rvm RVM_ARCHFLAGS="-arch i386"
+在其他 Dockerfile 指令中使用环境变量
+ENV TARGET_DIR /opt/app
+WORKDIR $TARGET_DIR
 
+docker run -e 标志也可以传递环境变量，这些变量值在运行时有效
+sudo docker run -ti -e "WEB_PORT=8080" ubuntu env
+
+5. USER
+指定该镜像会以什么样的用户去运行
+USER nginx
+USER 和 GROUP 的各种组合
+USER user
+USER user:group
+USER UID
+USER uid:gid
+USER user:gid
+USER uid:group
+也可以在 docker run 命令中 -u 覆盖该指令指定的值
+如果不通过 USER 指令指定用户，默认用户为 root
+
+6. VOLUME
+先基于镜像创建的容器添加卷:
+卷可以在容器间共享和重用
+一个容器可以不是必须和其他容器共享卷
+对卷的修改是立时生效
+对卷的修改不会对更新镜像产生影响
+卷会一直存在直到没有容器再使用它
+
+VOLUME ["/opt/project"] # 为基于此镜像创建的任何容器创建一个名为 /opt/project 的挂载点
+VOLUME ["/opt/project", "/data"]
+
+7. ADD
+将构建环境下的文件和目录复制到镜像中
+ADD software.lic /opt/application/software.lic
+将构建目录下的 software.lic 文件复制到镜像的 /opt/application/software.lic 指向源文件的位置参数可以是 URL, 或者构建上下文或环境中文件名或者目录。不能对构建目录或者上下文之外的文件进行 ADD 操作
+ADD http://wordpress.org/latest.zip /root/wordpress.zip
+ADD 处理本地归档文件时会自动解开 gzip bzip2 xz
+ADD 会使构建缓存无效
+
+8. COPY
+COPY 只关心在构建上下文中复制本地文件，不会做文件提取和解压
+COPY conf.d/ /etc/apache2/
+源路径必须位于当前构建环境， 目的位置会自动创建
+
+9. LABEL
+为镜像添加元素据，键值对形式展现
+LABEL version="1.o"
+LABEL location="New York" type="Data Center" role="Web Server" 
+推荐将所有的元素据放到一条 LABEL 语句防止不同的元数据指令创建过多镜像层
+使用 docker inspect 查看镜像标签
+
+10. STOPSIGNAL
+设置停止容器时发送什么系统调用信号给容器， 9/SIGKILL
+
+11. ARG
+定义在 docker build 命令运行时传递给构建运行时的变量，需在构建时使用 --build-arg 
+ARG build
+ARG webapp_user=user
+使用:
+sudo docker build --build-arg build=1234 -t="jamtur01/webapp" . # build 设置为1234， webapp_user 则为 user
+
+预定义 ARG 变量
+HTTP_PROXY
+http_proxy
+HTTPS_PROXY
+https_proxy
+FTP_PROXY
+ftp_proxy
+NO_PROXY
+no_proxy
+
+12. ONBUILD
+为镜像添加触发器，触发器在构建过程中插入新指令
+ONBUILD ADD . /app/src
+ONBUILD RUN cd /app/src && make
+Dockerfile for jamtur01/apache2
+```
+FROM ubuntu:14.04
+MAINTAINER
+RUN apt-get update && apt-get install -y apache2
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOG_DIR /var/log/apache2
+ONBUILD ADD . /var/www
+EXPOSE 80
+ENTRYPOINT ["/usr/sbin/apache2"]
+CMD ["-D", "FOREGROUND"]
+```
+sudo docker build -t="jamtur01/apache2"
+只在子镜像中执行，孙子镜像不会执行(触发)
+
+4.6 将镜像推送到 Docker Hub
+sudo docker push jamtur01/static_web
+自动构建
+在 Docker Hub 中将 Github 连接到 Docker Hub
+删除多个镜像
+删除所有镜像
+sudo docker rmi `docker images -a -q`
+
+4.7 删除镜像
+sudo docker rmi jamtur01/static_web
+4.8 运行自己的 Docker Registry
+sudo docker run -p 5000:5000 registry:2
+sudo docker tag <image_ID> host:port/username/project
+sudo docker push host:port/username/project
+ 
+
+5. 在测试中使用 Docker
+5.1 使用 Docker 测试静态网站
+5.1.1 Sample 网站的初始 Dockerfile
+在宿主机创建 sample 目录，
 
