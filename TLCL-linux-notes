@@ -1,4 +1,4 @@
-<https://billie66.github.io/TLCL/>
+https://billie66.github.io/TLCL/
 
 # TLCL Linux Notes
 ### 虚拟终端/控制台
@@ -8,7 +8,6 @@
 cd -  
 cd ~username
 ### * 0/1+
-```
 ? 1  
 [char] 1  
 [!char]  
@@ -22,7 +21,6 @@ BACKUP.[0-9][0-9][0-9]
 [[:upper:]]*  
 [![:digit:]]*  
 *[[:lower:]123]  
-```
 ### cp
 cp -a, --archive  
 cp -i, --interactive  
@@ -105,7 +103,7 @@ echo $(ls)
 ls -l $(which cp)
 file $(ls /usr/bin/* | grep zip)
 ```
-旧版 ls -l \`which cp\`
+旧版 ls -l `which cp`
 
 ### 引用
 双引号内，参数展开，算数表达式展开，命令替换有效  
@@ -232,7 +230,7 @@ B
 nG  
 G  最后一行  
 gg  第一行  
-A 本行行尾  
+A 本行行尾插入  
 o 插入空行  
 O  
 
@@ -289,12 +287,12 @@ fc ; 重复
 
 ## 正则表达式
 grep  
-\- i   
-\- v  
-\- c, \-\-count  
-\-n  
-\-l 打印包含匹配项的文件名 \-L 相反  
-\-h 多文件搜索，不输出文件名  
+-i   
+-v  
+-c, --count  
+-n  
+-l 打印包含匹配项的文件名 -L 相反  
+-h 多文件搜索，不输出文件名  
 
 元字符和原义字符  
 `grep bzip file1`  
@@ -306,8 +304,8 @@ bzip 是原义字符
 ^ $ 锚点  
 中括号表达式和字符类   `grep -h '[bg]zip' dirlist*.txt`  
 中括号中的插入字符 ^ 表示否定
-中括号中的连字符 \- 表示字符范围
-`grep -h '[^bg]zip dirlist*'`  
+中括号中的连字符 - 表示字符范围
+`grep -h '[^bg]zip' dirlist*`  
 它们的文件名都包含字符串“zip”，并且“zip”的前一个字符 是除了“b”和“g”之外的任意字符。注意文件 zip 没有被发现。一个否定的字符集仍然在给定位置要求一个字符， 但是这个字符必须不是否定字符集的成员。插入字符如果是中括号表达式中的第一个字符的时候，才会唤醒否定功能；否则，它会失去 它的特殊含义，变成字符集中的一个普通字符。  
 字符区域  
 `grep -h '^[A-Z]' dirlist*`  
