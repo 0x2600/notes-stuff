@@ -340,4 +340,55 @@ nnn nnn-nnnn
 
 \* 0 或多个  
 \+ 1 或多个
+## 软件包管理
+常见软件包管理任务
+查找资源库中的软件包
+apt-get update ; apt-cache search search_string
+yum search search_string
+从资源库中安装一个软件包
+apt-get update;apt-get install package_name
+yum install package_name
+通过软件包文件来安装软件
+dpkg --install package_file
+rpm -i package_file
+卸载软件
+apt-get remove package_name
+yum erase package_name
+经过资源库来更新软件包
+apt-get update;apt-get upgrade
+yum update
+经过软件包文件来升级软件
+dpkg --install package_file
+rpm -U package_file
+列出所安装的软件包
+dpkg --list
+rpm -qa
+确定是否安装了一个软件包
+dpkg --status package_name
+rpm -q package_name
+显示所安装软件包的信息
+apt-cache show package_name
+yum info package_name
+查找安装了某个文件的软件包
+dpkg --search file_name
+yum -qf file_name
+ex. rpm -qf /usr/bin/vim
+## 存储媒介
+mount umount fsck fdisk mkfs fdformat dd genisoimage wodim cdrecord md5sum
+
+/etc/fstab 字段
+设备名 挂载点 文件系统类型 选项 频率(dump) 次序(fsck)
+
+音频 CD 和 CD-ROM 不一样， 音频 CD 不包含文件系统，不能被挂载
+挂载点就是文件系统树中的一个目录。如果把设备挂载到一个非空目录，将不能看到这个目录中原来的内容，直到卸载这个设备
+mount -t iso9660 /dev/hdc /mnt/cdrom
+
+Linux 存储设备名称
+/dev/fd* 软盘
+/dev/hd* IDE(PATA)
+/dev/lp* 打印机
+/dev/sd* SCSI 磁盘
+/dev/sr* 光盘(CD/DVD 读取器和烧写器)
+符号链接 /dev/cdrom, /dev/dev, /dev/floppy 
+创建新的文件系统
 
