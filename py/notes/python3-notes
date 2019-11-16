@@ -22,7 +22,7 @@ len(), max(), min(), list(), str(), sum(), sorted(), reversed(), enumerate()
 1) 根据索引值删除元素。 del listname[-1] 删除最后一个元素。 del listname[0:2]
 删除一段
 2) 根据元素值进行删除
-remove() 删除地一个和指定值相同的元素，找不到 ValueError
+remove() 删除一个和指定值相同的元素，找不到 ValueError
 listname.remove(element) 最好提前判断元素是否存在， count()
 3) 删除列表所有元素
 clear() 得到空列表
@@ -57,6 +57,85 @@ a = [1, 2, 3]
 b = dict.fromkeys(a, "Hello") # b: {1: "Hello", 2: "Hello", 3: "Hello"}
 ```
 dict() 创建字典
+```
+a = dict(one=1, two=2, three=3)
+
+demo = [('two', 2), ('one', 1), ('three', 3)]
+demo = [['two',2], ['one', 1], ['three', 3]]
+demo = (('two', 2), ('one', 1), ('three', 3))
+demo = (['two',2], ['one', 1], ['three', 3])
+a = dict(demo)
+
+demokeys = ['one', 'two', 'three']
+demovalues = [1, 2, 3]
+a = dict(zip(demokeys, demovalues))
+
+```
+访问字典
+无序，不能索引，切片
+通过键来访问
+
+dict.get(key[, default]) # 键不存在时返回 default 指定的值，默认是 None
+
+删除字典
+del
+dict.clear() 清空
+
+添加键值对
+修改键值对
+删除键值对 del
+判断字典中是否存在指定键值对 in, not in
+
+dict keys(), values(), items()
+使用返回的数据
+list(dictname.keys())
+for 迭代
+
+dict.copy() # shadow copy of D
+表层的键值对深拷贝，列表数据浅拷贝
+
+update() 
+dictname.update(E[, **F])
+a.update({1:2})
+a.update(one=1, two=2)
+
+pop()
+D.pop(k[, d])
+
+popitem() # 随机弹出一个键值对
+
+setdefault(key, default=None) 
+
+set 集合
+集合存储不可变数据类型，集合本身是可变数据类型
+数据必须唯一
+无序
+frozenset 不可变数据类型
+
+创建 set
+{} 创建。 setname= {1, 2} # 创建非空集合
+set() 函数 set(iterable)
+print(set("He")) # {'H', 'e'} # 字符串迭代
+
+访问 set 元素，循环
+
+删除 set, del setname
+
+添加元素
+set.add()
+
+删除元素
+remove(...) # must be a member, otherwise KeyError
+diacard(...) # otherwise do nothing
+
+set 做交集，并集，差集
+&, |, -, ^
+- a 有， b 没有
+^ a, b 不同时有 (a|b) - (a&b)
+
+
+
+
 
 
 
@@ -462,7 +541,7 @@ q = ['name', 'age']
 a = ['jerry', 22]
 for q_, a_ in zip(q, a):
 	print(q_, a_)
-# output: name gary\nage 22\n
+# output: name jerry\nage 22\n
 
 15. 模块
 模块搜索路径 sys.path, 第一个空串，表示当前目录
