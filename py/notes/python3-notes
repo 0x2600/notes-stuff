@@ -2,6 +2,63 @@
 1. 基本数据类型
 Number, String, Tuple 不可变
 List, Set, Dictionary 可变
+list, tuple 顺序，有索引
+dict, set 无序
+序列类型: list, str, tuple, set, dict,
+序列支持一下几种通用操作，集合和字典不支持索引，切片，相加和相乘操作
+1) 序列索引
+2) 序列切片
+3) 序列相加。类型相同可以相加。
+4) 序列相乘
+5) 检查元素是否包含在序列中。 in, not in
+6) 和序列相关的内置函数
+len(), max(), min(), list(), str(), sum(), sorted(), reversed(), enumerate()
+
+列表添加元素:
+1) append(). listname.append(obj). 对象为列表或者元组时，被当作一个元素
+2) extend(). listname.extend(obj). 被追加的列表或元组不会被当作一个整体
+3) insert(). listname.insert(index, obj) 插入的列表或元组会视为整体
+列表删除元素:
+1) 根据索引值删除元素。 del listname[-1] 删除最后一个元素。 del listname[0:2]
+删除一段
+2) 根据元素值进行删除
+remove() 删除地一个和指定值相同的元素，找不到 ValueError
+listname.remove(element) 最好提前判断元素是否存在， count()
+3) 删除列表所有元素
+clear() 得到空列表
+列表修改元素
+中空的 slice 赋值，相当于插入元素
+指定 step 的切片赋值时，元素个数须相等 alist[2:9:2]
+
+list 常用方法
+listname.count(obj)
+listname.index(obj, start, end) # 没有出现，抛出 ValueError
+listname.pop(index) # 不指定索引，移除列表中最后一个元素
+listname.reverse() # 原列表改变
+listname.sort(key=None, reverse=False) # 原列表改变
+
+创建元组
+= 运算符直接创建元组。括号可不要。一个元素的元组需要小括号。
+使用 tuple() 函数创建元组
+list(), tuple() 会将 str 序列拆开。
+访问元组元素
+索引，切片
+修改元组元素
+对元组重新赋值
+连接多个元组向元组中添加新元素 a_tuple = (1,2);a_tuple = a_tuple+(3,)
+删除元组 del tuplename # 不常用，自带垃圾回收
+
+字典 无序可变序列
+创建字典
+花括号创建字典
+fromkeys() 方法创建字典 # dictname = dict.fromkeys(iterable, value=None)
+```
+a = [1, 2, 3]
+b = dict.fromkeys(a, "Hello") # b: {1: "Hello", 2: "Hello", 3: "Hello"}
+```
+dict() 创建字典
+
+
 
 Number:(type()函数查看变量所指的对象类型) int , float, bool, complex
 或者 isinstance() 函数, a = 1; isinstance(a, int)
@@ -60,6 +117,14 @@ oct(x)
 身份运算符: is, is not
 x is y, id(x) == id(y), id()用于获取对象内存地址
 运算符优先级
+三目运算符 if else:
+```
+a = 5
+b = 3
+st = print("a > b"), print("a 大于 b") if a > b else print("a <= b")
+# st = (None, None), print()函数会被调用
+# 如果是分号，st 将是第一条语句的返回值
+```
 
 3. 数字 Number
 支持十六进制，八进制表示整数
@@ -808,3 +873,43 @@ lxml
 
 Python Web Sites
 Django
+
+## Python bytes 类型和用法
+如何将字符串内容转换为 bytes 对象
+1. ASCII 字符， 在字符串前加 b 构建 bytes 对象
+2. 调用 bytes() 函数(bytes 的构造方法)将字符串按指定的字符集转换为 bytes 对象，默认是 utf-8
+3. 调用字符串本身的 encode() 方法将字符串按指定的字符集转换为 bytes 对象，默认是 utf-8
+b1 = b'hello'
+b2 = bytes("我爱Python", encoding='utf-8')
+b3 = "我爱Python".encode('utf-8')
+如果程序获得了 bytes 对象，如何将其解码为字符串。调用 bytes 对象的 decode() 方法
+somestr = b3.decode('utf-8')
+
+## py2 py3 异常 
+#Python 2.x
+>>> try:
+...  raise TypeError,"类型错误"
+... except TypeError,err:
+...  print err.message
+...
+类型错误
+
+#Python 3.x
+>>> try:
+...     raise TypeError("类型错误")
+... except TypeError as err:
+...     print(err)
+...
+类型错误
+
+## 八进制字面量表示
+py3: 0o10
+py2: 0o10/010
+
+## 不等于
+py2: !=/<>
+py3: !=
+
+## py3 数据类型
+py3: 去除 long, 只有 int。新增 bytes 
+py3: 字典的 keys(), items() values() 返回迭代器， iterkeys(), dict.has_key()(被 in 替代) 被废弃， 
