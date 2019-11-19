@@ -148,6 +148,28 @@ var = 1; del var
 数值运算: + - * / // % **
 
 String
+split()
+str.split(sep, maxsplit)
+join(iterable)
+'.'.join(['www', 'bing','com']) # 'www.bing.com'
+str.count(sub[, start[, end]])
+found(), rfound()
+index(), rindex()
+ljust(), rjust(), center()
+startswith(sub,start,end), endswith()
+
+str.title(), str.lower(), str.upper()
+
+strip([chars]) left and right
+lstrip() left
+rstrip() right
+
+str.format()
+
+str.encode() -> bytes
+bytes.decode() -> str
+
+
 
 List: reverselist = somelist[::-1]
 mylist = input().split(" ") 空格分开传入的参数组成列表, input() 读入字符串,
