@@ -414,5 +414,60 @@ remote: xload
 OpenSSH: scp, sftp
 
 ## 查找文件
+locate, updatedb
+find:
+文件类型测试条件
+b, c, d, f, l(symbolic link)
+大小单位
+b, default, 512B
+c, 字节
+w, 字
+k, M, G
 
+测试条件:
+-cmin n, -n, +n
+-cnewer file
+-ctime n
+-empty
+-group name
+-iname pattern, ignore case
+-inum n, match inode
+-mmin n
+-mtime n
+-name pattern
+-newer file
+-nouser
+-nogroup
+-perm mode
+-samefile name
+-size n
+-type c
+-user name
+
+find ~ \( -type f -not -perm 0600 \) -or \( -type d -not -perm 0700 \) 
+预定义的操作:
+-delete, -ls, -print, -quit
+用户定义的行为
+-exec command {};
+ex. -exec rm '{}' ';'
+交互 -ok replace -exec
+find ~ -type f -name 'foo*' -ok ls -l '{}' ';'
+提高效率:
+-exec 每次找到一个匹配的文件，会启动一个新的指定命令的实例
+1. ; -> +
+find ~ -type f -name 'foo*' -exec ls -l '{}' +
+2. xargs
+从标准输入接受输入，并把输入转换为一个特定命令的参数列表
+find ~ -type f -name 'foo*' -print | xargs ls -l
+
+find playground \( -type f -not -perm 0600 -exec chmod 0600 '{}' ';' \) -or \( -type d -not -perm 0711 -exec chmod 0700 '{}' ';' \)
+
+选项:
+-depth 先处理目录中的文件，再处理目录自身。指定 -delete 行为时，自动应用此选项
+-maxdepth levels 
+-mindepth levels
+-mount 不要搜索挂载到其他文件系统上的目录
+-noleaf 用于搜索 DOS/Windows, CD/ROMS
+
+## 归档和备份
 
