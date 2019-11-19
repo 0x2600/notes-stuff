@@ -514,6 +514,8 @@ unzip -p ls-etc.zip | less
 同步文件和目录
 sudo rsync -av --delete /etc /home /usr/local /media/BigDisk/backup
 
-
+## 文本处理
+cat -A(显示空格), -n(行号), -s(禁止多余空行)
+cat << EOF > output-file
 
 
