@@ -391,4 +391,28 @@ Linux 存储设备名称
 /dev/sr* 光盘(CD/DVD 读取器和烧写器)
 符号链接 /dev/cdrom, /dev/dev, /dev/floppy 
 创建新的文件系统
+1. 可选创建新的分区布局 2. 创建文件系统
+sudo umount /dev/sdb1
+sudo fdisk /dev/sdb # Device name, not partition number
+sudo mkfs -t ext3 /dev/sdb1 # Partition
+
+测试和修复文件系统
+首先卸载
+sudo fsck /dev/sdb1
+
+直接把数据移入/出设备
+
+
+## 网络系统
+ftp, lftp, wget
+ssh remote-sys 'ls \*' > dirlist.txt # '' 防止在本地 shell 展开
+ssh remote-sys 'ls * > dirlist.txt'
+传递 X 窗口系统流量
+local: ssh -X remote-sys
+remote: xload
+
+OpenSSH: scp, sftp
+
+## 查找文件
+
 
