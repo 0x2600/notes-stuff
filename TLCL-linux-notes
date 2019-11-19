@@ -470,4 +470,50 @@ find playground \( -type f -not -perm 0600 -exec chmod 0600 '{}' ';' \) -or \( -
 -noleaf 用于搜索 DOS/Windows, CD/ROMS
 
 ## 归档和备份
+gzip 压缩版替代原始文件， gunzip
+-c stdout, keep original file
+-d decompress
+-f force, even compressed file exists
+-l list every compressed file
+-r recursive for directory
+-t test compressed file integrity
+-v verbose
+-number 1-9
+
+ls -l /etc | gzip > foo.txt.gz
+gzip foo.txt # foo.txt.gz
+gunzip -c foo.txt.gz | less # or zcat foo.txt.gz | less # gunzip -c zless
+
+bzip2, bzcat, bzless
+
+tar
+操作模式
+c, x, r(追加文件到归档文件的末尾), t(list content) 需首先指定模式，然后是其他的选项
+tar cf playground.tar playground
+末尾添加路径名，恢复指定的文件
+结合 find 
+find playground -name 'file-A' -exec tar rf playground.tar '{}' '+'
+
+标准输入和标准输出
+find playground -name 'file-A' | tar cf - --files-from=- | gzip > playground.tgz
+- 表示标准输入或标准输出
+
+find playground -name 'file-A' | tar czf playground.tgz -T -
+find playground -name 'file-A' | tar cjf playground.tbz -T -
+
+网络传输文件
+ssh remote-sys 'tar cf - Documents' | tar xf -
+
+zip:
+zip -r playground.zip playground
+-r 
+find playground -name 'file-A' | zip -@ file-A.zip
+ls -l /etc/ | zip ls-etc.zip -
+unzip -p ls-etc.zip | less
+
+同步文件和目录
+sudo rsync -av --delete /etc /home /usr/local /media/BigDisk/backup
+
+
+
 
