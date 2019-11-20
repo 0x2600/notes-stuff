@@ -13,6 +13,7 @@ dict, set 无序
 5) 检查元素是否包含在序列中。 in, not in
 6) 和序列相关的内置函数
 len(), max(), min(), list(), str(), sum(), sorted(), reversed(), enumerate()
+sorted(), reversed() 不改变原来序列
 
 列表添加元素:
 1) append(). listname.append(obj). 对象为列表或者元组时，被当作一个元素
@@ -484,7 +485,7 @@ if __name == "__main__":
 13. 函数
 参数传递: 分可变类型与不可变类型 mutable immutable
 不可变类型: 类似值传递，如 Number, String, Tuple
-可变类型: 引用传递
+可变类型: 引用传递， list, dict
 函数形参: 必需参数，关键字参数，默认参数，不定长参数
 必须参数: 调用时须以声明时的顺序传入参数
 关键字参数: 函数调用时参数的顺序可以和声明时的顺序不一致
@@ -853,7 +854,13 @@ def fun():
     a = a + 1
     print(a)
 
-test()
+fun()
+
+获取指定作用域范围中的变量
+globals() ,locals(), vars(obj)
+locals() 在全局范围内调用则与 globals() 效果一样
+globals(), locals() 可以修改对应全局变量的值， locals() 修改的局部变量值则不会生效
+
 
 
 22. 标准库概览
