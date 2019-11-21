@@ -985,13 +985,54 @@ in2 = Class2()
 print(in2.attr1, in2.attr2)
 ```
 
-还可以动态地为类和对象增加属性
+还可以动态为类和对象增加属性
 
 实例变量(定义在类的方法中的属性，作用于调用方法的对象)
 不能通过对象修改类变量的值，这是定义新的实例变量
+```
+class Class1:
+    # class variable
+    attr1 = 'str1'
+    attr2 = 1
 
+    def method1(self, para1, para2):
+        self.attr1 = para1
+        self.attr2 = para2
 
+in1 = Class1()
+in1.method1('str2', 2)
+print(in1.attr1, in1.attr2, Class1.attr1, Class2.attr2) # str2 2 str1 1
+# 所以建议用对象名访问类变量，存在类变量和实例变量同名的可能性,其访问的将是实例变量
+```
+修改类变量，实例变量不会受影响
+修改实例变量，类变量不会受影响，更不会影响其他对象中的实例变量
 
+实例方法，静态方法，类方法
+实例方法最少要包含一个 self 参数，可以通过类对象直接调用，也可以用类名调用，需手动传入 self 参数(调用该方法的实例)
+
+类方法最少包含一个 cls 参数，需用 @classmethod 修饰
+def Bird:
+    @classmethod
+    def fly(cls):
+        pass
+
+Bird.fly()
+b = Bird()
+b.fly()
+推荐使用类名直接调用，不推荐使用实例对象调用
+
+静态方法(定义在类这个空间(类命名空间)) @staticmethod 修饰，无需 self, cls
+class Bird:
+    @staticmethod
+    def info(p):
+        print(p)
+
+Bird.info(1)
+b = Bird()
+b.info(2)
+既可以使用类名也可以使用对象来调用静态方法
+
+一般不需要使用类方法和静态方法
 
 22. 标准库概览
 os, shutil, glob, sys.argv, sys.stdout.write(), re, math, random, urllib.request, smtplib, datetime, 
