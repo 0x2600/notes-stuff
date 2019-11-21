@@ -837,12 +837,22 @@ def fun():
 
 fun()
 print(num) # 2
+```
+'''global 修饰变量名时，不能直接给变量赋初值'''
+def text():
+    global demo
+    demo = "Hello"
+    print(demo)
+
+text() # Hello
+print(demo) # Hello
+```
 
 ''' 嵌套函数修改外层函数数据 '''
 def out():
     num = 1
     def inner():
-        nonlocal num
+        nonlocal num # 用于声明访问当前函数所在函数内的局部变量
         num = 2
     inner()
 
@@ -860,6 +870,54 @@ fun()
 globals() ,locals(), vars(obj)
 locals() 在全局范围内调用则与 globals() 效果一样
 globals(), locals() 可以修改对应全局变量的值， locals() 修改的局部变量值则不会生效
+
+使用函数变量:(C 函数指针)
+
+使用函数作为函数形参:(C 回调函数)
+def map(data, fn):
+    result = []
+    for i in data:
+        result.append(fn(i))
+
+def fn1(n):
+    return n ** 2
+
+# 调用
+map([1, 2, 3], fn1)
+
+使用函数作为返回值 (闭包或闭合函数)
+def get_fn():
+    def inner_fn(n):
+        return n ** 2
+    return inner_fn
+
+my_fun = get_fn()
+print(my_fun(2)) # 4
+```
+def nth_power(exponent):
+    def exponent_of(base):
+        return base ** exponent
+    return exponent_of
+
+square = nth_power(2)
+print(square(3)) # 9
+```
+闭包函数有一个 __closure__ 属性可以获取自由变量，例如上例 exponent, square.__closure__
+
+lambda 表达式，匿名函数
+f = lambda x:x ** 2
+f(3) # 9 
+lambda 只能是单行表达式
+lambda [parameter_list] : expression 多个参数逗号分开
+
+eval() 执行完返回结果，exec() 执行完不返回结果。执行一个字符串形式的 Python 代码
+eval(expression, globals=None,locals=None)
+exec(expression, globals=None,locals=None)
+
+区别: eval() 返回结果， exec() 不返回结果
+a = exec("2+3") # a = None
+a = eval("2+3") # a = 5
+
 
 
 

@@ -229,7 +229,7 @@ CMD ["-h"]
 也可以在运行时通过 docker run 的 --entrypoint 覆盖 ENTRYPOINT 指令
 
 3. WORKDIR
-从镜像船舰一个新容器时，指定一个工作目录, ENTRYPOINT CMD 指定的程序将会在这个目录下执行
+从镜像创建一个新容器时，指定一个工作目录, ENTRYPOINT CMD 指定的程序将会在这个目录下执行
 ···
 WORKDIR /opt/webapp/db
 RUN bundle install 
