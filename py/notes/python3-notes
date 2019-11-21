@@ -918,6 +918,78 @@ exec(expression, globals=None,locals=None)
 a = exec("2+3") # a = None
 a = eval("2+3") # a = 5
 
+给类对象动态添加方法
+def out_fn1(self):
+    return "fn1"
+
+class MyClass:
+    pass
+
+instance1 = MyClass()
+instance1.infn1 = out_fn1
+instance1.infn1(instance1) # fn1
+
+instance1.infn2 = lambda self:"fn2"
+instance1.infn2(instance1)
+
+MethodType 包装
+from types import MethodType
+f = lambda self:"fn3"
+instance1.infn3 = MethodType(f, p)
+instance1.infn3() 
+
+```
+instance1.infn3()
+'''等效的调用'''
+foo = instance1.infn3
+foo()
+```
+
+返回 self 的方法
+```
+class ReturnSelf:
+    def grow(self):
+        if hasattr(self, 'age'):
+            self.age += 1
+        else:
+            self.age = 1
+        return self
+
+rs = ReturnSelf()
+rs.grow().grow()
+print(rs.age) # 2
+```
+
+类变量和实例变量
+类变量(定义在类中，但在各个类方法外的变量,所有类的实例化对象都可以共享类变量的值)
+类编俩个推荐直接用类名访问，但也可以使用对象名访问(不推荐)
+```
+class Class1:
+    attr1 = 'str1'
+    attr2 = 1
+    def info(self):
+        print(Class1.attr1, Class1.attr2)
+
+in1 = Class1()
+in1.info()
+```
+
+```
+class Class2:
+    attr1 = 'str1'
+    attr2 = 1
+    def info(self):
+        print(self.attr1, self.attr2)
+
+in2 = Class2()
+print(in2.attr1, in2.attr2)
+```
+
+还可以动态地为类和对象增加属性
+
+实例变量(定义在类的方法中的属性，作用于调用方法的对象)
+不能通过对象修改类变量的值，这是定义新的实例变量
+
 
 
 
