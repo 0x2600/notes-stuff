@@ -5,7 +5,7 @@ List, Set, Dictionary 可变
 list, tuple 顺序，有索引
 dict, set 无序
 序列类型: list, str, tuple, set, dict,
-序列支持一下几种通用操作，集合和字典不支持索引，切片，相加和相乘操作
+序列支持以下几种通用操作，集合和字典不支持索引，切片，相加和相乘操作
 1) 序列索引
 2) 序列切片
 3) 序列相加。类型相同可以相加。
@@ -173,19 +173,9 @@ bytes.decode() -> str
 
 
 List: reverselist = somelist[::-1]
-mylist = input().split(" ") 空格分开传入的参数组成列表, input() 读入字符串,
-split() 函数 sep 关键字参数指定分隔字符
-reverselist = mylist[::-1]
-
-Tuple: immutable
-
-Set: {}, set() 创建，用于成员关系测试，删除重复元素。{} 创建空字典, 空 set 使用 set() 创建。
-成员测试: 'Rose' in castset
-集合运算: seta - setb, seta | setb, seta & setb, seta ^ setb, 差集，并集，交集，a, b 不同时存在的元素
 
 Dictionary: 无序的 key-value 集合
 key 不可变类型， 且唯一
-dict['one'], dict[2], dict.keys(), dict.values()
 使用 dict() 构造函数
 
 dict([('one', 1), (2, 'two')])
