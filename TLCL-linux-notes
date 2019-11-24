@@ -2,8 +2,8 @@ https://billie66.github.io/TLCL/
 
 # TLCL Linux Notes
 ### 虚拟终端/控制台
-<kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>F1<kbd>~<kbd>F6<kbd>  
-图形桌面 <kbd>Alt</kbd>-<kbd>F7<kbd>
+Ctrl+Alt+F1~F6  
+图形桌面 Alt-F7
 ### cd
 cd -  
 cd ~username
@@ -33,7 +33,7 @@ hard link 缺点
 不能跨分区  
 不能为目录创建 hard link
 ### 命令分类
-可执行程序，shell builtins, shell 函数, alias    
+可执行程序, shell builtins, shell 函数, alias    
 使用 type 命令确定  
 ### which 可执行程序位置, 不包括 builtins, alias
 help 用于 shell builtins, ex. help cd  
@@ -55,7 +55,7 @@ stdin 0
 stdout 1
 stderr 2
 `ls -l /bin/usr 2> ls-err`
-stdout ,stderr 重定向到同一个文件
+stdout, stderr 重定向到同一个文件
 `ls -l /bin/usr > ls-output 2>&1 # strerr 在 stdout 重定向之后`
 `ls -l /bin/usr &> ls-output`
 stdin redirect:  
