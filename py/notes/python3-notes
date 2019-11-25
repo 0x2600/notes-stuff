@@ -893,7 +893,7 @@ instance1.infn2(instance1)
 MethodType 包装
 from types import MethodType
 f = lambda self:"fn3"
-instance1.infn3 = MethodType(f, p)
+instance1.infn3 = MethodType(f, instance1)
 instance1.infn3() 
 
 ```
@@ -902,6 +902,16 @@ instance1.infn3()
 foo = instance1.infn3
 foo()
 ```
+Python 对象的一个实例方法调用另一个实例方法时，不可以省略 self
+class Class1:
+
+
+    def jump(self):
+        pass
+
+    def run(self):
+        self.jump()
+
 
 返回 self 的方法
 ```
@@ -920,7 +930,7 @@ print(rs.age) # 2
 
 类变量和实例变量
 类变量(定义在类中，但在各个类方法外的变量,所有类的实例化对象都可以共享类变量的值)
-类编俩个推荐直接用类名访问，但也可以使用对象名访问(不推荐)
+类变量推荐直接用类名访问，但也可以使用对象名访问(不推荐)
 ```
 class Class1:
     attr1 = 'str1'
@@ -991,6 +1001,11 @@ b.info(2)
 既可以使用类名也可以使用对象来调用静态方法
 
 一般不需要使用类方法和静态方法
+
+描述符
+略
+
+
 
 22. 标准库概览
 os, shutil, glob, sys.argv, sys.stdout.write(), re, math, random, urllib.request, smtplib, datetime, 
