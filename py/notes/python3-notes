@@ -1018,6 +1018,81 @@ b.info(2)
 描述符
 略
 
+父类方法重写
+使用未绑定方法调用被重写的方法
+class BaseClass:
+    def foo(self):
+        print('foo in baseclass')
+
+class SubClass(BaseClass):
+    def foo(self):
+        print('foo in subclass')
+    def bar(self):
+        BaseClass.foo(self)
+
+in1 = SubClass()
+in1.foo() # foo in subclass
+in1.bar() # foo in baseclass
+
+子类重写了父类的构造方法，那么子类的构造方法必须调用父类的构造方法
+1) 未绑定方法
+2) super() 函数调用父类的构造方法
+note: 子类继承多个父类时， super() 函数只能用来调用第一个父类的构造方法，其他父类的构造方法只能使用未绑定的方式调用。
+Typical use to call a cooperative superclass method:
+class C(B):
+    def meth(self, arg):
+        super().meth(arg) # 自动绑定 self 参数
+class C(B):
+    @classmethod
+    def cmeth(cls, arg):
+        super().cmeth(arg)
+```
+class Base1:
+    def _init__(self, a, b):
+        self.a = a
+        self.b = b
+class Base2:
+    def __init__(self, c, d):
+        self.c = c
+        self.d = d
+class Sub1(Base1, Base2):
+    def __init__(self, a, b, c, d):
+        super().__init__(a, b) # super() 应用于第一个父类的构造方法
+        Base2.__init__(self, c, d) # 其他父类使用未绑定方法
+in1 = Sub1(1, 2, 3, 4)
+print(in1.a, in1.b, in1.c, in1.d) # 1 2 3 4
+```
+给类动态添加方法，第一个参数会自动绑定
+限制为某个类的实例动态添加属性和方法 __slots__ 并不限制通过类来动态添加属性和方法
+```
+# 需要将构造方法中的实例属性加入 __slots__, 否则实例无法初始化。其他实例方法中的实例变量也需要加入 __slots__. 支队当前类的实例起作用，对该类派生出来的子类不起作用。要限制子类的实例动态添加属性和方法，需要在子类中也定义 __slots__ ，这样子类的实例允许动态添加的属性和方法就是子类的 __slots__ 和父类 __slots__ 元组的和。
+class Class1:
+    __slots__ = ('walk', age)
+
+
+in1 = Class1()
+from types import MethodType
+in1.walk = MethodType(lambda self: print('walking...'))
+in1.walk() # walking...
+'''
+or
+in1.walk = lambda self: print('walking...')
+in1.walk(in1)
+'''
+in1.age = 20
+print(in1.age) # 20
+# in1.name = 'test' # raise AttributeError
+Class1.name = 'test'
+print(in1.name, Class1.name) # test test
+
+Class1.run = lambda self: print('running...')
+in1.run() # running... # 自动绑定第一个参数
+Class1.run2 = lambda : print('running2...')
+#in1.run2() # Error
+Class1.run2() # running2...
+```
+
+
 
 
 22. 标准库概览
