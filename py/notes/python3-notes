@@ -876,6 +876,19 @@ exec(expression, globals=None,locals=None)
 a = exec("2+3") # a = None
 a = eval("2+3") # a = 5
 
+```
+class P:
+    name = 'test'# 类属性
+
+    def __init__(self, name):
+        self.name = name # 局部变量赋值给实例属性
+
+p = P('2')
+print(p.name, P.name) # 2 test # 用实例访问时，实例属性有值时覆盖类属性
+del p.name
+print(p.name, P.name) # test test # 删除实例属性时， fallback 到类属性
+```
+
 给类对象动态添加方法
 def out_fn1(self):
     return "fn1"
