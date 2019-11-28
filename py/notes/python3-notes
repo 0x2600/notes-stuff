@@ -1133,6 +1133,29 @@ print(rect.getsize())
 ```
 
 
+## 异常处理机制
+try
+except
+else
+finally(即使前面执行了 return, 该子句也会执行。碰到 os.exit(1) 不会执行)
+```
+def test():
+    fis = None
+    try:
+        fis = open('a.txt')
+    except OSError as e:
+        print(e.strerror)
+        return
+    finally:
+        if fis is not None:
+            try:
+                fis.close()
+            except OSError as ioe:
+                print(ioe.strerror)
+        print('执行 finally 子句')
+
+test()
+```
 
 
 22. 标准库概览
