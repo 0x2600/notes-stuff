@@ -990,16 +990,21 @@ print(in1.attr1, in1.attr2, Class1.attr1, Class2.attr2) # str2 2 str1 1
 
 实例方法，静态方法，类方法
 实例方法最少要包含一个 self 参数，可以通过类对象直接调用，也可以用类名调用，需手动传入 self 参数(调用该方法的实例)
+class Class1:
+    def method1(self);
+        pass
 
+in1 = Class1()
+Class1.method1(in1)
 类方法最少包含一个 cls 参数，需用 @classmethod 修饰
 def Bird:
     @classmethod
     def fly(cls):
         pass
 
-Bird.fly()
+Bird.fly() # 推荐调用方式，自动将类本身绑定给 cls 参数，无需手动传参
 b = Bird()
-b.fly()
+b.fly() # 实际上还是使用类调用，因此第一个参数被自动绑定到 Bird 类
 推荐使用类名直接调用，不推荐使用实例对象调用
 
 静态方法(定义在类这个空间(类命名空间)) @staticmethod 修饰，无需 self, cls
@@ -1101,6 +1106,32 @@ d = Dog()
 print(d.age) # 4
 d.walk() # fn
 1. 创建的类名， 2. 继承的父类元组， 3. 类变量和方法
+=======
+## property() 函数: 定义属性
+```
+class Rect:
+    def __init__(self, w, l):
+        self.width = w
+        self.length = l
+    def setsize(self, size):
+        self.width, self.length = size
+    def getsize(self):
+        return self.width, self.length
+    def delsize(self):
+        self.width, self.length = 0, 0
+    # 使用 property() 函数
+    # size = property(getsize, setsize, delsize, 'Comment here.')
+
+rect = Rect(1, 2)
+rect.setsize((3, 4))
+print(rect.getsize())
+# rect.size
+# rect.size = 4, 5
+# del rect.size
+
+
+```
+
 
 
 
