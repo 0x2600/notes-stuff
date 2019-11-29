@@ -1131,7 +1131,24 @@ print(rect.getsize())
 
 
 ```
+## sys.exc_info() 获取异常信息
+import os
+try:
+    1/0
+except:
+    print(sys.exc_info()) # 返回元组，异常类名，异常实例，traceback 对象
+打印 traceback 对象
+import traceback
+traceback.print_tb(sys.exc_info()[2])
 
+## traceback 模块
+traceback.print_exc(limit, file)
+```
+try:
+    raise
+except:
+    traceback.print_exc(file=open('tracback.log', 'w'))
+```
 
 ## 异常处理机制
 try
