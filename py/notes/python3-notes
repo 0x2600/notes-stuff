@@ -1176,6 +1176,29 @@ test()
 
 
 22. 标准库概览
+1. sys
+2. os
+3. random
+4.time
+time.struct_time 类
+tm_year, tm_mon, tm_mday, tm_hour, tm_min, tm_sec, tm_wday, tm_yday, tm_isdst
+time.struct_time 实例化一个对象，可以传上述参数，或上述参数的元组
+常用函数
+asctime([t]) ->str
+ctime([secs]) -> str
+gmtime([secs]) ->struct_time
+localtime([secs]) -> struct_time
+mktime(t) -> float
+
+
+5. json
+json.dump(obj, fp) encode
+json.dumps(obj)
+
+json.load(fp) decode
+json.loads(s)
+
+6. re
 os, shutil, glob, sys.argv, sys.stdout.write(), re, math, random, urllib.request, smtplib, datetime, 
 
 #

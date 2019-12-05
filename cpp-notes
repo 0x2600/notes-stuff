@@ -1,0 +1,69 @@
+1.11 内联函数
+定义时声明 inline
+
+1.14 函数的默认参数
+默认参数放在形参列表的最后面，值可以指定字面常量或者使用变量表达式
+float d = 1.0
+void foo(float a=d+1.0){
+    // function body here.
+}
+简单点，函数定义时指定默认参数
+
+1.16 函数重载 function overloading
+函数名字相同，参数列表不同(参数个数，类型，顺序不同)。返回值不能作为重载的依据。
+#include <iostream>
+using namespace std;
+
+void Swap(int a, int b){
+	cout << b << " " << a << endl;
+}
+
+void Swap(float a, float b){
+	cout << b << " " << a << endl;
+}
+
+int main(){
+	int x, y;
+	cin >> x >> y;
+	Swap(x, y);
+	
+	float x1, y1;
+	cin >> x1 >> y1;
+	Swap(x1, y1);
+
+}
+
+2.1 类的定义和对象的创建
+类通常定义在函数外面
+class Stu{
+public:    
+    int x;
+    void foo(){
+        cout << x;
+    }
+};
+int main(){
+    // 在栈上创建对象
+    Stu ming;
+    ming.x = 20;
+    ming.foo();
+
+    // 使用对象指针
+    Stu *pming = &ming;
+    pming->foo(); 
+
+    // 堆上创建对象. new 在堆上创建出来的对象是匿名的，需要指针指向它。
+    // 栈内存是程序自动管理的，不能使用 delete 删除。堆内存有程序员管理， new 和 delete
+    // 成对出现。
+    Stu *phan = new Stu;
+    phan->x = 30;
+    phan->foo();
+}
+
+2.2 类的成员变量和成员函数
+
+
+
+
+
+
