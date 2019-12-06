@@ -61,6 +61,50 @@ int main(){
 }
 
 2.2 类的成员变量和成员函数
+在类体中定义的成员函数会自动成为内联函数。内联函数一般不是我们期望的(除非成员函数比较
+短小)。所以建议在类体内部对成员函数作声明，在外部定义。
+如果希望函数定义在类外部，又希望是内联函数。定义时加 inline 关键字。
+
+// 外部
+void Stu::foo(){
+    cout << x << endl;
+}
+
+2.3 类成员的访问权限和封装
+类内部。无访问权限的限制
+类外部。对象访问成员，可以访问 public 属性成员。
+类的声明和成员函数的定义都是类定义的一部分。通常将类声明放在头文件中，将成员函数
+的定义放在源文件中。
+
+2.6 构造函数
+名字和类名相同，没有返回值，没有变量来接收返回值。public 属性。
+class Stu{
+private:
+    char *mname;
+    int mage;
+public:
+    Stu(char *, int);
+    void greet(){
+        cout << mname << endl;
+    }
+};
+
+Stu::Stu(char *name, int age){
+    mname = name;
+    mage = age;
+}
+
+int main(){
+    Stu han("Han", 20);
+    han.greet();
+    return 0;
+}
+
+构造函数重载
+
+调用没有参数的构造函数，可以省略括号 Stu han(); Stu han; Stu *phan = new Stu(); Stu *phan = new Stu;
+
+
 
 
 
