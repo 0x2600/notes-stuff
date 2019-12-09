@@ -104,6 +104,42 @@ int main(){
 
 调用没有参数的构造函数，可以省略括号 Stu han(); Stu han; Stu *phan = new Stu(); Stu *phan = new Stu;
 
+2.7 构造函数初始化列表
+class Stu{
+public:
+    Stu(char *name, int age);
+};
+
+Stu::Stu(char *name, int age):m_name(name), m_age(age){
+    // TODO;
+}
+
+成员变量的初始化顺序与初始化列表无关，只与成员变量在类中声明的顺序有关
+class Demo{
+private:
+    m_a;
+    m_b;
+public:
+    Demo(int b);
+}
+
+Demo::Demo(int b):m_b(b), m_a(m_b){}
+等价于
+Demo::Demo(int b){
+    m_a = m_b;
+    m_b = b;
+}
+在栈上创建对象时，m_a 初始化的值不确定。
+
+初始化 const 成员变量，唯一方法
+
+2.8 析构函数
+名字，类名前加 ~,没有参数，不能被重载(只有一个析构函数)
+
+内存分区: 所有函数之外创建的对象是全局对象，位于全局数据区，程序结束执行时调用这些
+对象的析构函数。
+函数内部创建的对象是局部对象，栈区，函数执行结束调用这些对象的析构函数。
+new 创建的对象位于堆区，delete 删除时调用析构函数。
 
 
 

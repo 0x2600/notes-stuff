@@ -1189,6 +1189,21 @@ ctime([secs]) -> str
 gmtime([secs]) ->struct_time
 localtime([secs]) -> struct_time
 mktime(t) -> float
+perf_counter()
+process_time()
+sleep()
+strftime(format) -> str
+strptime(str) -> struct_time
+time() -> secs
+timezone -> secs
+tzname -> str
+%Y 2019
+%m 1-12
+%d 1-31
+%H 1-24
+%M 1-59
+%S 1-61
+
 
 
 5. json
@@ -1200,6 +1215,50 @@ json.loads(s)
 
 6. re
 os, shutil, glob, sys.argv, sys.stdout.write(), re, math, random, urllib.request, smtplib, datetime, 
+
+7. set & frozen set
+set 可变，frozen set 不可变
+集合元素不需要改变时，使用 frozen set
+set 的元素必须是不可变的，因此 set 不能包含 set, 可以包含 frozen set
+
+
+8. deque 双端队列
+deque([iterable[, maxlen]])
+
+插入删除在一端进行，成为栈
+一端插入，一端删除，成为队列
+append, appendleft
+pop, popleft
+extend, extendleft
+clear
+copy
+count
+index
+insert
+remove
+
+10. ChainMap
+```
+from collections import ChainMap
+import builtins
+
+
+myname = "global"
+def test():
+    myname = "local"
+    pylook = ChainMap(locals(), globals(), vars(builtins))
+    print(pylook['myname']) # local
+    print(pylook['len']) <built-in function len>
+
+test()
+```
+
+11. Counter
+dict, 记录容器中各元素出现的次数
+
+12. defaultdict
+区别: dict 访问不存在的 key 会发生 KeyError 异常。defaultdict 可以提供一个 default_factory 属性，为不存在的 key 生成 value.
+
 
 #
 from datetime import date
