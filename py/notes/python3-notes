@@ -1259,6 +1259,58 @@ dict, 记录容器中各元素出现的次数
 12. defaultdict
 区别: dict 访问不存在的 key 会发生 KeyError 异常。defaultdict 可以提供一个 default_factory 属性，为不存在的 key 生成 value.
 
+13. nameedtuple
+namedtuple(typename, field_names)
+field_names 字符串列表
+
+from collections import namedtuple
+Point = namedtuple('Point', ['x', 'y'])
+p = Point(11, y=22)
+print(p[0]+p[1]) # 33
+a, b = p # 11, 22
+print(p.x, p.y)
+
+14. OrderedDict
+a = OrderedDict(a=1,b=2)
+顺序不同的 OrderedDict 对象不相等
+
+15. itertools
+
+16. functools
+
+## 文件操作 io
+1. 打开
+file  = open(file_name, mode, buffing)
+buffing, 0 不带缓冲。1 带缓冲。大于1的整数，指定缓冲区的大小(字节)，任意负数，默认
+缓冲区大小。
+2. read, readline, readlines, write, writelines
+read([size]) b-> 单位是字节，t-> 单位是字符，无参数读取文件所有内容
+UnicodeDecodeError 解决方法
+open() 函数打开文本文件时，默认使用当前操作系统的字符集。
+1. 二进制模式读，调用 bytes 对象的 decode() 方法，指定 encoding。 f.read().decode('utf-8')
+2. codecs.open() 打开文件，并指定字符集. 
+import codecs
+f = codecs.open('a.txt', 'r', 'utf-8')
+
+readline, readlines 文本文件，按行读取
+readline([size]), size 读取一行时，一次最多读取的字符数
+readlines() 读取文件中的所有行，返回字符串列表，每个元素为一行内容。
+
+write(string), close() 函数调用后才会写入。或者调用 f.flush() 立即将缓冲区数据写入文件。
+二进制格式打开的文件，可以不使用缓冲区，写入的数据会直接进入文件。对于文本格式打开的文件，必须使用缓冲区。否则 ValueError
+
+writelines(lines)
+
+seek(), tell()
+打开文件，文件指针位于0位置
+seek(offset[, whence])
+whence, 0 文件头，默认位置。1 当前位置。2 文件尾。
+offset 正值后偏移，负值前偏移。
+
+
+
+
+
 
 #
 from datetime import date
