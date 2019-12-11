@@ -1368,8 +1368,37 @@ for i in range(100):
     if i == 20:
         t1 = threading.Thread(name="mythread",target=action, args=(100,))
         t1.start()
+# threading.current_thread() 返回当前线程对象。
+# threading.enumerate() 返回正运行的线程列表，启动后，结束前状态。
+```
+2) 继承 Thread 类创建线程类
+定义 Thread 子类，重写 run() 方法。创建实例。调用实例的 start() 方法。
 
 ```
+import threading
+
+
+class MyClass(threading.Thread):
+    def __init__(self,name):
+        threading.Thread.__init__(self,name = name)
+        self.i = 0
+    
+    def run(self):
+        while self.i < 20:
+            print(threading.current_thread().getName() + " " + str(self.i))
+            self.i += 1
+        
+for i in range(20):
+    print(threading.current_thread().getName() + " " + str(i))
+    if i == 5:
+        myin = MyClass(name="mythread")
+        myin.start()
+```
+
+线程的生命周期(新建，就绪，运行，阻塞，死亡)
+创建 Thread 对象后，线程处于新建状态。当调用 start() 方法后就处于就绪状态。
+注: 启动线程使用 start 方法。而不是 run 方法。调用 start() 方法来启动线程，系统会把该 run() 方法当成线程执行体来处理；但如果直接调用线程对象的 run() 方法，则 run() 方法立即就会被执行，而且在该方法返回之前其他线程无法并发执行。
+
 
 
 
