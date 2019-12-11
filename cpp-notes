@@ -200,6 +200,40 @@ class Addr{
 友元类 略
 
 2.19 string
+#include <string>
+string 类的转换函数 c_str() 将 string 转换为 C 风格的字符串，返回指针。
++， += 字符串拼接。操作数可以是string, string; string, c_str; string, 字符数组; string, 字符
+string 增删改查:
+insert(pos, str)
+erase(pos, len=npos)
+substr(pos=0,len=npos)
+size_t find(string &, pos=0)
+size_t find(char *, pos=0)
+rfind()
+
+3.1 引用
+type &name = data;
+int b;
+int &a = b;
+```
+int main(){
+    int a = 99;
+    int &r = a;
+    r = 90; // a = 90
+}
+```
+void swap3(int &a, int &b){
+    int tmp = a;
+    a = b;
+    b = tmp;
+}
+// call swap3
+int num1, num2;
+swap3(num1, num2);
+
+4. 继承与派生
+
+
 
 
 
