@@ -143,6 +143,16 @@ var = 1; del var
 数值运算: + - * / // % **
 
 String
+table = {'Sjoerd': 4127, 'Jack': 4098, 'Dcab': 8637678}
+    formatted_string = 'Jack: {0[Jack]:d}; Sjoerd: {0[Sjoerd]:d}; Dcab: {0[Dcab]:d}'.format(table)
+
+    assert formatted_string == 'Jack: 4098; Sjoerd: 4127; Dcab: 8637678'
+
+    # This could also be done by passing the table as keyword arguments with the ‘**’ notation.
+    formatted_string = 'Jack: {Jack:d}; Sjoerd: {Sjoerd:d}; Dcab: {Dcab:d}'.format(**table)
+
+    assert formatted_string == 'Jack: 4098; Sjoerd: 4127; Dcab: 8637678'
+
 split()
 str.split(sep, maxsplit)
 join(iterable)
@@ -557,6 +567,7 @@ pickle 模块实现基本的数据序列和反序列化
 反序列化操作从文件中创建上一次程序保存的对象
 pickle.dump(obj, file[, protocol])
 x = pickle.load(file)
+
 
 17. py File 方法
 18. OS 模块
@@ -1306,6 +1317,61 @@ seek(), tell()
 seek(offset[, whence])
 whence, 0 文件头，默认位置。1 当前位置。2 文件尾。
 offset 正值后偏移，负值前偏移。
+
+pickle 模块， python 对象的持久化存储
+dumps, loads
+dump, load
+dumps(obj)
+```
+import pickle
+tup1 = ('I love python', {1,2,3}, None)
+p1 = pickle.dumps(tup1)
+```
+loads(data)
+tup2 = pickle.loads(p1) # == tup1
+
+pickle.dump(obj, file), file 'wb'
+```
+import pickletup1 = ('I love python', {1,2,3}, None)
+with open('file1', 'wb') as f:
+    pickle.dump(tup1, f)
+```
+
+load(file) 
+with open('file', 'rb') as f:
+    tup2 = pickle.load(f)
+
+## os.path 模块常见函数用法
+abspath, commonprefix, commonpath, dirname, exists, getsize, isfile, isdir
+
+## 并发编程(多线程和多进程)
+创建线程(2种方式)
+涉及模块: threading
+1) threading 模块 Thread 类构造器创建线程，并调用该实例的 start 方法。
+2) 继承 threading.Thread 类，创建子类并实例化，调用 start 方法。
+
+1) __init__(self, group=None, target=None, name=None,args=(), kwargs=None, *, daemon=None)
+target 
+args 以位置参数的形式为 target 指定的函数传入参数。
+kwargs 以关键字参数的形式给 target 指定的函数传参。 
+```
+import threading
+import time
+def action(max):
+    for i in range(max):
+        print(threading.current_thread().getName() + " " + str(i))
+        time.sleep(2)
+
+for i in range(100):
+    print(threading.current_thread().getName() + " " + str(i))
+    time.sleep(1)
+    if i == 20:
+        t1 = threading.Thread(name="mythread",target=action, args=(100,))
+        t1.start()
+
+```
+
+
 
 
 
