@@ -232,11 +232,130 @@ int num1, num2;
 swap3(num1, num2);
 
 4. 继承与派生
+class Stu:public People;
+public 继承方式
+public, protected, private 修饰类的成员
+protected 成员不能通过对象访问，当存在继承关系时，基类中的 protected 成员可以在派生类中使用
 
+public, protected, private 指定继承方式
+    public 成员 | protected 成员 | private 成员
+public 继承 | public | protected | 不可见
+protected 继承 | protected | protected | 不可见
+private 继承 | private | private
 
+改变访问权限
+using 改变基类中 public, private 成员的访问权限。不能改变 private 成员，因为该成员在基类中不可见。
 
+public:
+    using Stu::m_name
+private:
+    using Stu::m_age
 
+4.3 继承时的名字遮蔽问题
+派生类的成员和基类的重名，那么在派生类中使用该成员实际上使用的是派生类新增的成员。
+```
+#include <iostream>
+#include <string>
 
+using namespace std;
+
+class people{
+public:
+    void show();
+protected:
+    string m_name;
+    int m_age;
+};
+
+void people::show(){
+    cout << m_name << " " << m_age << endl;
+};
+
+class stu: public people{
+public:
+    stu(string name, int age, float score);
+    void show();
+private:
+    float m_score;
+};
+stu::stu(string name, int age, float score):m_score(score){
+    m_name = name;
+    m_age = age;
+}
+void stu::show(){
+    cout << m_name << " " << m_age << " " << m_score << endl;
+}
+
+int main(){
+    stu stu1("stu1", 20, 98.0);
+    stu1.show();
+    stu1.people::show();
+}
+```
+只要成员函数名字一样，就会遮蔽，而不是重载。
+class class1{
+public: 
+    void func();
+    void func(string)
+};
+class class2: public class1{
+public:
+    void func(int);
+    void func(float)
+};
+int main(){
+    class2 obj2();
+    obj2.func(1);
+    obj2.func(1.0);
+    obj2.class1::func();
+    obj2.class1::func("test")
+    // 以上调用方法是正确的。class1 中的 func 构成重载， class2 中的 func 构成重载。
+    return 0;
+}
+
+4.6 基类和派生类的构造函数
+基类构造函数不会被继承，不能当作普通的成员函数来调用。因此放在派生类构造函数头部。
+派生类构造函数只能调用直接基类的构造函数，不能调用间接基类的。
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class class1{
+public:
+    class1();
+    class1(string name, int age);
+public:
+    string m_name;
+    int m_age;
+};
+class1::class1(){
+    m_name = "x";
+    m_age = 20;
+}
+class1::class1(string name, int age){
+    m_name = name;
+    m_age = age;
+}
+class class2: public class1{
+public:
+    class2();
+    class2(string name, int age, float score);
+public:
+    float m_score;
+};
+class2::class2(){
+    m_score = 0.0;
+}
+
+class2::class2(string name, int age, float score):class1(name, age), m_score(score){}
+
+int main(){
+    class2 obj1; // 这里写 class2 obj1() 会报错。因为会把 obj1 当成函数。
+    cout << obj1.m_name << obj1.m_age << obj1.m_score << endl;
+    class2 obj3("test", 25, 2.0);
+    cout << obj3.m_name << obj3.m_age << obj3.m_score << endl;
+}
 
 
 

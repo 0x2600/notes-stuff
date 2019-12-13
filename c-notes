@@ -1,6 +1,4 @@
-容易忘：文件读写， 内存管理，枚举，指针数组 int *p[2], 数组指针(我又忘了怎么写...), 函数指针 int (* fun)(int, int)，错误处理，
-格式控制符
-回文数
+容易忘：文件读写， 内存管理，枚举，指针数组 int *p[2], 数组指针int (*p)[2], 函数指针 int (* fun)(int, int)，错误处理，格式控制符
 
 ## 1. C 存储类
 auto, register, static, extern
@@ -20,7 +18,8 @@ register 类定义变量可能存储在寄存器中
  int x, y;
  int add2num(){
     extern int x, y;
-    x = 1, y = 2;
+    x = 1;
+    y = 2;
     return x + y;
  }
 int main(){
@@ -105,7 +104,7 @@ int main(){
 	int *p = getrandom();
 	int i;
 	for(i = 0; i<10; i++){
-		printf("%d ", *(p++));
+		printf("%d ", *(p++)); // p[i] also works.
 	}
 	return 0;
 }
@@ -189,7 +188,10 @@ struct{
 int a;
 char b;
 double c;
-} s1;
+} s1={1, 'a', 2.0}, s[2]={
+    {1,'b',1.0},
+    {2, 'c', 3.0}
+};
 
 struct SIMPLE{
 int a;
@@ -226,12 +228,12 @@ struct A *pa;
 // other member;
 };
 
-结构体作为函数参数
+结构体作为函数参数, 以下两种形参都对
 void printbook(struct Book book); // 示例函数声明，调用: printbook(book)
 void printbook(struct Book *pbook); // 这样的声明也可以,调用: printbook(&book)
 指向结构的指针
 struct Book *pbook;
-pbook = &book1;
+pbook = &book1; // 必须显式 &, 和数组不同。
 pbook->title;
 
 位域，划分几个比特位为不同的区域
