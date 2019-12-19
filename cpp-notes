@@ -357,6 +357,40 @@ int main(){
     cout << obj3.m_name << obj3.m_age << obj3.m_score << endl;
 }
 
+基类和派生类的析构函数
+创建派生类对象时，先执行基类构造函数，再执行派生类构造函数
+销毁派生类对象时，先执行派生类析构函数，后执行基类析构函数
+
+## 多继承
+class D: public A, private B, protected C{};
+
+构造函数
+D(): A(), B(), C(){
+//
+}
+基类构造函数的调用顺序和声明派生类时基类出现的顺序相同， 与构造函数中出现的顺序无关
+
+命名冲突
+多个基类中出现同名的成员(变量或者函数)，类名加域解析符
+class A{
+void show();
+};
+
+class B{
+void show();
+};
+
+class C:public A, public B{
+void show(){
+    A::show();
+    B::show()
+    // c.show() define here
+}
+};
+
+## 虚继承和虚基类
+
+
 
 
 
