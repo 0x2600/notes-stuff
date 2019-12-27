@@ -1402,6 +1402,119 @@ for i in range(20):
 
 
 
+## Python 网络编程
+socket  基于TCP, UDP 的网络编程模块
+asyncore socket 模块的异步版本
+asynchat asyncore 增强版
+cgi 基本的 CGI 支持
+email email, MIME 消息处理模块
+ftplib 
+httplib, http.client
+imaplib
+mailbox 操作不同格式邮箱模块
+mailcap 支持 mailcap 文件处理
+nntplib 
+smtplib 发送邮件
+poplib pop3
+telnetlib
+urllib url 处理
+xmlrpc, xmlrpc.server, xmlrpc.client
+
+
+### urllib.parse 模块
+urllib 包含多个模块
+urllib.request
+urllib.error
+urllib.parse
+urllib.rebotparser
+
+python2 中， urllib 分为 urllib 和 urllib2 两个模块， urllib 用于简单的下载，urllib2 可实现 HTTP 验证， cookie 管理。
+
+urllib.parse 函数:
+urlparse(urlstring, scheme='', allow_fragments=True)
+urlunparse(ParseResult), 参数为 ParseResult 对象或者元组
+
+>>> _url = 'http://www.crazyit.org:80/index.php;yeeku?name=fkit#frag' 
+>>> parseresult = urlparse(_url) 
+>>> parseresult
+ParseResult(scheme='http', netloc='www.crazyit.org:80', path='/index.php', params='yeeku', query='name=fkit', fragment='frag')
+
+parseresult.scheme, netloc, path, params, query, fragment, port, hostname, username, password
+
+parse_qs(qs), -> dict, qs -> string
+parse_qsl(qs) -> list
+
+urlencode(query), query -> dict/list, -> string
+urljoin(base, url)
+1. 被拼接的 URL 只是一个相对路径 path（不以斜线开头），那么该 URL 将会被拼接到 base 之后，如果 base 本身包含 path 部分，则用被拼接的 URL替换 base 所包含的 path 部分。
+http://www.bing.com/user/user.html, help.html -> http://www.bing.com/user/help.html
+
+2. 被拼接的 URL 是一个根路径 path（以单斜线开头），那么该 URL 将会被拼接到 base 的域名之后。
+http://www.bing.com/user/user.html, /help/help.html -> http://www.bing.com/help/help.html
+
+3. 被拼接的 URL 是一个绝对路径 path（以双斜线开头），那么该 URL将会被拼接到 base 的 scheme 之后。
+http://www.bing.com/help.html, //www.google.com/help.html
+
+>>> urljoin("http://www.bing.com/user/user.html", "help.html")       
+'http://www.bing.com/user/help.html'
+>>> urljoin("http://www.bing.com/user/user.html", "/help.html") 
+'http://www.bing.com/help.html'
+>>> urljoin("http://www.bing.com/user/user.html", "//help.html") 
+'http://help.html'
+
+
+### urllib.request 模块
+函数 urlopen(url, data), 如果 url 是 HTTP 地址，返回一个 http.client.HTTPResponse 对象
+data 属性不仅可以发送 POST 请求，还可以发送 PUT, PATCH, DELETE 等请求。需要使用 urllib.request.Request 来构造请求参数，这样在 urlopen(url) 中的 url 参数可以是 Request 对象。
+
+urllib.request.Request(url, data=None, headers={}, origin_req_host=None, unverifiable=False, method=None)
+req = Request('http://localhost:10011/put', data='put 测试'.encode())
+with urlopen(req) as f:
+    #
+Request 对象的方法 
+add_header(key, val)
+
+### http.cookiejar
+http.cookiejar.CookieJar 对象
+以 CookieJar 对象为参数，创建 urllib.request.HTTPCookieProcessor 对象，以 HTTPCookieJar 对象为参数，调用 urllib.request.build_opener() 函数创建 OpenerDirector 对象， 使用 OpenerDirector 对象发送请求， 其参数为 Request 对象。
+
+
+from urllib.request import *
+import http.cookiejar, urllib.parse
+
+
+cookie_jar = http.cookiejar.MozillaCookieJar('a.txt')
+# cookie_jar.load('a.txt', ignore_discard=True, ignore_expires=True)
+
+cookie_processor = HTTPCookieProcessor(cookie_jar)
+opener = build_opener(cookie_processor)
+
+req = Request('http://example.org/', data=b'name=name&pass=pass')
+r = opener.open(req)
+print(r.read().decode())
+
+cookie_jar.save(ignore_discard=True, ignore_expires=True)
+
+
+### socket, TCP, UDP
+server:
+import socket
+s = socket.socket()
+s.bind(('0.0.0.0', 4000))
+s.listen()
+
+while True:
+    c, addr = s.accept()
+    c.send(b'New year.')
+    c.close()
+
+client:
+import socket
+c = socket.socket()
+c.connect(('localhost', 4000))
+print(c.recv(1024))
+
+
 
 
 
