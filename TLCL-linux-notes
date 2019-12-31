@@ -519,3 +519,104 @@ cat -A(显示空格), -n(行号), -s(禁止多余空行)
 cat << EOF > output-file
 
 
+## Linux 入门教程
+
+ctrl + Z 暂停当前进程， fg %n 恢复
+~ $ ping localhost
+PING localhost(localhost (::1)) 56 data bytes
+64 bytes from localhost (::1): icmp_seq=1 ttl=64 time=0.036 ms
+64 bytes from localhost (::1): icmp_seq=2 ttl=64 time=0.057 ms
+64 bytes from localhost (::1): icmp_seq=3 ttl=64 time=0.061 ms
+^Z
+[1]+  Stopped                 ping localhost
+~ $ fg %1
+ping localhost
+64 bytes from localhost (::1): icmp_seq=4 ttl=64 time=0.052 ms
+64 bytes from localhost (::1): icmp_seq=5 ttl=64 time=0.058 ms
+64 bytes from localhost (::1): icmp_seq=6 ttl=64 time=0.058 ms
+
+
+cp -d, --no-dereference, --preserve=links 拷贝软链接而不是目标文件
+
+chown -R, chmod -R 递归
+
+umask 0022
+文件 666 - 022 = 644
+目录 777 - 022 = 755
+
+chattr [+-=] [ASaci] 文件或目录，
++-= ：分别为增加、减少、设定
+
+A：增加该属性后，文件或目录的atime将不可被修改；
+
+S：增加该属性后，会将数据同步写入磁盘中；
+
+a：增加该属性后，只能追加不能删除，非root用户不能设定该属性；
+
+c：自动压缩该文件，读取时会自动解压；
+
+i：增加后，使文件不能被删除、重命名、设定连接、写入、新增数据；
+
+lsattr -aR, -a 列出隐藏文件, -R 递归
+
+
+
+语法： find [路径] [参数] 下面介绍几个笔者经常用的参数
+
+-atime +n ：访问或执行时间大于n天的文件
+
+-ctime +n ：写入、更改inode属性（例如更改所有者、权限或者连接）时间大于n天的文件
+
+-mtime +n ：写入时间大于n天的文件
+
+文件的 Access time，atime 是在读取文件或者执行文件时更改的。文件的 Modified time，mtime 是在写入文件时随文件内容的更改而更改的。文件的 Create time，ctime 是在写入文件、更改所有者、权限或链接设置时随 Inode 的内容更改而更改的。 因此，更改文件的内容即会更改 mtime 和 ctime，但是文件的 ctime 可能会在 mtime 未发生任何变化时更改，例如，更改了文件的权限，但是文件内容没有变化。 如何获得一个文件的atime mtime 以及ctime ？
+
+ls -l 命令可用来列出文件的 atime、ctime 和 mtime。
+
+ls -lc filename         列出文件的 ctime
+
+ls -lu filename         列出文件的 atime
+
+ls -l filename          列出文件的 mtime    
+
+atime不一定在访问文件之后被修改，因为：使用ext3文件系统的时候，如果在mount的时候使用了noatime参数那么就不会更新atime的信息。而这是加了 noatime 取消了, 不代表真实情況。反正, 這三個 time stamp 都放在 inode 中。若 mtime, atime 修改inode 就一定會改, 既然 inode 改了, 那 ctime 也就跟著要改了。
+
+
+fsck 检查磁盘坏道，一般先卸载磁盘
+
+/etc/fstab
+文件系统，挂载点，文件系统类型， 选项(defaults)，是否 dump，开机是否自检磁盘(1, 2都是自检，0不自检)
+第四列详解：
+async/sync ：async表示和磁盘和内存不同步，系统每隔一段时间把内存数据写入磁盘中，而sync则会时时同步内存和磁盘中数据；
+auto/noauto ：开机自动挂载/不自动挂载；
+default：按照大多数永久文件系统的缺省值设置挂载定义，它包含了rw, suid, dev, exec, auto, nouser,async ；
+ro：按只读权限挂载；
+rw：按可读可写权限挂载；
+exec/noexec ：允许/不允许可执行文件执行，但千万不要把根分区挂载为noexec，那就无法使用系统了，连mount命令都无法使用了，这时只有重新做系统了；
+user/nouser ：允许/不允许root外的其他用户挂载分区，为了安全考虑，请用nouser ；
+suid/nosuid ：允许/不允许分区有suid属性，一般设置nosuid ；
+usrquota ：启动使用者磁盘配额模式，磁盘配额相关内容在后续章节会做介绍；
+grpquota ：启动群组磁盘配额模式；
+
+mount -o remount,ro,sync /dev/sda1 /test1 无法向 sda1 分区写入数据
+mount -o remount /dev/sda1 /test1 重新挂载，不加任何选项，默认 defaults 挂载
+
+blkid 磁盘的 UUID
+$ blkid [/dev/sda1]
+
+建立 swap 文件
+1. 空文件 dd if=/dev/zero of=$swapfile bs count
+2. setting up swapspace, mkswap $swapfile
+3. using swapspace, swapon $swapfile, swapoff $swapfile
+
+quota
+1. 打开磁盘的 quota 功能
+/etcfstab defaults,usrquota,grpquota
+umount /home
+mount -a
+或者 mount -o remount -a
+
+
+
+
+
