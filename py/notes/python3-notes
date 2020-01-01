@@ -1675,3 +1675,55 @@ py3: !=
 ## py3 数据类型
 py3: 去除 long, 只有 int。新增 bytes 
 py3: 字典的 keys(), items() values() 返回迭代器， iterkeys(), dict.has_key()(被 in 替代) 被废弃， 
+
+
+
+理解 UnboundLocalError:
+出现赋值就是局部变量
+如果被引用而没有被赋值，那么默认被视为全局变量，如果被赋值过，那么被视为局部变量。
+赋值操作：变量在当前作用域定义过，就是赋值操作，否则是在当前作用域定义一个新的变量。
+被赋值过：无论是否会执行(如在 if 语句中)，或者在引用之后赋值。
+def foo():
+    print(x)
+    x = 20
+    # x 被赋值，是局部变量，第一行引用的是局部变量，引用失败
+
+# ex.2
+x = 10
+def foo():
+    x += 1
+    print(x)
+    # x = x + 1,赋值语句，x 为局部变量，右边引用失败。
+ex.3
+def external():
+    x= 10
+    def internal():
+        nonlocal x
+        x += 1
+        print(x)
+    internal()
+external()
+# external 中的x不是全局变量global,也不是局部变量,而是enclosing, internal
+# 内定义的变量才是局部变量，但 internal 内只想引用 external 内的变量，这时可用
+# nonlocal 修饰x。
+
+对于py2 不支持nonlocal 关键字，想要修改 external 中的x,可以把x定义为list
+# py2 
+def foo():
+    x = [10]
+    def bar():
+        x[0] += 1 
+        print(x)
+    bar()
+foo() # [11]
+
+ex.4
+>>> def foo():
+...     x = 100
+...     def bar():
+...             print(x)
+...     bar()
+...
+>>> foo()
+100
+
