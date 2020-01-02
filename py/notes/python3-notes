@@ -38,6 +38,10 @@ listname.pop(index) # 不指定索引，移除列表中最后一个元素
 listname.reverse() # 原列表改变
 listname.sort(key=None, reverse=False) # 原列表改变
 
+List: reversedlist = somelist[::-1]
+reversed(list) -> 不改变原来 list, 返回 reversed list
+list.reverse() list 改变
+
 创建元组
 = 运算符直接创建元组。括号可不要。一个元素的元组需要小括号。
 使用 tuple() 函数创建元组
@@ -50,6 +54,13 @@ list(), tuple() 会将 str 序列拆开。
 删除元组 del tuplename # 不常用，自带垃圾回收
 
 字典 无序可变序列
+Dictionary: 无序的 key-value 集合
+key 不可变类型， 且唯一
+使用 dict() 构造函数
+
+dict([('one', 1), (2, 'two')])
+dict(runoob=1, google=2)
+dict([(1, 'one'), ('two', 2)])
 创建字典
 花括号创建字典
 fromkeys() 方法创建字典 # dictname = dict.fromkeys(iterable, value=None)
@@ -111,7 +122,7 @@ set 集合
 集合存储不可变数据类型，集合本身是可变数据类型
 数据必须唯一
 无序
-frozenset 不可变数据类型
+frozenset 本身是不可变数据类型
 
 创建 set
 {} 创建。 setname= {1, 2} # 创建非空集合
@@ -144,14 +155,14 @@ var = 1; del var
 
 String
 table = {'Sjoerd': 4127, 'Jack': 4098, 'Dcab': 8637678}
-    formatted_string = 'Jack: {0[Jack]:d}; Sjoerd: {0[Sjoerd]:d}; Dcab: {0[Dcab]:d}'.format(table)
+formatted_string = 'Jack: {0[Jack]:d}; Sjoerd: {0[Sjoerd]:d}; Dcab: {0[Dcab]:d}'.format(table)
 
-    assert formatted_string == 'Jack: 4098; Sjoerd: 4127; Dcab: 8637678'
+assert formatted_string == 'Jack: 4098; Sjoerd: 4127; Dcab: 8637678'
 
-    # This could also be done by passing the table as keyword arguments with the ‘**’ notation.
-    formatted_string = 'Jack: {Jack:d}; Sjoerd: {Sjoerd:d}; Dcab: {Dcab:d}'.format(**table)
+# This could also be done by passing the table as keyword arguments with the ‘**’ notation.
+formatted_string = 'Jack: {Jack:d}; Sjoerd: {Sjoerd:d}; Dcab: {Dcab:d}'.format(**table)
 
-    assert formatted_string == 'Jack: 4098; Sjoerd: 4127; Dcab: 8637678'
+assert formatted_string == 'Jack: 4098; Sjoerd: 4127; Dcab: 8637678'
 
 split()
 str.split(sep, maxsplit)
@@ -174,18 +185,6 @@ str.format()
 str.encode() -> bytes
 bytes.decode() -> str
 
-
-
-List: reverselist = somelist[::-1]
-
-Dictionary: 无序的 key-value 集合
-key 不可变类型， 且唯一
-使用 dict() 构造函数
-
-dict([('one', 1), (2, 'two')])
-dict(runoob=1, google=2)
-dict([(1, 'one'), ('two', 2)])
-
 数据类型转换
 int(x, [,base])
 float(x)
@@ -203,7 +202,15 @@ ord(x)
 hex(x)
 oct(x)
 
-2. 运算符
+eval() 执行完返回结果，exec() 执行完不返回结果。执行一个字符串形式的 Python 代码
+eval(expression, globals=None,locals=None)
+exec(expression, globals=None,locals=None)
+
+区别: eval() 返回结果， exec() 不返回结果
+a = exec("2+3") # a = None
+a = eval("2+3") # a = 5
+
+运算符
 算术运算符
 比较运算符: == != < > <= >=
 赋值运算符: = += -+ *= /= %= **= //=
@@ -218,7 +225,7 @@ x is y, id(x) == id(y), id()用于获取对象内存地址
 a = 5
 b = 3
 st = print("a > b"), print("a 大于 b") if a > b else print("a <= b")
-# st = (None, None), print()函数会被调用
+# st = (None, None), print()函数会被调用, st 是元组。
 # 如果是分号，st 将是第一条语句的返回值
 ```
 
@@ -879,13 +886,6 @@ f(3) # 9
 lambda 只能是单行表达式
 lambda [parameter_list] : expression 多个参数逗号分开
 
-eval() 执行完返回结果，exec() 执行完不返回结果。执行一个字符串形式的 Python 代码
-eval(expression, globals=None,locals=None)
-exec(expression, globals=None,locals=None)
-
-区别: eval() 返回结果， exec() 不返回结果
-a = exec("2+3") # a = None
-a = eval("2+3") # a = 5
 
 ```
 class P:
