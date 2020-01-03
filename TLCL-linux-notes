@@ -197,7 +197,7 @@ printenv USER
 set | less
 echo $USER
 ```
-
+unset 取消设置某个变量
 建立 Shell 环境  
 
 1. 登录 Shell 
@@ -417,6 +417,27 @@ local: ssh -X remote-sys
 remote: xload
 
 OpenSSH: scp, sftp
+
+
+cut cut -d "delimiter" -c -f 从文件的每一行截取部分
+cut -d ":" -f1 /etc/passwd -> 得到用户名
+
+sort //TODO
+
+wc -cmlw
+
+uniq report or omit repeated lines
+uniq -c --count FILE
+
+tee read from stdin and wite to stdout and file
+
+tr -d 删除 -s 去重复 tr '[a-z]' '[A-Z]' 针对一个字符
+grep 'root' /etc/passwd | tr 'r' 'R'
+
+split 切割文档，得到多个文件
+-b bytes
+-l lines
+
 
 ## 查找文件
 locate, updatedb
