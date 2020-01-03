@@ -215,7 +215,8 @@ echo $USER
 ~/.bashrc
 ```
 
-## vi
+## vim
+三种模式：一般模式，编辑模式，命令模式
 
 移动光标  
 0  
@@ -238,13 +239,13 @@ O
 x  
 3x  
 dd  
-5dd  
+5dd  删除光标所在的向下 n 行
 dW  
 d$  
 d0  
 d^  
 dG  
-d3G  
+d3G 光标所在行到第三行 
 
 复制  
 yy  
@@ -261,6 +262,8 @@ J 连接行
 fc ; 重复  
 `:%s/Line/line/g`  
 `:1,5s/Line/line/gc`
+:n1,n2s/word1/word2/g
+:1,$s/word1/word2/g
 
 编辑多个文件
 
@@ -351,6 +354,8 @@ yum install package_name
 通过软件包文件来安装软件
 dpkg --install package_file
 rpm -i package_file
+rpm -ivh --force --nodeps *.rpm (-i 安装， -v 详细， -h )
+rpm -q, -i --info, -l --list 列出安装的文件 (-i, -l 是查询选项)
 卸载软件
 apt-get remove package_name
 yum erase package_name
@@ -371,7 +376,7 @@ apt-cache show package_name
 yum info package_name
 查找安装了某个文件的软件包
 dpkg --search file_name
-yum -qf file_name
+rpm -qf file_name
 ex. rpm -qf /usr/bin/vim
 ## 存储媒介
 mount umount fsck fdisk mkfs fdformat dd genisoimage wodim cdrecord md5sum
@@ -485,6 +490,8 @@ gzip foo.txt # foo.txt.gz
 gunzip -c foo.txt.gz | less # or zcat foo.txt.gz | less # gunzip -c zless
 
 bzip2, bzcat, bzless
+bzip2 -d, -z filename, -d, decompress, -z compress -> bz2
+xz, .xz, .lzma(legacy)
 
 tar
 操作模式
@@ -615,6 +622,8 @@ quota
 umount /home
 mount -a
 或者 mount -o remount -a
+略
+
 
 
 
