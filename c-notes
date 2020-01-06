@@ -277,15 +277,131 @@ scanf, printf, getchar, putchar, gets, puts
 13. C 文件读写
 打开文件 FILE *fopen(const char *filename, const char *mode);
 关闭文件 int fclose(FILE *fp);
-写入文件 int fputc(int c, FILE *fp);
-int fputs(const char *s, FILE *fp);
 int fprintf(FILE *fp, const char *format);
-读取文件
-int fgetc(FILE *fp);
-char *fgets(char *buf, int n, FILE *fp);
 int fscanf(FILE *fp, const char *format);
 
-二进制IO函数 fread, fwrite
+#include <stdio.h>
+// read file, from file to memory.
+int fgetc(FILE *stream) // stream -> int, EOF on EOF or error.
+int getc(FILE *stream)
+
+int getchar(void) // getc(stdin)
+
+char *fgets(char *s, int size, FILE *stream) // Reading stops after an EOF or
+newline. Return char *s on success, and NULL on EOF or error.
+
+// write file, from memory to file.
+int fputc(int c, FILE *stream) // return int c, or EOF on error.
+int putc(int c, FILE *stream)
+
+int fputs(const char *s, FILE *stream) // return nonnegative on success, or EOF
+on error
+
+int putchar(int c) // putc(int c, stdout)
+
+int puts(const char *s)  // return nonnegative on success, or EOF on error
+
+fread, fwrite - bianry stream input/output
+#include <stdio.h>
+
+size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream)  // return
+number of iterms read or written, using feof() feeor() to determine which
+occored.
+size_t fwrite(const char *ptr, size_t size, size_t nmemb, FILE *stream)
+
+void foo1(){
+	int b[5];
+	int a[]={1,2,3,4,5};
+	int i=5;
+	FILE *fp = fopen("test", "wb+");
+	if(fp == NULL){
+		perror("Fail to open file\n");
+		exit(1);
+	}
+	else{
+		printf("write items: %d\n", fwrite(a, sizeof(int), 5, fp) );
+	}
+	rewind(fp);
+	printf("read items: %d\n", fread(b, sizeof(int), 5, fp) );
+	for(i=0;i<5;i++){
+		printf("%d ",b[i]);
+	}
+	fclose(fp);
+}
+void foo2(){
+	typedef struct{
+		char name[10];
+		int age;
+		float score
+	} STU;
+
+	STU stu1, stu2, *pa, *pb;
+	pa = &stu1;
+	pb = &stu2;
+	scanf("%s %d %f", pa->name, &(pa->age), &(pa->score));
+	FILE *fp = fopen("test", "wb+");
+	printf("write item: %d\n", fwrite(pa, sizeof(STU), 1, fp) );
+	rewind(fp);
+	printf("read items: %d\n", fread(pb, sizeof(STU), 1, fp) );
+	printf("%s %d %f\n", pb->name, pb->age, pb->score);
+	fclose(fp);
+}
+
+void foo3(){
+	
+	typedef struct{
+		char name[10];
+		int age;
+		float score
+	} STU;
+
+	STU stu1={"Jerry", 21, 99.0}, *pa;
+	pa = &stu1;
+	FILE *fp = fopen("test", "wt+");
+	fprintf(fp, "%s %d %f\n", pa->name, pa->age, pa->score);
+	rewind(fp);
+	STU stu2, *pb = &stu2;
+	fscanf(fp, "%s %d %f", pb->name, &(pb->age), &(pb->score) );
+	printf("%s %d %f\n", pb->name, pb->age, pb->score);
+	fclose(fp);
+}
+
+void rewind(FILE *stream); int fseek(FILE *stream, long offset, int whence);
+
+void foo4(){
+    STU stu[3]={
+        {"test1", 21, 23.0},
+        {"test2", 22, 24.0},
+        {"test3", 24, 25.0}
+    };
+    STU p;
+    FILE *fp = fopen("test", "wb+");
+    printf("Write item: %d\n", fwrite(stu, sizeof(STU), 3, fp));
+    fseek(fp, sizeof(STU),0);
+    printf("read items: %d\n", fread(&p, sizeof(STU), 1, fp));
+    printf("%s %d %f\n", p.name, p.age, p.score);
+}
+
+关于指针的 tip:
+// error usage
+int *p;
+*p = 5;
+printf("%d\n", *p);
+// correct usage
+int a = 4, *p = &a;
+*p = 5;
+printf("%d\n", *p);
+// or
+int *p = NULL;
+p = (int *)malloc(sizeof(int));
+*p = 5;
+printf("%d\n", *p);
+free(p);
+p = NULL;
+定义一个结构体指针 STU *p, 然后直接访问结构体的成员时发现这个问题
+// error usage
+STU *p;
+p->name;
 
 14. C 预处理器
 预处理器CPP指令
