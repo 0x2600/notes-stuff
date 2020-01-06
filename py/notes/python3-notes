@@ -604,7 +604,7 @@ else 子句，放在所有的 except 子句之后，try 子句没有发生异常
 抛出异常
 raise NameError("Hi there")
 定义清理行为
-finally 子句任何情况下都会执行
+finally 子句任何情况下都会执行, 即使执行 return 语句。
 assert 断言， 语法: assert expression, expression 为假时触发异常
 AssertionError, 程序中断, 为真时，继续执行下一条指令
 
