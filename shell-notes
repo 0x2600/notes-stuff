@@ -1,0 +1,36 @@
+## shell 基础
+第一层命令提示符，第二层命令提示符。
+
+在新进程中运行 shell 脚本
+./sc.sh
+bash sc.sh
+检查 PID，$$
+
+在当前进程中运行 shell 脚本
+source sc.sh 
+. sc.sh 
+
+## shell 编程
+### 变量
+变量都是字符串来存储的，除非 declare 显式定义变量的类型。
+
+定义
+var=value # 用于值不包含空白符的情况，= 周围不能有空格
+var='value'
+var="value"
+命名规范
+数字字母下划线
+不能以数字开头
+不能使用 shell 保留的关键字 (help)
+
+访问变量
+${var}, {} 帮助解释器识别变量的边界
+
+只读变量
+readonly var
+# var=newvalue 出错
+
+删除变量, 不能删除 readonly 变量
+unset var
+
+$(()) 数学计算
