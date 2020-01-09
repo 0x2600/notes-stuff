@@ -14,7 +14,7 @@ source sc.sh
 ### 变量
 变量都是字符串来存储的，除非 declare 显式定义变量的类型。
 
-定义
+定义变量
 var=value # 用于值不包含空白符的情况，= 周围不能有空格
 var='value'
 var="value"
@@ -34,3 +34,152 @@ readonly var
 unset var
 
 $(()) 数学计算
+
+命令替换的输出中如果包含多行或者多个连续的空白符，输出变量使用双引号扩住，否则换行无效，空白被压缩成一个。
+
+反引号和 $(), $() 支持嵌套，反引号不行
+
+特殊变量
+$0 脚本文件名
+$n 传递给脚本或者函数的参数
+$# 传递给脚本或者函数的参数个数
+$* 传递给脚本或者函数的所有参数
+$@ 传递给脚本或者函数的所有参数
+$? 上个命令的退出状态，或函数的返回值
+$$ 当前 shell 进程 PID
+
+字符串
+1) ''，原样输出，内部不能出现单引号，转义也不行
+2) ""，可以出现双引号，只要被转义
+3) 不被包围的字符串，不能出现空格，变量替换有效
+
+获取字符串长度
+${#string_name}
+
+字符串拼接，直接并排放一起，中间无空格，或者双引号扩起，那么中间可以有空格。
+
+字符串截取
+1) 指定位置，截取方向都是从左到右
+从左边开始计数
+${str:start:length} 从0开始索引，不包含 end
+str="0123"
+echo ${str:0:2} -> 01
+${str:0-start:end}
+从右边开始计数
+${str:0-start:length}
+str="321"
+echo ${str:0-3:2} -> 32
+
+2) 从指定字符开始截取，从子串截取到字符串末尾
+# 截取右边字符
+${str#*chars}
+str="http://3.cn"
+echo ${str#*:} -> //3.cn
+echo ${str##*/} -> 3.cn
+
+% 截取左边字符 ${str%chars*}
+${str%%/*} -> http:
+${str%/*} -> http:/
+
+数组
+定义： (), 元素之间空格分割,元素类型可不同
+array_name=(ele1 ele2)
+
+访问数组元素 ${array_name[index]}
+${array_name[*]} # 所有元素
+${array_name[@]}
+${array_name[-1]}
+获取数组长度 ${#array_name[@]}
+${array_name[*]}
+
+数组拼接
+arr3=(${arr1[*]} ${arr2[*]})
+echo ${arr3[*]}
+
+删除数组元素，整个数组
+unset arr[index]
+unset arr
+
+echo [-ne] ARGS
+-n 不换行
+-e 使能转义
+
+read [opotios] [name ...]
+-p prompt
+-s do not echo input
+-n nchars 读取 nchars 个字符后立即返回
+-t timeout
+
+exit [n], 没有 N, exit status 是上一条指令的执行结果。
+```
+bash
+ls /bin/usr 2>/dev/null
+exit
+echo $? # 2
+```
+
+declare, typeset(废弃)
+declare [options] [name[=value] ...]
+-p 显示 name 属性
+-a to make NAMEs indexed arrays
+-i integer
+-r readonly
+-x to make NAMEs export
+
+数学计算
+运算符
++, ++, -, --, *, /, **, %, ++, --, 
+!, &&, ||
+<, <=, >, >=, ==, !=
+<<, >>, ~, |, &, ^
+=, +=, -=, *=, /=, %=
+
+数学计算命令
+(()) 整数运算，逻辑运算， bc 整数和小数
+let 整数运算
+$[]
+
+在 (()) 使用变量无需 $, 多个表达式以逗号分开，最后一个表达式的结果作为整个语句的执行结果。
+a=1
+b=2
+((c=a+b))
+
+let 表达式， 多个表达式以空格分开
+let "表达式"
+let '表达式'
+let x+y 结果会丢弃，也不会返回结果
+
+选择结构 if...else, case...in
+condition 本质是命令的退出状态
+if condition
+then
+    statements
+fi
+
+if condition; then
+    statements
+fi
+
+if condition
+then
+    statements
+else
+    statements
+fi
+
+if condition
+then
+    statements
+elif condition2
+then
+    statements
+else
+    statements
+fi
+
+
+
+
+
+
+
