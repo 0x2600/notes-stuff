@@ -291,6 +291,69 @@ function foo(){
     done
 }
 
+select in，用户输入不在编号之内，赋空值。
+select var in value_list
+do
+    statements
+done
+
+PS3 #?
+
+break
+break n，跳出 n 层循环，省略参数跳出当前循环
+
+函数
+$? 接收函数 return value
+function foo(){
+    statements
+    [return value]
+}
+
+foo(){
+    statements
+    [return value]
+}
+
+function foo{
+    statements
+    [return value]
+}
+调用 
+foo
+foo param1 param2 ...
+没有限制定义和调用的顺序 # 测试 bash, sh 要先定义后调用
+```
+getsum(){
+    local sum=0
+    for i in $@
+    do
+        ((sum+=i))
+    done
+    return $sum
+}
+
+getsum 1 2 3 4
+echo $? # 10
+```
+```
+getsum(){
+    local sum=0
+    for i in $@
+    do
+        ((sum+=i))
+    done
+    echo $sum
+    return 0
+}
+echo $(getsum 1 2 3 4) # 10
+```
+
+代码块重定向
+
+while read str; do
+    echo $str
+done < filename
+
 
 
 
