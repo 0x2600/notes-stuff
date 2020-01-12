@@ -631,6 +631,7 @@ mount -o remount /dev/sda1 /test1 重新挂载，不加任何选项，默认 def
 
 blkid 磁盘的 UUID
 $ blkid [/dev/sda1]
+mount UUID="" /mnt
 
 建立 swap 文件
 1. 空文件 dd if=/dev/zero of=$swapfile bs count
@@ -638,15 +639,64 @@ $ blkid [/dev/sda1]
 3. using swapspace, swapon $swapfile, swapoff $swapfile
 
 quota
-1. 打开磁盘的 quota 功能
-/etcfstab defaults,usrquota,grpquota
+1. 打开磁盘的 quota 功能,针对分区 /dev/sda1
+/etc/fstab defaults,usrquota,grpquota
 umount /home
 mount -a
 或者 mount -o remount -a
-略
+cat /etc/mtab | grep /mnt 应该有 usrquota, grpquota 字样
+
+2. 生成配额配置文件
+quotacheck -augv 得到 aquota.user, aquota.group 文件
+
+3. 配置配额
+edquota -u username 修改 soft, hard 值
+edquota -t 设置宽限时间
+编辑组配额配置
+edquota -g grpname
+
+4. 启用配额
+quotaon -aug
+完毕
+
+rpm 
+rpm -ivh --force --nodeps 
+i 安装 v 详细 h 安装进度 --force 强制 nodeps 即使没有安装依赖，也要安装此包
+-U 升级
+-e 卸载
+-q 查询
+rpm -qi 查询信息
+rpm -ql 列出包安装的文件
+rpm -qf 列出文件属于哪个包
 
 
+cut -d: -f3 /etc/passwd | sort -n
+sort -n -t: -k3 /etc/passwd
 
+uniq -c --count
 
+tr 针对一个字符的操作
 
+^ z 暂停执行， bg 放到后台执行 running
+
+正则表达式
+grep
+sed
+awk
+
+cron
+分 时 日 月 周 
+
+/var/log/message
+dmesg 
+
+ls file | xargs cat
+find . -mtime +10 | xargs rm
+ls *.txt | xargs -n1 -i{} mv {} {}_bak
+
+exec
+find . -mtime +10 -exec rm -rf {} \;
+find ./*txt_bak -exec mv {} {}_bak \;
+
+screen attach 退出 ^ D, 或者 exit 
 
