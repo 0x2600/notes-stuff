@@ -61,7 +61,7 @@ ${#string_name}
 字符串截取
 1) 指定位置，截取方向都是从左到右
 从左边开始计数
-${str:start:length} 从0开始索引，不包含 end
+${str:start:length} 字符串从0开始索引
 str="0123"
 echo ${str:0:2} -> 01
 ${str:0-start:end}
