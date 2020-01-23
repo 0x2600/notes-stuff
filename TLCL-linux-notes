@@ -700,3 +700,70 @@ find ./*txt_bak -exec mv {} {}_bak \;
 
 screen attach 退出 ^ D, 或者 exit 
 
+
+
+Linux 服务分类
+RPM包默认安装的服务 -> 1. 独立的服务
+                    -> 2. 基于 xinetd 的服务
+源码包安装的服务
+
+chkconfig --list [服务名]
+可以查看独立的服务和基于 xinetd 的服务
+
+独立服务的启动管理
+1. 使用 /etc/init.d/ 目录中的启动脚本来启动独立的服务
+/etc/init.d/ httpd restart
+2. 使用 service 命令来启动独立服务，实际任然调用 /etc/init.d/ 中的启动脚本来启动独立的服务。
+service httpd restart
+service --status-all
+
+独立服务的自启动管理
+1. chkconfig 服务自启动管理命令
+chkconfig --list
+独立服务自启动
+chkconfig --level 2345 httpd on
+
+2. 修改 /etc/rc.d/rc.local 文件，把服务的启动命令放入这个文件，这个服务就会在开机时自启动（适用于源码安装的包）
+
+3. ntsysv 
+ntsysv [--level 235]
+
+基于 xinetd 服务的启动
+这样的服务没有自己独立的启动脚本程序，需要依赖 xinetd 的启动脚本， xinetd 本身是独立的服务。
+修改 /etc/xinetd.d/ 下服务的配置文件
+service xinetd restart
+
+基于 xinetd 服务的自启动
+1. chkconfig 
+chkconfig telnet on
+chkconfig --list | grep telnet
+2. ntsysv
+
+
+源码包服务得到启动管理
+如 apache2
+/usr/local/apache2/bin/apachectl start
+
+源码包服务的自启动管理
+启动程序放到 /etc/rc.d/rc.local 文件中执行
+
+让源码包服务被服务管理命令识别
+ln -s /usr/local/apache2/bin/apachectl /etc/init.d/apache
+service apache restart
+
+让源码包安装的程序能被 chkconfig 命令管理自启动
+vi /etc/init.d/apache
+#chkconfig:运行级别 启动顺序 关闭
+#description
+chkconfig --add apache
+
+让 ntsysv 命令可以管理源码包安装的 apache 服务
+使用和 chkconfig 同样的管理机制
+
+
+Linux 日志轮替，日志转储 logrotate
+日期 secure-20130605
+secure.1 secure.2
+
+logrotate 配置文件
+
