@@ -1,0 +1,117 @@
+1. echo 不能打印双引号中的 !，需要转义，使用单引号，不使用引号
+#echo "Hello!" # error
+echo hello !
+echo "hello \!"
+echo 'hello !'
+
+bc 先写 obase, 再写 ibase
+echo "obase=10;ibase=2;1000" | bc # 8
+
+将脚本内部的文本块进行重定向
+```
+#!/bin/bash
+cat<<EOF>log.txt
+LOG FILE HEADER
+This is a test log file
+EOF
+```
+
+自定义文件描述符
+```
+echo test > testfile
+exec 3<testfile # 使用文件描述符3打开并读取文件
+cat <&3 # test
+
+exec 4>log
+echo test >&4
+cat log
+
+exec 5>> loga
+echo test2 >&5
+cat loga
+```
+
+1.7 数组和关联数组
+普通数组
+arr1=(one 1 str1)
+arr1[3]=test2
+
+echo ${arr1[0]}
+echo ${arr1[*]}
+echo ${arr1[@]}
+echo ${#arr1[*]} # 个数
+echo ${!arr1[*]} # 索引，0 1 2
+
+关联数组
+declare -A arr2
+arr2=([index1]=test1 [index2]=test2)
+arr2[index3)=test3
+echo ${arr2[index1]}
+echo ${!arr2[*]} # index1 index2 index3
+
+对别名进行转义
+\command # 忽略当前定义的别名
+
+获取终端行数，列数
+tput lines
+tput cols
+
+stty -echo # 设置终端不回传， stty echo 恢复
+
+调试脚本
+1. bash -x script.sh
+#!/bin/bash -x
+2. #!/bin/bash
+set -x # 开启
+set +x
+3. 自定义调试格式
+#!/bin/bash
+DEBUG(){
+	[ "$_DEBUG" == "ON" ] && $@ || :
+}
+for i in {1..10}
+do
+	DEBUG echo $i
+done
+# : 命令是不要进行任何操作。调用脚本如果启用调试
+_DEBUG=ON ./script.sh
+
+$@ 列表，常用这个
+$* 单个实体
+
+fork bomb
+:(){ :|:& };:
+fork_bomb(){ fork_bomb | fork_bomb & }; fork_bomb
+
+导出函数
+export -f fname
+
+子shell 单独生成 一个独立的进程, ()
+pwd;(cd /bin;pwd);pwd
+
+放入双引号保留空格和换行符
+echo "$(cal)"
+
+read -n, -s, -t, -p, -d 
+
+while true; 可以用 while :; 代替，true 是二进制文件，需要生成新的进程， :
+是 shell 内建命令
+
+cat -T 将指标符显示为 ^I
+cat -s 去除多余空白行
+
+script -t 2> timing.log -a output.session
+scriptreplay timing.log output.session
+
+find ./ -name ".git" -prune
+
+cat 1 2 3 4 | xargs -n2
+1 2
+3 4
+
+cat 1X2X3 | xargs -dX
+1 2 3
+
+避免 xargs 将空格当成定界符 find ... -print0 | xargs -0 ...
+
+ 
