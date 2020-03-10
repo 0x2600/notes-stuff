@@ -1,0 +1,108 @@
+实例方法和类方法。
+实例方法可以操作实例变量和类变量。
+类方法不仅可以通过类名调用，也可以通过实例对象调用。类方法不可以操作实例变量。
+
+Java 两种多态
+方法重载(overload)
+方法名字相同，但是：
+参数的个数不同，
+参数个数相同，但参数列表中对应的某个参数类型不同。
+
+this 关键字可以出现在构造方法和实例方法，不可以出现在类方法中。this 出现在构造方法表示该构造方法创建的对象。出现在实例方法表示正在调用该方法的当前对象。
+this 不能出现在类方法中：类方法可以通过类名调用，这时可能还没有任何对象产生。
+
+包
+Lader.java
+package name.misc;
+
+public class Lader{
+    double x, y, z;
+    Lader(x, y, z){
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+    double sum(){
+        return x + y + z;
+    }
+
+}
+然后写一个包含主类的源文件 Example.java
+package name.misc;
+
+这里直接使用 Lader 类(同目录的命名包内)。这两个文件都位于 name/misc 目录内。在顶级目录编译 javac name/misc/*.java, 运行 java name.misc.Example 。
+导入包： 在顶级目录编写包含主类的 Example2.java 
+import name.misc.Lader;
+就可以使用别的包内的类。
+
+访问权限
+针对对象是否可以操作变量和调用方法。
+在类中，实例方法总是可以操作实例变量和类变量。类方法总是可以操作类变量。
+
+私有变量和私有方法 private 修饰
+创建这样的对象后，该对象不能操作自己的变量。包括使用实例操作实例变量和类变量，使用类名调用类方法和操作类变量。
+
+共有变量和共有方法 public
+在别的类中创建这样的对象，可以自由使用该对象操作变量和调用方法。
+
+友好变量和友好方法，不使用 public, private, protected 修饰
+如果在同一个包中的类中创建这样的对象，效果等同于 public
+不在同一个包中的类中，比如 import 引入的其他包中类创建的对象，不能访问自己的变量和方法。
+
+受保护的成员变量和方法
+与友好相似，在子类上不同
+
+public 类和友好类
+public class A{...}，称为 public 类，可以在任何一个类中使用该 public 类创建对象。
+无修饰的类 class B{...} 称为友好类，可以使用该类在别的类中创建对象，只有别的类和该类在同一个包中。
+类不可以使用 protected 和 private 修饰。
+
+基本数据类型的类封装
+Doubel, Float 类
+Byte, Short, Integer, Long, Character 类。 
+
+对象数组
+Student [] stu;
+stu = new Student[10];
+stu[0] = new Student();
+
+反编译和文档生成器
+javap java.awt.Button // public 属性的方法和变量。
+javap -private java.awt.Button // 全部
+
+javadoc -d <dir> Example.java //生成文档
+
+使用 java 运行环境扩展中类
+使用 jar 将一些类的字节码文件压缩成一个 jar 文件，放到 jre/lib/ext 目录使用。
+1. 有包名的类
+先生成字节码。然后在顶级目录编写 Manifest 文件，比如
+Manifest-Version: 1.0
+Class: name.misc.TestOne name.misc.TestTwo
+Created-By: 1.6
+生成 jar 文件。 jar cfm hello.jar hello.mf name/misc/*.class
+放到 ext 目录。别的源文件 import 使用。
+2. 无包名的类
+步骤相似。无须 import
+
+
+
+// liaoxuefeng
+
+子类覆写的方法可以通过 super 调用。
+super.foo()
+
+final 继承允许子类覆写父类的方法，如果父类不允许子类对其某个方法覆写，可以使用 final 修饰。
+
+如果一个类不允许其他类继承自他，可以使用 final 修饰。
+final class Person
+final 修饰的变量初始化后不可修改。
+可以在构造方法中初始化 final 字段
+class Person{
+    private final String name;
+    public Person(String name){
+        this.name = name;
+    }
+}
+
+
+
