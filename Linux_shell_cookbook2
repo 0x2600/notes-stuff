@@ -45,7 +45,7 @@ echo ${!arr1[*]} # 索引，0 1 2
 关联数组
 declare -A arr2
 arr2=([index1]=test1 [index2]=test2)
-arr2[index3)=test3
+arr2[index3]=test3
 echo ${arr2[index1]}
 echo ${!arr2[*]} # index1 index2 index3
 
@@ -114,4 +114,80 @@ cat 1X2X3 | xargs -dX
 
 避免 xargs 将空格当成定界符 find ... -print0 | xargs -0 ...
 
- 
+临时文件
+mktemp
+临时目录 
+mktemp -d
+mktemp testXXX 根据模板生成
+
+lsattr
+sudo chattr +i, -i
+
+declare -A test[in1]='re1'
+test[in2]='re2'
+echo ${!test[@]} # in1 in2
+echo ${test[in1]} # re1
+
+done < <(find $path -type f -print)
+<(find $path -type f -print)等同于文件名。只不过它用子进程输出来代替文件名。
+注意,第一个<用于输入重定向,第二个<用于将子进程的输出装换成文件名。在两个<之间有一
+个空格,避免shell将其解释为<<操作符。
+
+在Bash 3.x及更高的版本中,有一个新操作符<<<,可以让我们将字符串作
+为输入文件。利用这个新操作符,可以将loop循环的done语句改写成
+
+done <<< "`find ...`"
+
+使用环回文件
+1. sudo dd if=/dev/zero of=lo.img bs=20M count=1
+2. sudo mkfs.ext4 lo.img
+3. mkdir lo
+4. sudo mount -o loop lo.img lo
+5. sudo umount /dev/loop0 # loop0 文件系统注意改变
+
+将 ISO 文件作为环回文件挂载
+mkdir /mnt/isofile
+mount -o loop linux.iso /mnt/isofile
+
+在环回镜像中创建分区
+losetup /dev/loop1 lo.img # 文件到设备
+fdisk /dev/loop1 # 分区设备
+
+将有多个分区的镜像映射为设备
+kpartx -va lo.img # /dev/mapper/loop0p1, /dev/mapper/loop0p2
+格式化分区。
+挂载文件系统到挂载点，使用。
+
+查找文件差异并进行修补
+diff -u # 一体化输出
+diff -u ver1 ver2 > ver.patch # 生成 patch
+patch 应用与 ver1 生成 ver2，反之亦然。
+
+pushd 和 popd 快速定位
+pushd /tmp # 切换到 /tmp
+dirs 查看栈
+popd 弹出，并切换到上一级目录
+pushd +num
+popd +num
+
+tree path -P "*.sh" 只包含 pattern
+tree path -I "*.sh" 除了 pattern 之外
+tree path -H http://localhost -o out.html
+
+seq 10 | grep 5 -A 3 # 打印匹配某个结果之后的3行
+seq 10 | grep 5 -B 3 打印匹配结果之前3行
+seq 10 | grep 5 -C 3 # 前后各3行
+
+
+cut -f,--fields=LIST -d delimiter
+
+sed 文本替换
+echo iiii | sed 's/i/I/2g' # 从第二个匹配开始全局替换
+sed -i 's/\b[0-9]\{3\}\b/NUMBER/g' sed_data.txt # 使用 NUMBER 替换三位数字
+sed '/^$/d' # 删除空白行
+
+wget -O filenam -o log
+
+curl 将下载文件输出到 stdout，将进度条输出到 stderr。避免进度条信息使用 -s, --slient 选项
+-o, --ouput <file>
+-O # 自动填充文件名
