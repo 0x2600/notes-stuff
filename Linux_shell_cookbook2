@@ -191,3 +191,24 @@ wget -O filenam -o log
 curl 将下载文件输出到 stdout，将进度条输出到 stderr。避免进度条信息使用 -s, --slient 选项
 -o, --ouput <file>
 -O # 自动填充文件名
+
+ssh 无密码登陆
+非对称加密技术，一个公钥，一个私钥。通过 ssh-keygen 生成密钥对。公钥内容放在服务器 .ssh/authorized_keys 文件内。私钥放在客户机 .ssh/ 目录内。
+如果将公钥添加到服务器：
+1. ssh-copy-id user@remote_host
+2. ssh user@remote_host "cat >> ~/.ssh/authorized_keys" < ~/.ssh/id_rsa.pub
+
+ssh 端口转发
+1. 将本机端口 8000 的流量转到 www.bing.com:80
+ssh -L 8000:www.bing.com:80 me@localhost
+输入密码，将会开启一个 shell，进行转发的过程中，需要保持打开状态。
+访问 curl -I localhost:8000, bing.com:80 的头部
+2. 将远程主机端口 8000 上的流量转发到 bing.com:80
+ssh -L 8000:www.bing.com:80 user@remote_host
+curl -I remote_host:8000
+
+非交互式端口转发
+ssh -fL 8000:www.kernal.org:80 user@localhost -N 
+-f 指定 ssh 执行命令前转入后台， -N 告诉 ssh 无需执行命令。
+
+反向端口转发
