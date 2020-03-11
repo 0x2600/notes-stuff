@@ -104,5 +104,149 @@ class Person{
     }
 }
 
+一个构造方法可以调用别的构造方法。语法是 this(...)
+class People{
+    String name;
+    int age;
+
+    public People(String name, int age){
+        this.name = name;
+        this.age = age;
+    }
+
+    public People(String name){
+        this(name, 18);
+    }
+
+    public People(){
+        this("Unamed");
+    }
+}
+
+super 关键字
+class Person{
+    protected String name;
+    protected int age;
+
+    public Person(String name, int age){
+        this.name = name;
+        this.age = age;
+    }
+}
+
+class Student extends Person{
+    protected double score;
+
+    public Student(String name, int age, double score){
+        super(name, age); // 调用父类的构造方法。 如无明确指明，调用 super();
+        this.score = score;
+    }
+}
+
+向上转型
+Person p = new Student(); // upcasting
+向下转型 downcasting
+p instanceof P -> true, false // 判断类型, null 对任何类型的判断都是 false.
+
+继承和组合 is, has 关系
+
+@override //放在希望覆写的方法之前。编译器会帮忙检查。
+上转型对象调用被覆写的方法，实际调用覆写的方法。
+如：
+Person p = new Student();
+p.run(); // Student run
+
+多态的特性就是，运行期才能动态决定调用的子类方法。对某个类型调用某个方法，执行的实际方法可能是某个子类的覆写方法。
+
+如果一个类的某个方法目的就是让子类覆写它，那么可以用 abstract 修饰，这个方法要写出方法头，实现由子类实现。同时该父类也不能实例化，所以也要 abstract 修饰。 
+
+面向抽象编程：
+Person s = new Student();
+Person t = new Teacher();
+s.run();
+t.run();
+引用高层类型，避免引用实际子类型的方式。
+特点：
+上层代码只定义规范
+不需要子类就可以实现业务逻辑（正常编译）
+具体的业务逻辑由不同的子类实现。
+
+当一个类的所有方法都是抽象方法时，可以把该抽象类改写为接口
+interface Person{
+    void run();
+    String getName();
+}
+接口中的抽象方法也可以省略 abstract 修饰。 
+一个具体的类去实现接口时：
+class Student implements Person{
+    ...
+}
+
+一个类可以实现多个接口
+class Student implements Person, Hello{
+    ...
+}
+
+抽象类可以定义实例字段，interface 不可以定义实例字段。
+抽象类可以定义抽象方法和非抽象方法。interface 可以定义抽象方法和 default 方法。
+
+interface 的 default 方法在 interface 中实现。这样在 interface 类中增加方法，实现 interface 的类无需改变。
+
+静态字段属于类的字段，为所有的实例所共享。不推荐使用实例访问静态字段。实例能够访问静态字段只是因为编译器可以根据实例类型转换为类名来访问静态对象。
+
+静态方法属于 class，静态方法内部不能访问　this　变量，也无法访问非静态字段。通过实例变量也可以调用静态方法，不过只是编译器自动帮我们把实例改写为类名。
+静态方法经常用于工具类.
+Array.sort()
+Math.random()
+
+interface 虽然不能有实例字段,但是可以有 static final 字段.
+public interface Person{
+    public static final int MALE = 1; // 可以省略 public static final
+    public static final int FEMALE = 1;
+}
+
+
+import 语句三种写法
+1. 写完整报名，此时不用 import
+2. import 某个类，然后直接使用
+* 表示包下所有的类，不包括子包的类。
+3. import static java.lang.System.*; // 导入 System 类的所有静态字段和方法。
+
+自动导入： 当前包的其他类。java.lang 包
+
+作用域：
+public: class, interface 可以被其他任何类访问。field, method 可以被其他类访问，前提是有访问 class 的权限。
+
+private： field, method 无法被其他类访问。嵌套类可以访问 private field, method.
+
+protected 作用与继承关系。定义为 protected 的字段和方法可以被子类访问，包括子类的子类。
+
+包作用域是指一个类允许访问同一个包的没有 public, private 修饰的 class, 以及没有 public, protected, private 修饰的字段和方法。
+
+局部变量：方法内部定义的变量称为局部变量。
+
+final: 
+修饰类，阻止被继承。
+修饰方法，阻止被子类覆写
+修饰字段，阻止被修改
+修饰局部变量阻止被修改。
+
+一个 .java 文件只能包含一个 public 类，但可以包含多个非 public 类。如果有 public 类，文件名必须和 public 类的名字相同。
+
+classpath 类路径，指定搜索类的路径的环境变量
+不推荐在系统环境变量中设置 classpath，这样会污染整个环境。推荐 JVM 启动时传入 -classpath, -cp 参数。 
+没有设置环境变量或者没有传入参数， java 默认的 classpath 为当前目录。
+如执行 java name.misc.Hello， 会搜索 ./name/misc/Hello.class 字节码。
+java 核心库不需要设置 classpath.
+
+java -cp ./hello.jar abc.xyz.Hello
+会在 hello.jar 中搜寻 Hello 类。
+jar 就是一个 zip 包，可以使用 zip 打包然后修改扩展名
+MANIFEST.MF 指定 Main-Class 和其他信息，大型项目可以使用 Maven 构建工具。
+
+
+
+
+
 
 
