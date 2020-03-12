@@ -147,6 +147,11 @@ class Student extends Person{
 Person p = new Student(); // upcasting
 向下转型 downcasting
 p instanceof P -> true, false // 判断类型, null 对任何类型的判断都是 false.
+上转型对象不能操作子类新增的变量，调用子类新增的方法。可以操作、调用的变量、方法是子类隐藏或重写的变量与方法。
+可以将上转型对象强制转为一个子类对象，这是该对象将具有子类的所有属性和功能。
+错误： Tiger t = new Animal();
+如果子类重写了父类的静态方法，那么子类对象的上转型对象只能调用父类的静态方法。
+
 
 继承和组合 is, has 关系
 
@@ -158,7 +163,9 @@ p.run(); // Student run
 
 多态的特性就是，运行期才能动态决定调用的子类方法。对某个类型调用某个方法，执行的实际方法可能是某个子类的覆写方法。
 
-如果一个类的某个方法目的就是让子类覆写它，那么可以用 abstract 修饰，这个方法要写出方法头，实现由子类实现。同时该父类也不能实例化，所以也要 abstract 修饰。 
+如果一个类的某个方法目的就是让子类覆写它（不可以 final 修饰类），那么可以用 abstract 修饰，这个方法要写出方法头，实现由子类实现。同时该父类也不能实例化（不可以使用 new 运算符创建对象），所以也要 abstract 修饰。（抽象类可以有抽象方法（也可以没有抽象方法），也可以有非抽象方法。但是非抽象类不能有抽象方法） 该方法必须是实例方法，所以不可以使用 static 修饰。 抽象类不可以实例化，但是可以声明对象作为其子类的上转型对象。
+
+
 
 面向抽象编程：
 Person s = new Student();
@@ -207,7 +214,7 @@ public interface Person{
 
 
 import 语句三种写法
-1. 写完整报名，此时不用 import
+1. 写完整包名，此时不用 import
 2. import 某个类，然后直接使用
 * 表示包下所有的类，不包括子包的类。
 3. import static java.lang.System.*; // 导入 System 类的所有静态字段和方法。
@@ -243,6 +250,20 @@ java -cp ./hello.jar abc.xyz.Hello
 会在 hello.jar 中搜寻 Hello 类。
 jar 就是一个 zip 包，可以使用 zip 打包然后修改扩展名
 MANIFEST.MF 指定 Main-Class 和其他信息，大型项目可以使用 Maven 构建工具。
+
+Java 9 开始, JDK 引入模块 Module
+java 9 之前,大型 Java 程序会生成自己的 jar 文件,同时引用依赖的第三方 jar 文件,JVM 自带的标准库也是以 rt.jar 文件存在.
+自己开发的程序,除了自己的 app.jar 以外还需要一堆第三方的 jar 包,运行程序一般:
+java -cp app.jar:a.jar:b.jar com.liaoxuefeng.sample.Main
+注意:标准库不要写到 classpath 中去.
+如果漏写某个运行时需要的 jar, 就会抛出 ClassNotFoundException
+
+java 9 开始的模块,主要是为了解决依赖问题.
+标准库的 rt.jar 分拆成了几十个模块,以 .jmod 扩展名标识放在 JAVA_HOME/jmods 目录下.
+java.base.jmod
+java.compiler.jmod,
+...
+模块之间的依赖关系已经写到模块内的 module-info.class 文件内.
 
 
 
