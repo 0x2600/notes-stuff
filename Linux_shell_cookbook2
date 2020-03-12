@@ -211,4 +211,14 @@ curl -I remote_host:8000
 ssh -fL 8000:www.kernal.org:80 user@localhost -N 
 -f 指定 ssh 执行命令前转入后台， -N 告诉 ssh 无需执行命令。
 
-反向端口转发
+# TODO 反向端口转发
+
+网络流量与端口分析
+lsof -i 
+创建网络套接字
+nc -l 12344
+nc HOST 1234
+传输文件：
+nc -l 1234 > file
+nc HOST 1234 < file
+
