@@ -214,11 +214,15 @@ ssh -fL 8000:www.kernal.org:80 user@localhost -N
 # TODO 反向端口转发
 
 网络流量与端口分析
-lsof -i 
+lsof -  
 创建网络套接字
 nc -l 12344
 nc HOST 1234
 传输文件：
 nc -l 1234 > file
 nc HOST 1234 < file
+
+cron 在系统启动时运行命令
+@reboot command
+
 
