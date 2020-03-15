@@ -423,6 +423,7 @@ cut cut -d "delimiter" -c -f 从文件的每一行截取部分
 cut -d ":" -f1 /etc/passwd -> 得到用户名
 
 sort //TODO
+sort -nvk
 
 wc -cmlw
 
@@ -540,7 +541,9 @@ ls -l /etc/ | zip ls-etc.zip -
 unzip -p ls-etc.zip | less
 
 同步文件和目录
-sudo rsync -av --delete /etc /home /usr/local /media/BigDisk/backup
+sudo rsync -avLx --delete /etc /home /usr/local /media/BigDisk/backup
+L copy file by link pointed
+-x one file system
 
 ## 文本处理
 cat -A(显示空格), -n(行号), -s(禁止多余空行)
