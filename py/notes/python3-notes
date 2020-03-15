@@ -230,9 +230,10 @@ st = print("a > b"), print("a 大于 b") if a > b else print("a <= b")
 ```
 
 3. 数字 Number
-支持十六进制，八进制表示整数
+支持十六进制，八进制，二进制表示整数
 num1 = 0xf # 15
 num2 = 0o10 # 8
+num3 = 0b11 # 3
 complex: a +bj, complex(a, b)
 
 >>> 7//2
@@ -655,8 +656,8 @@ class Speaker:
 		print(self.name, self.topic)
 
 class Sample(Student, Speaker):
-	def __init__(self, n, a, g, t):
-		Student.__init__(self, n, a, g)
+	def __init__(self, n, a, w, g, t):
+		Student.__init__(self, n, a, w, g)
 		Speaker.__init__(self, n, t)
 	def speak(self):
 		print(self.name, self.age, self.grade, self.topic)
@@ -665,7 +666,7 @@ if __name__ == "__main__":
 	MySam = Sample('jerry', 22, 60, 'A', 'Python')
 	MySam.speak()
 
-# output: jerry 22 60 A Python\n
+# output: jerry 22 A Python\n
 
 方法重写
 class Parent:
