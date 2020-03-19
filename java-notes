@@ -276,6 +276,84 @@ java -cp ./hello.jar abc.xyz.Hello
 jar 就是一个 zip 包，可以使用 zip 打包然后修改扩展名
 MANIFEST.MF 指定 Main-Class 和其他信息，大型项目可以使用 Maven 构建工具。
 
+内部类与外嵌类
+内部类可以使用外嵌类的变量和方法。内部类的类体不可以声明类变量和类方法。外嵌类可以使用内部类声明对象，作为其成员。
+static 修饰的内部类可以在程序的其他类使用，static 内部类不能操作外嵌类中的实例变量。
+非内部类不可以是 static 类。
+
+匿名类
+匿名类可以继承父类的方法和重写方法。
+匿名类是内部类，可以访问外嵌类的变量和方法，不可以有静态变量和方法。。
+匿名类要直接使用父类的构造方法。
+
+和接口有关的匿名类。必须实现接口的全部方法。
+
+常用实用类
+String 类的常用方法：
+1. public int length()
+2. public boolean equals(String s) equalsIgnoreCase(String s)
+3. public boolean startsWith(String s) endsWith(String s)
+4. public int compareTo(String s), compareToIgnoreCase(String s)
+5. public boolean contains(String s)
+6. public int indexOf(String s) 返回首次出现字符串 s 的索引，没有返回 -1, lastindexOf(String s) 返回最后出现字符串 s 的索引。indexOf(String s, int startpoint)
+7. public String substring(int startpoint[, int end]) 返回 [start, end) 的子串。
+8. public String trim() 返回去掉前后空格的字符串
+
+字符串与基本数据的转化。使用: Double.parseDouble(String s);
+public static byte parseByte(String s) throws NumberFormatException
+              int
+              short 
+              long 
+              float
+              double
+由基本数据转化为字符串
+public static String valueOf(byte, int, long, float, double n)
+
+注意 main() 的参数 args[0] 不是程序文件名。
+
+对象的字符串表示 System.out.println(object x), x.toString() -> String
+
+String(char a[]), String(char a[], int offset, length)
+void getChars(int start, int end, char c[], int offset)
+char[] toCharArray()
+
+byte[] getBytes([String charsetName]) throws UnsupportedEncodingException
+
+
+		String s = "我能吞下玻璃而不伤身体";
+		char a[] = s.toCharArray();
+		String pass = "pass";
+		char b[] = pass.toCharArray();
+		int al = a.length;
+		int bl = b.length;
+
+		System.out.println(new String(a)+"\nencrypt...");
+
+		for(int i=0; i<al; i++){
+			a[i] ^= b[i%bl];
+		}
+		System.out.println(new String(a)+"\nencrypt...");
+
+		
+		for(int i=0; i<al; i++){
+			a[i] ^= b[i%bl];
+		}
+		System.out.println(a);
+
+
+我能吞下玻璃而不伤身体
+encrypt...
+扡肜呭乸珋瓢聿乾佔車传
+encrypt...
+我能吞下玻璃而不伤身体
+
+
+
+
+
+
+
+
 
 
 
