@@ -288,7 +288,41 @@ static 修饰的内部类可以在程序的其他类使用，static 内部类不
 
 和接口有关的匿名类。必须实现接口的全部方法。
 
-常用实用类
+### 异常类
+语法：
+try{
+    ...
+}
+catch(Exception e){
+    ...
+}
+finally{
+    ...
+}
+
+自定义异常类
+// Cust_class.java
+class Cust_class extends Exception{
+    // Constuctor...
+}
+// class we will use, method in this class will throw customized exception.
+void method_1 throws Cust_class{
+    if...
+        throw new Cust_class(...) // 创建异常类, 方法结束
+    ...
+}
+// mainClass
+try{
+    method_1(); // call method that may throw exception
+}
+
+
+### 断言
+assert booleanExpression:msg， 值为 false， 输出 msg 
+启用与关闭断言语句。默认关闭，启用： java -ea mainClass
+
+
+### 常用实用类
 String 类的常用方法：
 1. public int length()
 2. public boolean equals(String s) equalsIgnoreCase(String s)
@@ -309,7 +343,7 @@ public static byte parseByte(String s) throws NumberFormatException
 由基本数据转化为字符串
 public static String valueOf(byte, int, long, float, double n)
 
-注意 main() 的参数 args[0] 不是程序文件名。
+注意 main() 的参数 args[0] 不是程序文件名。java mainClass args[0] args[1]...
 
 对象的字符串表示 System.out.println(object x), x.toString() -> String
 
@@ -346,6 +380,113 @@ encrypt...
 扡肜呭乸珋瓢聿乾佔車传
 encrypt...
 我能吞下玻璃而不伤身体
+
+正则表达式
+字符串对象有方法 public boolean matches(String regex)
+元字符：
+. 任何一个字符
+\\d 0-9
+\\D 不是 0-9
+\\s 空格类, \t \n \x0B \f \r
+\\S 非空格类
+\\w 用于标识符的字符（不包括美元字符）
+\\W 非上
+\\p{Lower}, Upper, ASCII, Alpha, Digit, Alnum, Punct, Graph, Print, Blank, Cntrl
+
+Graph = Alnum + Punct, Blank 空格或制表符
+[abc] 代表其中一个， [a-z] a-z, [^abc] 不是 abc 任何一个， [a-z[1-9]] 并， [a-z&&[c-d]] 交 c-d， [a-f&&[^bc]] adef
+
+普通 . 字符， [.]
+
+限定修饰符：
+? 0, 1
+* 0, 多次
++ 1, 多次
+X{n} n 次
+X{n,} 至少 n 次
+X{n,m} n-m 次
+XY X 的后缀是 Y 
+X|Y X 或者 Y 
+
+字符串替换
+public String replaceAll(String regex, String replacement), 返回字符串，不改变当前字符串。 "123abc".replaceAll("[a-z]+", "456")
+字符串分解 public String[] split(String regex)
+
+java.util.StringTokenizer
+StringTokenizer 类
+构造方法 StringTokenizer(String s) 默认 delim 是空格，换行...
+StringTokenizer(String s, String delim)
+该实例有 boolean hasMoreTokens(), String nextToken(), countTokens() 方法。
+
+Scanner 类
+1. 使用默认分割标记（空格）解析字符串
+Scanner sc = new Scanner(String s)
+方法： hasNext(), nextInt(), next(), 异常： InputMismatchException
+2. 使用正则表达式作为分割标记解析字符串
+sc.useDelimiter(regex)
+
+java.util 包的 Date 类与 Canlendar 类
+Date nowTime = new Date([long timeInMillis]); // 本机日期与时间
+Canlendar can = new Canlendar;
+can.getInstance;
+can.set(int year, int month, int date);
+can.get(Canlendar.MONTH); 参数为类的静态变量
+
+日期的格式化：
+String.format(格式化模式，日期列表)
+String.format("%tY-%<tm-%<td", new Date()); // 使用同一个日期对象
+%tH:%tM:%tS 
+星期的全称不同， 设置 Locale 格式化模式
+import java.util.Locale
+String.format(Locale.JAPAN, "%tA", new Date());
+
+Math, BigInteger, Random 类
+Math 类方法 public static 
+long abs(double a)
+double max(double), min, random (0, 1), pow, sqrt, log, sin, asin
+
+BigInteger 构造方法： BigInteger(String s)
+实例方法：
+add(BigInteger var), subtract, multiply, divide, remainder, compareTo, abs, pow, toString, toString(p 进制)
+
+java.util.Random
+构造方法：
+public java.util.Random();
+public java.util.Random(long seed);
+
+public int nextInt();
+public int nextInt(int);
+public long nextLong();
+public boolean nextBoolean();
+public float nextFloat();
+public double nextDouble();
+
+### 数字格式化
+1.5 之前使用 java.text.DecimalFormatter 类。之后使用了 Formatter 类。现在 String 类的静态方法 format 即支持类似 C 的 printf 函数类似的 fromat 方法。 
+格式化顺序： 默认从左到右。可以在格式符前添加 index$ 改变顺序， %2$.2f
+%% 转义 %
+
+格式化整数
+%d %o %x %X
+%+ 正整数强制加上 + 号
+%, 格式化千位加 , 号
+数据宽度 %md %-md 右对齐，左对齐。如果数据实际的宽度大于格式的宽度，按照实际数据的宽度格式化。
+
+%f %e E %g G %a A 浮点保留6位
+%+， %， 正数格式化加 + 号，整数部分按千位分组
+%m.nf 总计 m 位， 小数 n 位。如果数据实际的宽度大于格式的宽度，按照实际数据的宽度格式化。
+
+StringBuffer 可变的类字符串对象
+append(object o), insert(int index, String s), reverse(), delete(int startIndex, int endIndex), replace(int startIndex, int endIndex, String s)
+
+Pattern 和 Matcher 类， java.util.regex
+String reg = "good", input = "good morning.";
+Pattern pa = Pattern.compile(reg);
+Matcher ma = pa.matcher(input);
+
+ma.find([int start]) -> boolean 可以多次调用， ma.start(), ma.end(), ma.group() 返回模式字符串的开始、结束位置，和 匹配的子串。
+
+
 
 
 
