@@ -487,6 +487,55 @@ Matcher ma = pa.matcher(input);
 ma.find([int start]) -> boolean 可以多次调用， ma.start(), ma.end(), ma.group() 返回模式字符串的开始、结束位置，和 匹配的子串。
 
 
+## 输入输出流
+File 类
+构造方法： 
+File(String filename)
+File(String path, String filename)
+File(File dir, String filename)
+文件的属性：
+String getName(), boolean canRead(), boolean canWrite(), boolean exists(), long length(), String getAbsolutePath()
+String getParent(), boolean isFile(), boolean isDirectory(), boolean isHidden(), long lastModified()
+
+目录：
+创建目录 boolean mkdir()
+列出目录中的文件：
+String[] list()
+File[] listFiles()
+文件的创建与删除：
+boolean createNewFile()
+boolean delete()
+
+运行可执行文件
+1. 创建 Runtime 对象, java.lang.Runtime
+Runtime ec = Runtime.getRuntime();
+2. 调用 exec(String com) 方法
+
+
+文件字节输入流 FileInputStream(String name) (File file)
+public class java.io.FileInputStream extends java.io.InputStream {
+  public java.io.FileInputStream(java.lang.String) throws java.io.FileNotFoundException;
+  public java.io.FileInputStream(java.io.File) throws java.io.FileNotFoundException;
+  public java.io.FileInputStream(java.io.FileDescriptor);
+  public int read() throws java.io.IOException;
+  public int read(byte[]) throws java.io.IOException;
+  public int read(byte[], int, int) throws java.io.IOException;
+  public void close() throws java.io.IOException;
+  trim...
+}
+int read() 返回 0-255, 失败返回 -1
+int read(byte[]) 读出 byte[] 长度字节，失败返回 -1
+int read(byte[], int offset, int len)
+String s = new String(s, 0, n) n 实际长度
+
+文件字节输出流
+FileOutputStream(String name[, boolean append])
+public void write(int) throws java.io.IOException;
+public void write(byte[]) throws java.io.IOException;
+public void write(byte[], int, int) throws java.io.IOException;
+
+
+文件字符输入输出流 FileReader, FileWriter 类
 
 
 
