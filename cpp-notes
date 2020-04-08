@@ -34,6 +34,7 @@ int main(){
 }
 
 2.1 类的定义和对象的创建
+类是一种数据结构，不占用内存空间，所以类体中的成员变量在定义类的时候不可以初始化。
 类通常定义在函数外面
 class Stu{
 public:    
@@ -77,7 +78,7 @@ void Stu::foo(){
 的定义放在源文件中。
 
 2.6 构造函数
-名字和类名相同，没有返回值，没有变量来接收返回值。public 属性。
+名字和类名相同，没有返回值，没有变量来接收返回值。public 属性。返回值类型是 void 也不行，函数体中不可以有 return 语句。
 class Stu{
 private:
     char *mname;
@@ -97,12 +98,15 @@ Stu::Stu(char *name, int age){
 int main(){
     Stu han("Han", 20);
     han.greet();
+
+    Stu *pStu = new Stu("test", 21);
+    pStu->greet();
     return 0;
 }
 
 构造函数重载
-
-调用没有参数的构造函数，可以省略括号 Stu han(); Stu han; Stu *phan = new Stu(); Stu *phan = new Stu;
+如果定义了构造函数，那么编译器就不会自动生成空白的构造函数。
+调用没有参数的构造函数，可以省略括号。 Stu han(); Stu han; Stu *phan = new Stu(); Stu *phan = new Stu;
 
 2.7 构造函数初始化列表
 class Stu{
@@ -131,10 +135,10 @@ Demo::Demo(int b){
 }
 在栈上创建对象时，m_a 初始化的值不确定。
 
-初始化 const 成员变量，唯一方法
+初始化 const 成员变量，唯一方法。
 
 2.8 析构函数
-名字，类名前加 ~,没有参数，不能被重载(只有一个析构函数)
+名字，类名前加 ~,没有参数，不能被重载(只有一个析构函数)。用户没有定义，编译器自动生成。
 
 内存分区: 所有函数之外创建的对象是全局对象，位于全局数据区，程序结束执行时调用这些
 对象的析构函数。
@@ -142,7 +146,8 @@ Demo::Demo(int b){
 new 创建的对象位于堆区，delete 删除时调用析构函数。
 
 2.11 this 指针
-const 指针，指向当前对象，只能在类的内部使用。，可以访问 private, protected, public 成员。只有当对象被创建后 this 才有意义，因此不能在 static 函数中使用。
+const 指针(不可修改指针的指向，修饰指针)，指向当前对象，只能在类的内部使用。，可以访问 private, protected, public 成员。只有当对象被创建后 this 才有意义，因此不能在 static 函数中使用。(此时可能没有对象被创建)
+this 本质上可以当做是成员函数的隐式形参，属于函数的局部变量。
 
 2.12 static 静态成员变量
 public:
@@ -151,7 +156,7 @@ static 成员变量属于类，在类声明的外部进行初始化，初始化�
 
 2.13 static 静态成员函数
 静态成员函数与普通成员函数，普通成员函数有 this 指针，可以访问类中的任意成员;静态成员函数只能访问静态成员。
-声明时加 static, 定义时不能加 static，可以通过类调用，也可以通过对象调用。
+声明时加 static, 定义时不能加 static。可以通过类调用，也可以通过对象调用。
 public:
     static int getTotal();
 
@@ -162,9 +167,11 @@ char *getname() const;
 char *Stu::getname() const{
     ;
 }
+函数开头的 const 修饰函数的返回值。函数头结尾的 const 表示 const 常成员函数，不会修改成员变量的值，可用于 get 函数。 
 
 2.15 const 对象
-const 对象只能调用类的 const 成员。
+const 对象只能调用类的 const 成员(变量和函数)。
+定义对象时：
 const Stu stu();
 Stu const stu()
 
@@ -172,7 +179,7 @@ const Stu *pstu = new Stu()
 Stu const *pstu = new Stu()
 
 2.16 友元函数和友元类 friend 关键字
-友元函数 
+友元函数 在当前类以外定义的、不属于当前类的函数也可以在类中声明，但要在前面加 friend 关键字，这样就构成了友元函数。
 1) 非成员函数声明为友元函数
 
 class Stu{
@@ -198,6 +205,8 @@ class Addr{
     friend char *Stu::getCity(Addr *paddr);
 };
 友元类 略
+2.18 class 和 struct 区别
+C++ 中 struct 可以包涵成员函数。
 
 2.19 string
 #include <string>
@@ -210,11 +219,14 @@ substr(pos=0,len=npos)
 size_t find(string &, pos=0)
 size_t find(char *, pos=0)
 rfind()
+find_first_of() 查找共有的字符串出现的位置
 
 3.1 引用
-type &name = data;
-int b;
-int &a = b;
+引用必须在定义的同时初始化，并且不能再引用其他数据。定义时 &, 使用时不要 &，& 取地址。
+不希望通过引用来修改原始数据,常引用：
+const int &r = a;
+int const &r = a;
+
 ```
 int main(){
     int a = 99;
@@ -233,8 +245,8 @@ swap3(num1, num2);
 
 4. 继承与派生
 class Stu:public People;
-public 继承方式
-public, protected, private 修饰类的成员
+public 继承方式，其他包括 protected, private(默认) 继承方式
+friend 修饰的函数不是该类的函数，参数一般为该类。
 protected 成员不能通过对象访问，当存在继承关系时，基类中的 protected 成员可以在派生类中使用
 
 public, protected, private 指定继承方式
@@ -244,15 +256,16 @@ protected 继承 | protected | protected | 不可见
 private 继承 | private | private
 
 改变访问权限
-using 改变基类中 public, private 成员的访问权限。不能改变 private 成员，因为该成员在基类中不可见。
+using 改变基类中 public, protected 成员的访问权限。不能改变 private 成员，因为该成员在基类中不可见。
 
+子类中：
 public:
     using Stu::m_name
 private:
     using Stu::m_age
 
 4.3 继承时的名字遮蔽问题
-派生类的成员和基类的重名，那么在派生类中使用该成员实际上使用的是派生类新增的成员。
+派生类的成员(成员变量或成员函数)和基类的重名，那么在派生类中使用该成员实际上使用的是派生类新增的成员。
 ```
 #include <iostream>
 #include <string>
@@ -289,7 +302,7 @@ void stu::show(){
 int main(){
     stu stu1("stu1", 20, 98.0);
     stu1.show();
-    stu1.people::show();
+    stu1.people::show(); // 基类的函数 
 }
 ```
 只要成员函数名字一样，就会遮蔽，而不是重载。
@@ -310,11 +323,15 @@ int main(){
     obj2.class1::func();
     obj2.class1::func("test")
     // 以上调用方法是正确的。class1 中的 func 构成重载， class2 中的 func 构成重载。
+    // obj2();
+    // obj2("test") 这两个调用是错误的。
     return 0;
 }
 
 4.6 基类和派生类的构造函数
-基类构造函数不会被继承，不能当作普通的成员函数来调用。因此放在派生类构造函数头部。
+基类构造函数不会被继承，因为构造函数的名字都不相同。
+子类对父类继承过来的变量使用构造函数初始化，但是父类可能存在 private 属性的变量，这是就要借助父类的构造函数来初始化。即在子类的构造函数中调用父类的构造函数。
+不能当作普通的成员函数来调用。因此放在派生类构造函数头部。不能放在子类构造函数体中。
 派生类构造函数只能调用直接基类的构造函数，不能调用间接基类的。
 #include <iostream>
 #include <string>
@@ -344,10 +361,11 @@ public:
 public:
     float m_score;
 };
+// 调用基类的默认构造函数
 class2::class2(){
     m_score = 0.0;
 }
-
+// 子类构造函数调用父类构造函数，函数调用，传入实参
 class2::class2(string name, int age, float score):class1(name, age), m_score(score){}
 
 int main(){
@@ -371,24 +389,65 @@ D(): A(), B(), C(){
 基类构造函数的调用顺序和声明派生类时基类出现的顺序相同， 与构造函数中出现的顺序无关
 
 命名冲突
-多个基类中出现同名的成员(变量或者函数)，类名加域解析符
+多个基类中出现同名的成员(变量或者函数)，如果在子类中使用，需要类名加域解析符以明确指定使用哪个基类的成员。
 class A{
-void show();
+public:
+    void show();
 };
 
 class B{
-void show();
+public:
+    void show();
 };
 
 class C:public A, public B{
-void show(){
-    A::show();
-    B::show()
-    // c.show() define here
+public:
+    void display(){
+        A::show();
+        B::show()
+        // other code define here
 }
 };
+4.11 虚继承和虚基类
+虚继承，使得在派生类中只保留一份间接基类的成员。
+A, B, C, D
+class B: virtual public A;
+class C: virtual public A;
+BC愿意共享其基类。
+虚继承时的构造函数：
+派生类首先调用虚基类的构造函数，虚基类的派生类对虚基类的构造函数的调用无效。
+4.14 向上转型
+派生类对象赋值给基类对象。
+成员变量是派生类的，成员函数确实基类的。
+与 java 相比，java 上转型对象的成员函数也是派生类的，除非 static 修饰的函数还是基类的。
+而 C++ 上转型对象能够访问派生类的成员变量却不能访问派生类的成员函数。C++ 通过虚函数来增加此功能。
 
-## 虚继承和虚基类
+5.1 虚函数
+函数声明前加 virtual 关键字。定义处可以加也可以不加。这样与 java 的默认上转型对象行为一致。
+注意事项:
+1) 只需要在虚函数的声明处加上 virtual 关键字，函数定义处可以加也可以不加。
+
+2) 为了方便，你可以只将基类中的函数声明为虚函数，这样所有派生类中具有遮蔽关系的同名函数都将自动成为虚函数。
+
+3) 当在基类中定义了虚函数时，如果派生类没有定义新的函数来遮蔽此函数，那么将使用基类的虚函数。
+
+4) 只有派生类的虚函数覆盖基类的虚函数（函数原型相同）才能构成多态（通过基类指针访问派生类函数）。
+
+5) 构造函数不能是虚函数。对于基类的构造函数，它仅仅是在派生类构造函数中被调用，这种机制不同于继承。也就是说，派生类不继承基类的构造函数，将构造函数声明为虚函数没有什么意义。
+
+6) 析构函数可以声明为虚函数，而且有时候必须要声明为虚函数。 
+
+5.4 纯虚函数
+virtual int getage() = 0;
+只要包含纯虚函数的类为抽象类，不能实例化，派生类必须实现纯虚函数才能被实例化。
+
+// TODO 函数中返回对象是否是返回指针？
+complex operator+(complex &n){
+    complex B(0.0, 0.0);
+    B.m_real = this->m_real + n.m_real;
+    B.m_imag = this->m_imag + n.m_imag;
+    return B;
+}
 
 
 
