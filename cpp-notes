@@ -449,6 +449,54 @@ complex operator+(complex &n){
     return B;
 }
 
+函数模板
+template<typename T> void Swap(T &a, T &b){
+    T tmp = b;
+    b = a;
+    a = tmp;
+}
+
+类模板
+template<typename T1, typename T2>
+class class_name{};
+
+声明需要带模板头，每个成员函数的定义也要带模板头
+
+使用类模板创建对象：
+Point<int, float> p(1, 2.1);
+必须显式指明数据类型。
+Point<int, float> *ppoint = new Point<int, float>(1, 2.1)
+
+异常
+try{
+    //
+}
+catch(exceptiontype [e]){
+    // 
+}
+e 变量可以省略
+
+异常类型可以是 int、char、float、bool 等基本类型，也可以是指针、数组、字符串、结构体、类等聚合类型。C++ 语言本身以及标准库中的函数抛出的异常，都是 exception 类或其子类的异常。也就是说，抛出异常时，会创建一个 exception 类或其子类的对象。
+
+多级 catch, 从上到下匹配，一个匹配，就会停止检索其他的异常。
+catch 在匹配异常类型的过程中，会进行类型转换，仅能进行「向上转型」、「const 转换」和「数组或函数指针转换」。
+throw exceptionData;
+
+throw 用作异常规范，或者异常指示符，异常列表
+double foo(char param) throw (int, char, exception);
+double foo(char param) throw (); //不会抛出任何异常，即使抛出，try 也不会检测。
+
+1. 虚函数中的异常规范
+派生类虚函数的异常规范要比基类更严格，或一样严格
+
+2. 函数声明和函数定义中的异常规范
+严格保持一致
+
+异常规范现已废弃，避免使用。
+
+
+  
+
 
 
 
