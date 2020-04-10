@@ -486,6 +486,85 @@ Matcher ma = pa.matcher(input);
 
 ma.find([int start]) -> boolean 可以多次调用， ma.start(), ma.end(), ma.group() 返回模式字符串的开始、结束位置，和 匹配的子串。
 
+## 组件及事件处理
+### java swing 概述
+Component 的子类或者间接子类创建的对象称为 组件。
+Container 的子类或间接子类创建的对象称为 容器。
+可以向容器添加组件 add() 方法。
+可以移除组件 removeall(), remove(Component c)
+容器本身也是一个组件，可以把一个容器添加到另一个容器中。
+每当有新的组件添加或移除时，当让容器调用 validate() 方法。
+
+
+### 窗口
+JFrame 底层容器，窗口
+JDialog 也是底层容器，对话框。其他组件必须添加到底层容器中。不允许再将窗口添加到另一个容器中。
+JFrame 常用方法：
+JFrame(), JFrame(String s) 创建带标题的窗口
+void setBounds(int a, int b, int width, int height)
+void setSize(int width, int height)
+void setLocation(int x, int y)
+setVisible(boolean b = false)
+setResizable(boolean b=true)
+void dispose() 撤销当前窗口，并释放当前窗口所使用的资源
+void setDefaultCloseOperation(int operation)
+JFrame.DO_NOTHING_ON_CLOSE
+HIDE_ON_CLOSE
+DISPOSE_ON_CLOSE
+EXIT_ON_CLOSE
+
+菜单条，菜单项，菜单
+菜单条： JMenuBar
+JFrame 对象调用 setJMenuBar(JMenuBar bar)
+举个例子：
+
+import javax.swing.*;
+import java.awt.*;
+
+
+
+class myfile{
+    public static void main(String args[]){
+        WinMenu win1 = new WinMenu("test", 0, 0, 200, 300);
+
+    } 
+}
+class WinMenu extends JFrame{
+    JMenuBar jmb;
+    JMenu jm1, jm2;
+    JMenuItem jmi1, jmi2, jmi3;
+
+    WinMenu(String s, int x, int y, int w, int h){
+        init(s);
+        setBounds(x, y, w, h);
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+    }
+    void init(String s){
+        setTitle(s);
+        jmb = new JMenuBar();
+        jm1 = new JMenu("File");
+        jm2 = new JMenu("Save as");
+        jmi1 = new JMenuItem("PDF");
+        jmi2 = new JMenuItem("TXT");
+        jmi3 = new JMenuItem("Quit");
+
+        jm1.add(jm2);
+        jm2.add(jmi1);
+        jm2.add(jmi2);
+        jm1.add(jmi3);
+
+        jmb.add(jm1);
+        setJMenuBar(jmb);
+
+    }
+
+}
+
+常用组件与布局
+组件：
+JTextField, JTextArea, JButton, JLable, JCheckBox, JRadioBox, JComboBox, JPasswordField, 
 
 ## 输入输出流
 File 类
