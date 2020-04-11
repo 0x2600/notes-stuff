@@ -1,0 +1,294 @@
+## 数据结构
+线性表：顺序表，链表。
+实现顺序表的初始化（堆区动态内存分配），插入元素(索引，值，表)， 删除元素(索引，表)， 查找索引（值，表），替换元素(值，新值，表)。
+#include <stdio.h>
+#include <stdlib.h>
+#define SIZE 5
+
+typedef struct{
+    int *head;
+    int len;
+    int size;
+} Table;
+
+Table initTable(){
+    Table T;
+    T.head = (int *)malloc(SIZE*sizeof(int));
+    if(T.head == NULL){
+        puts("malloc error");
+        exit(1);
+    }
+    T.len = 0;
+    T.size = SIZE;
+    return T;
+}
+
+void insertTable(int index, int ele, Table *T){
+    int i;
+    for(i=T->len;i>=index;i--){
+        T->head[i] = T->head[i-1];
+    }
+    T->head[index] = ele;
+    T->len ++;
+}
+
+void deleteTable(int index, Table *T){
+    int i;
+    for(i=index;i<(T->len)-1;i++){
+        T->head[i] = T->head[i+1];
+    }
+    T->len --;
+}
+
+int findTable(int ele, Table *T){
+    for(int i=0;i<T->len;i++){
+        if (T->head[i] == ele){
+            return i;
+        }
+    }
+    return -1;
+}
+
+void alterTable(int ele, int newele, Table *T){
+    int index = findTable(ele, T);
+    if (index != -1){
+        T->head[index] = newele;
+    }
+    else{
+        puts("ele not found, Table will not be alterd.");
+    }
+}
+
+void showTable(Table T){
+
+    int i;
+    for(i=0;i<T.len;i++){
+        printf("%d ", T.head[i]);
+    }
+    puts("");
+}
+
+int main(){
+    Table T = initTable();
+    int i;
+    for(i=0;i<3;i++){
+        T.head[i] = i + 1;
+        T.len ++;
+    }
+    puts("insert 100 @2");
+    insertTable(2, 100, &T);
+    showTable(T);
+    puts("delete index 1");
+    deleteTable(1, &T);
+    showTable(T);
+    puts("show 100 and 99 index");
+    printf("%d %d\n", findTable(100, &T), findTable(99, &T));
+    puts("replace 100 with 200");
+    alterTable(100, 200, &T);
+    showTable(T);
+    return 0;
+}
+
+// 输出
+insert 100 @2
+1 2 100 3 
+delete index 1
+1 100 3 
+show 100 and 99 index
+1 -1
+replace 100 with 200
+1 200 3 
+
+链表：
+链表节点分数据域和指针域。
+每个节点的实现：
+typedef struct Link{
+	char ele;
+	struct Link *next;
+} link;
+完整的链表结构：
+头指针：普通指针，指向链表第一个节点的位置。
+头节点：不存任何数据的节点，方便解决某些问题。
+首元节点：存数据的第一个节点。
+其他节点。
+
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct Link{
+    int ele;
+    struct Link *next;
+} link;
+
+link *initTable(){
+    link *p = (link *)malloc(sizeof(link));
+    link *tmp = p;
+    for(int i=1;i<5;i++){
+        link *a = (link *)malloc(sizeof(link));
+        a->ele = i;
+        a->next = NULL;
+        tmp->next = a;
+        tmp = a;
+
+    }
+    return p;
+}
+
+void showTable(link *p){
+    link *tmp = p;
+    while(tmp->next!=NULL)
+    {
+        printf("%d ", tmp->next->ele);
+        tmp = tmp->next;
+    }
+    puts("");
+}
+
+void insertTable(link *p, int ele, int index){
+    link *tmp = p;
+    for(int i=0;i<index;i++){
+        tmp = tmp->next;
+    }
+    // tmp now points to index-1 node.
+    link *in = (link *)malloc(sizeof(link));
+    in->ele = ele;
+    in->next = tmp->next;
+    tmp->next = in;
+
+}
+
+void deleteTable(link *p, int index){
+    link *tmp = p;
+    for(int i=0;i<index;i++){
+        tmp = tmp->next;
+    }
+    link *del = tmp->next;
+    tmp->next = tmp->next->next;
+    free(del);
+}
+
+int findTable(link *p, int ele){
+    link *tmp = p;
+    int index=-1;
+    while(tmp->next != NULL){
+        tmp = tmp->next;
+        index ++;
+        if(tmp->ele == ele){
+            return index; 
+        }
+    }
+    return -1;
+}
+
+void alterTable(link *p, int ele, int new_ele){
+    int index = findTable(p, ele);
+    if (-1 == index){
+        printf("not found %d\n", ele);
+    }
+    else{
+        link *tmp = p;
+        for(int i=0;i<index;i++){
+            tmp = tmp->next;
+        }
+        tmp->next->ele = new_ele;
+    }
+}
+int main (){
+    link *p = initTable();
+    puts("initial:");
+    showTable(p);
+    puts("insert 5 at index 1");
+    insertTable(p, 5, 1);
+    showTable(p);
+    puts("delete index 3");
+    deleteTable(p, 3);
+    showTable(p);
+
+    puts("find 2 and 3 index");
+    printf("%d %d\n", findTable(p, 2), findTable(p, 3));
+
+    puts("alter 2 with 3");
+    alterTable(p, 2, 3);
+    showTable(p);
+
+    puts("alter 7 with 8");
+    alterTable(p, 7, 8);
+    showTable(p);
+    
+    
+}
+
+// 输出
+initial:
+1 2 3 4 
+insert 5 at index 1
+1 5 2 3 4 
+delete index 3
+1 5 2 4 
+find 2 and 3 index
+2 -1
+alter 2 with 3
+1 5 3 4 
+alter 7 with 8
+not found 7
+1 5 3 4 
+
+静态链表，数据存储在数组中，但存储位置时随机的，有游标指向后继数据的位置。
+第一个数据放在数组的第二位，索引为1， 最后一位的游标为0. a[0] 默认不存放数据。
+静态链表结构：数据域，游标(指示后继元素在数组中的位置)
+typedef struct{
+	int data;
+	int cur;
+} component;
+
+
+
+
+
+
+
+## charpter 3 递归
+
+本章内容:
+基本递归
+尾递归
+
+### 基本递归
+阶乘举例
+1. 迭代法
+2. 递归法
+递归阶段和回归阶段
+
+C程序在内存中的组织方式
+代码段，静态数据区(全局变量，静态局部变量)，堆(动态分配的存储空间,
+如malloc,realloc)和栈(函数调用信息)
+
+栈，当调用了一个函数时，栈中会分配一块空间来保存与这个调用相关的信息，每一个调用都被当作是活跃的，那块空间被称为活跃记录，或者栈帧。
+栈是用来存储函数调用信息的绝好方案，由于其后进先出的特点。缺点，栈空间直到函数返回时才释放，可能会占用相当大的空间。生成和销毁活跃记录需要耗费一定的时间。因此当函数调用的开销很大时，需要考虑采用迭代的方案。
+
+尾递归
+尾递归的 fact 函数
+f(n, a) = a, n=0, n=1
+		= f(n-1, n*a), n>1
+
+## charpter 4 算法分析
+本章内容:
+最坏情况分析
+O 表示法
+计算的复杂度
+
+1. 最坏情况分析
+原因:
+最佳情况下的性能无意义。平均情况很难界定。最坏情况可以告诉我们算法性能的上限。
+
+2. O 表示法
+简单规则:
+常数项忽略不计。常数因子忽略不计。考虑高阶项的因子。
+
+常数项用 O(1) 表示。O(c) = O(1)
+常量因子往往被忽略。O(cT)=cO(T)=O(T)
+加法运算取最大值。O(T1)+O(T2) = O(T1+T2)=max(O(T1), O(T2))
+乘法结果不需要改变，但往往可以用更紧凑的方法表示。O(T1)O(T2) = O(T1T2)
+
+3. 计算的复杂度
+
+
