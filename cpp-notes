@@ -494,9 +494,94 @@ double foo(char param) throw (); //不会抛出任何异常，即使抛出，try
 
 异常规范现已废弃，避免使用。
 
+异常类：
 
-  
 
+面向对象进阶：
+拷贝构造函数：
+Student::Student(const Student &stu){
+    this->m_member = stu.m_member;
+}
+
+const 修饰。 1. 不希望修改实参， 2. 实参可以是 const 对象，因为非 const 对象可以转换为 const 对象，而 const 对象不可以转换为非 const 对象。 
+如无显式定义拷贝构造函数，那么编译器生成默认拷贝构造函数，当类持有其他资源，如动态分配的内存，打开的文件等，默认构造函数不能拷贝这些资源，需要显式定义拷贝构造函数。
+
+深拷贝，浅拷贝
+有指针时使用深拷贝，确保拷贝出的对象和原对象不会相互影响。
+当浅拷贝不能满足需求时，如记录对象创建的时间，创建过的对象数目。
+
+转换构造函数：(其他类型转换为当前类型)
+Complex(double real):m_real(real), m_img(0.0){}
+Complex a = (Complex)2.1;
+Complex b = Complex(2.2);
+构造函数：
+默认生成构造函数 Complex();
+普通构造函数： Complex(double real, double img);
+拷贝构造函数： Complex(const Complex &a);
+转换构造函数： Comple(double real);
+class Complex{
+public:
+    Complex(double x, double y): m_real(x), m_img(y){}
+    Complex(double real):m_real(real), m_img(0.0){}
+    Complex(const Complex &a){
+        this->m_real = a.m_real;
+        this->m_img = a.m_img;
+    }
+    void to_string(){
+        cout << m_real << "+" << m_img << "j" << endl;
+    }
+    // 类型转换函数
+    /* operator <type>(){
+        // TODO
+        return data;
+    }
+    */
+    operator double() const {
+        return m_real;
+    }
+public:
+    double m_real;
+    double m_img;
+};
+
+类型转换函数：(当前类的类型转换为其他类型) type conversion function
+1. type 可以是内置类型，类类型，typedef 定义的类型别名，任何可以被返回的类型(除 void) 一般不允许转换为数组和函数类型。转换为指针类型和引用类型是可以的。
+2. 函数一般不会改变被转换的对象
+3. 类型转换函数可以被继承，可以是虚函数
+4. 多个类型转换函数注意二义性。
+
+四种类型转换运算符
+static_cast
+const_cast 
+reinterpret_cast
+dynamic_cast
+xxx_cast<newType>(data)
+如：
+double score = 2.1;
+int n = static_cast<int>(score);
+
+static_cast 良性转换，风险较低。适用于：
+自动类型转换。void 指针和具体类型指针的转换。有转换构造函数或者类型转换函数的类与其他类型的转换。
+不可以：
+两个具体类型指针之间的转换。
+int 和指针之间的转换。
+不可以将 const volatile 修饰符去掉
+
+const_cast 去掉 const volatile 修饰符。
+
+reinterpret_cast 适用于不能用 static_cast 转换的情况。例如两个具体类型指针之间的转换，int 和指针之间的转换。
+double *pm_real = reinterpret_cast<double *>(new Complex(1.1, 2.2));
+刺穿类的封装性。
+
+dynamic_cast 中 newType 和 expression 必须同时是指针类型或者引用类型。指针转换失败将返回 NULL, 引用转换失败将抛出 std::bad_cast 异常。 
+
+
+## 输入输出流
+标准流对象:
+cin 从键盘读取，可以被重定向从文件读取
+cout 向屏幕输出，可以被重定向文件输出
+cerr 标准错误输出流，不可以重定向
+clog 同 cerr, 除 cerr 不使用缓冲区， clog 使用缓冲区，缓冲区满或者刷新时才输出
 
 
 
