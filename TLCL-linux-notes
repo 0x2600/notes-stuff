@@ -770,3 +770,117 @@ secure.1 secure.2
 
 logrotate 配置文件
 
+单用户模式可以：
+修改 root 账户密码
+修改默认运行级别错误导致的无法启动问题
+
+如果单用户模式无法进入，可以尝试系统光盘救援模式
+1. Grub 被覆盖，需要重新安装 bootloader
+2. 重要系统文件丢失。如 /etc/inittab
+
+远程管理协议
+RDP windows 支持，传输指令。
+RFB VNC 工具使用，传输图像。
+Telnet
+SSH
+
+查看运行级别
+runlevel
+更改运行级别
+int 5
+int 0 # 关机
+
+initramfs 作用
+Grub 加载内核进入内存，内核取得计算机控制权的时候，在加载一些硬盘文件系统时由于这些模块本身就位于硬盘中。还没有加载硬盘的驱动模块，因此无法挂载根分区。initramfs 虚拟文件系统通过 Grub 在内存中解压，提供虚拟根分区，加载驱动，挂载真正的根分区。
+
+Grub 作用
+MBR 启动引导区域。空间不够 Grub 存放，Linux将 Grub 的程序分成三个阶段来执行。
+1. 执行 Grub 主程序，位于 MBR 或者其他分区的引导扇区中。
+1.5. Grub 第二阶段程序放在文件系统中，第一阶段不能识别不同的文件系统。由 1.5 来加载阶段二的程序。1.5 程序放在 MBR 后的32 byte 空间，不是位于文件系统中。
+2. 加载 Grub 配置文件 /boot/grub/grub.conf ，根据配置，加载内核和虚拟文件系统(initramfs)
+
+Grub 磁盘分区表示法
+hd(0,0)
+1. hd 代表硬盘不区分 SCSI 还是 IDE 接口的硬盘
+2. 第一个 0 代表第一块硬盘
+3. 第二个 0 代表这块硬盘的第一个分区
+
+手动安装 Grub (/tsidk /dev/sdb1)
+1. 在要作为启动分区中安装 Grub 相关文件
+grub-install --root-directory=/tdisk /dev/sdb1
+2. 修改 Grub 配置 /boot/grub/grub.conf
+3. 进入 /dev/sdb1 安装 Grub。交互模式
+
+Grub 加密
+1. 生成密码 grub-md5-crypt
+2. 配置整体菜单需要密码才能编辑，或者输入密码才能启动。password 字段，或者 lock 某一个菜单
+
+内核模块的添加删除
+1. 复制模块到 /lib/modules 相关目录
+2. depmod 生成 modules.dep 文件
+3. modprobe 安装模块
+4. 删除 modprobe -r <module_name>
+
+sed
+语法： sed 选项 脚本命令 文件名
+选项： -n 不输出处理结果， -i 直接修改源文件
+脚本命令：
+
+替换命令 s
+[address]s/pattern/replacement/flags
+flags:
+n，数字，每一行中的 pattern 出现第几次才会替换
+g，一行中全部匹配的字符串进行替换，没有 g，只会替换第一次：
+sed 's/i/I/' # 替换一次。 sed 's/i/I/g' # 全部替换
+p，打印匹配行，与 -n 选项一起使用，只打印匹配的行
+w <file_name> 
+\ 转义，比如转义 /
+
+删除命令 d
+指定地址的删除 sed '3d' test # 删除第三行, sed 'd' test # 删除所有行
+地址：
+行号:
+sed '3d' test
+特定区间：
+sed '2,3d' test # 删除第二第三行
+
+追加，插入命令 a i
+sed '2i\
+This is a inserted line.' test
+追加，插入多行，每一行加 \
+
+替换命令 c
+sed '3c\
+This is a changed line.' test
+
+转换命令 y
+sed 'y/12/90/' test
+echo "Linux is not Unix" | sed 'y/is/IS/'
+
+读取命令 r
+sed '3r test2' test
+sed '$r test2' test # 插入到末尾
+
+关于地址：
+1. 数字形式表示行区间
+2. 文本形式表示具体行区间
+语法：
+[address]脚本命令
+[address]{
+    多个脚本命令
+}
+
+
+awk 
+语法： awk 选项 脚本命令 文件名
+选项：
+-F fs 指定段分隔符，默认空格或制表符
+脚本命令，由 匹配规则+{执行命令} 组成
+awk '/^$/{print "Blank line"}' test # 遇到空行打印字符串
+
+使用字段常量
+$0 整行
+$1 $n 第 n 个字段
+awk '{print $2}' test
+
+
