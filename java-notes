@@ -617,15 +617,75 @@ public void write(byte[], int, int) throws java.io.IOException;
 文件字符输入输出流 FileReader, FileWriter 类
 
 
+## java 多线程机制
+线程的状态与生命周期
+1. 新建。
+2. 运行。start() 方法。 调用 run() 指定线程的具体使命。没有结束 run() 方法之前不能调用 start() 方法。
+3. 中断。原因：
+JVM 将 CPU 资源切换给其他线程。
+调用了 sleep(int millsec) 立即让出 CPU 资源，sleep 执行完成后，该线程重新进入线程队列中排队等待 CPU 资源。 
+wait() 方法调用 
+执行某个操作进入阻塞状态
+4. 死亡, 不可以继续运行
+1. 线程完成了它的全部工作。run() 方法执行完成
+2. 线程被提前强制终止。
 
+线程调度与优先级1-10
 
+Thread 类与线程的创建
+1. 用户类继承 Thread 类，重写 run() 方法。
+2. 使用 Thread 类
+用户类 实现 Runnable 接口
+class CutomizedClass implements Runnable; // run() method here
+Thread thread = new Thread(new CutomizedClass());
+thread.start();
 
+目标对象与线程的关系
+1. 完全解耦
+2. 目标对象组合线程（弱耦合）
 
+目标对象组合线程和使用 interrupt() 方法的例子
+// interrupt() 吵醒休眠的线程 ，即执行了 sleep() 方法。被 InterruptedException 捕捉到
+class ClassRoom implements Runnable
+{
+    Thread student = new Thread(this);
+    Thread teacher = new Thread(this);
 
+    public void run()
+    {
+        if (Thread.currentThread()== student){
+            System.out.println("student now starts sleeping");
+            try{
+                Thread.sleep(1000*60*60);
+            }
+            catch(InterruptedException e)
+            {
+                System.out.println("student was interrupted.");
 
+            }
+            System.out.println("student starts listenning");
+        }
+        else if (Thread.currentThread() == teacher)
+        {
+            System.out.println("start class");
+            if (student.isAlive())
+            {
+                student.interrupt();
+                System.out.println("interrupt student");
+            }
+        }
+    }
+}
 
+线程同步
+银行类。两个线程，一个收入，一个支出。
+public synchronized void saveortake(double amount);
 
+协调线程的同步
+wait(), notifyAll()
 
+线程联合
+线程 A 执行过程中，调用 B.join() 会执行完 B 线程的任务，之后转回 A 的任务。
 
-
+线程默认不是守护线程，称为用户线程。一个线程可以在运行之前设置自己是否是守护线程 setDaemon(boolean on) 所有用户线程结束之后，即使守护线程中还有要执行的语句，守护线程也将立即结束执行。
 
