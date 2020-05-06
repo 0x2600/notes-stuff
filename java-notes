@@ -544,19 +544,19 @@ class WinMenu extends JFrame{
     void init(String s){
         setTitle(s);
         jmb = new JMenuBar();
-        jm1 = new JMenu("File");
+        jm1 = new JMenu("File"); 
         jm2 = new JMenu("Save as");
         jmi1 = new JMenuItem("PDF");
         jmi2 = new JMenuItem("TXT");
         jmi3 = new JMenuItem("Quit");
 
-        jm1.add(jm2);
+        jm1.add(jm2); //
         jm2.add(jmi1);
         jm2.add(jmi2);
-        jm1.add(jmi3);
+        jm1.add(jmi3); //
 
-        jmb.add(jm1);
-        setJMenuBar(jmb);
+        jmb.add(jm1); //
+        setJMenuBar(jmb); //
 
     }
 
@@ -565,6 +565,126 @@ class WinMenu extends JFrame{
 常用组件与布局
 组件：
 JTextField, JTextArea, JButton, JLable, JCheckBox, JRadioBox, JComboBox, JPasswordField, 
+
+    add(new JLabel("text area"));
+    txtfield = new JTextField(10);
+    add(txtfield);
+
+    add(new JLabel("button"));
+    button_ok = new JButton("OK");
+    add(button_ok);
+
+    add(new JLabel("checkbox"));
+    cb1 = new JCheckBox("cb1");
+    cb2 = new JCheckBox("cb2");
+    add(cb1);
+    add(cb2);
+
+
+    add(new JLabel("radio"));
+    rb1 = new JRadioButton("rb1");
+    rb2 = new JRadioButton("rb2");
+    bg = new ButtonGroup(); //
+    bg.add(rb1);
+    bg.add(rb2);
+    add(rb1); //
+    add(rb2); //
+
+    add(new JLabel("Combo box"));
+    Cb1 = new JComboBox();
+    Cb1.addItem("Item 1"); //
+    Cb1.addItem("Item 2"); //
+    add(Cb1);
+
+    add(new JLabel("text area"));
+    txtarea = new JTextArea(6, 12);
+    add(new JScrollPane(txtarea)); //
+
+常用容器
+相比于 JFrame 这种底层容器，本节中间容器经常要添加到 JFrame 中
+1. JPanel 默认布局 FlowLayout
+2. JScrollPane 滚动窗格只添加一个组件
+JScrollPane scrollpane = new JScrollPane(new JTextArea());
+3. 拆分窗格 JSplitPane
+构造方法 JSplitPane(int a, Component a, Component b) a, 水平拆分，垂直拆分
+4. JLayeredPane
+方法 add(JComponent com, int layer)
+
+常用布局 
+java.awt 包中  FlowLayout BorderLayout CardLayout GridLayout BoxLayout null 布局
+容器使用 setLayout(布局对象) 设置布局
+
+处理事件
+1. 事件源
+
+2. 监视器。事件源将某个对象注册为自己的监视器。这个对象实现了 ActionListener 接口。 
+
+3. 处理事件的接口，监视器必须实现 ActionPerformed(ActionEvent e) 方法。 
+
+4. ActionEvent 类中的方法
+public Object getSource()
+public String getActionCommand() 事件源可以调用 public setActionCommand(String s) 设置
+
+
+例子： 在文本框中输入字符串，按下回车，在另一个文本框输出输入的字符串
+分析：
+ActionPerformed 方法要对另一个文本框操作，需要得到该文本框的引用。可以在该类中组合该文本框，然后实现窗口的时候直接添加这个文本框
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+class ComponentDemo{
+    public static void main(final String args[]) {
+        final WinMenu win1 = new WinMenu("My Desktop Application", 0, 0, 200, 300);
+
+    }
+}
+
+class WinMenu extends JFrame {
+
+    MyListener al;
+    WinMenu(final String s, final int x, final int y, final int w, final int h) {
+        setLayout(new FlowLayout());
+        setTitle(s);
+        
+        al = new MyListener();
+
+        add(al.jtf);
+        add(al.jb);
+        add(new JScrollPane(al.jta));
+
+        setBounds(x, y, w, h);
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+    }
+
+}
+
+class MyListener implements ActionListener
+{
+    public JTextArea jta;
+    public JTextField jtf;
+    public JButton jb;
+    public MyListener()
+    {
+        jta = new JTextArea(6, 12);
+        jtf = new JTextField(10);
+        jb = new JButton("OK");
+        jtf.addActionListener(this);
+        jb.addActionListener(this);
+    }
+    public void actionPerformed(ActionEvent e)
+    {
+        String str = jtf.getText();
+        jta.append(str+" "+str.length()+"\n");
+        //System.out.println(str);
+    }
+}
+
+
+
 
 ## 输入输出流
 File 类
