@@ -510,10 +510,12 @@ const 修饰。 1. 不希望修改实参， 2. 实参可以是 const 对象，�
 有指针时使用深拷贝，确保拷贝出的对象和原对象不会相互影响。
 当浅拷贝不能满足需求时，如记录对象创建的时间，创建过的对象数目。
 
-转换构造函数：(其他类型转换为当前类型)
+自定义类型转换规则（以类的成员函数形式出现）
+1. 转换构造函数：(其他类型转换为当前类型) conversion constrcutor
 Complex(double real):m_real(real), m_img(0.0){}
 Complex a = (Complex)2.1;
 Complex b = Complex(2.2);
+
 构造函数：
 默认生成构造函数 Complex();
 普通构造函数： Complex(double real, double img);
@@ -536,7 +538,7 @@ public:
         return data;
     }
     */
-    operator double() const {
+    operator double() const { //2. 函数一般不会改变被转换的对象
         return m_real;
     }
 public:
@@ -544,7 +546,7 @@ public:
     double m_img;
 };
 
-类型转换函数：(当前类的类型转换为其他类型) type conversion function
+2. 类型转换函数：(当前类的类型转换为其他类型) type conversion function
 1. type 可以是内置类型，类类型，typedef 定义的类型别名，任何可以被返回的类型(除 void) 一般不允许转换为数组和函数类型。转换为指针类型和引用类型是可以的。
 2. 函数一般不会改变被转换的对象
 3. 类型转换函数可以被继承，可以是虚函数
@@ -565,14 +567,23 @@ static_cast 良性转换，风险较低。适用于：
 不可以：
 两个具体类型指针之间的转换。
 int 和指针之间的转换。
-不可以将 const volatile 修饰符去掉
+不可以将 const, volatile 修饰符去掉
 
 const_cast 去掉 const volatile 修饰符。
+例子：
+int main{
+    const int n = 100;
+    int *p = static_cast<int*>(&n);
+    *p = 200;
+    // n 的值是 100, *p 的值是 200
+    // C++ 对待 const 变量类似 #define 宏。
+}
 
 reinterpret_cast 适用于不能用 static_cast 转换的情况。例如两个具体类型指针之间的转换，int 和指针之间的转换。
 double *pm_real = reinterpret_cast<double *>(new Complex(1.1, 2.2));
 刺穿类的封装性。
 
+dynamic_cast <newType>(expression)
 dynamic_cast 中 newType 和 expression 必须同时是指针类型或者引用类型。指针转换失败将返回 NULL, 引用转换失败将抛出 std::bad_cast 异常。 
 
 
@@ -583,6 +594,73 @@ cout 向屏幕输出，可以被重定向文件输出
 cerr 标准错误输出流，不可以重定向
 clog 同 cerr, 除 cerr 不使用缓冲区， clog 使用缓冲区，缓冲区满或者刷新时才输出
 
+ostream cout(&fout) // cout 是 ostream 对象，这是复制构造函数。
 
+freopen("file", "w", stdout) // redirect cout to file.
+freopen("file", "r", stdin) // redirect cin to file not from keyboard.
 
+c++ cout 对象使用流操作算子进行输出格式控制
+使用方法： cout << hex << 10;
+
+输出单个字符
+ostream &put(char)
+putchar(char)
+
+cin 正常读取返回 true ，遇到结束标志返回 false (ctrl + D)
+cin 返回值是 istream & 类型，该对象有类型转换函数 operator bool(){}
+
+读取一个字符
+int get()
+
+读取一行字符串
+istream & getline(char *buf. int size)
+istream & getline(char *buf, int size, char delimiter)
+读取出错(比如读取超过 size 个字符)，记得清楚 cin 内部出错标记，使 cin 可以正常读取 cin.clear()
+
+跳过指定字符
+cin.ignore(int n=1, int delim=EOF) 跳过 n 个字符或者 delim 之前的字符
+用法：
+cin.ignore();
+cin >> buf;
+
+查看输入流中的下一个字符，不取走
+int cin.peek()
+
+处理输入输出错误
+标志    检测函数
+badbit  bad()
+eofbit  eof()
+failbit fail()
+goodbit good()
+输出错误一般较少
+int i = 0;
+cin >> i;
+if (!cin) // 不是 good() 
+{
+    if (cin.bad())
+    {
+        return error_code;
+    }
+    if (cin.eof())
+    {
+        //TODO
+    }
+    if (cin.fail())
+    {
+        cin.clear(); // 清除标志，错误恢复， good 
+        //TODO 
+    }
+}
+
+管理输出缓冲区
+* 缓冲区刷新原因：
+* 程序结束
+* 缓冲区满
+* 操作符如 endl 显式刷新缓冲区。flush, ends // cout << "hi" << endl;//ends
+* unitbuf 操作符
+cout << unitbuf;
+//out
+cout << nounitbuf;
+* 关联输入与输出
+从输入读取数据的操作都会导致刷新关联的输出流。默认 cin 与 cout 关联。
 
