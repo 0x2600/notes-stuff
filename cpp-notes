@@ -664,3 +664,273 @@ cout << nounitbuf;
 * 关联输入与输出
 从输入读取数据的操作都会导致刷新关联的输出流。默认 cin 与 cout 关联。
 
+文件操作 文件流类
+ifstream, ofstream, fstream // #include <fstream>
+
+1. 打开文件 文件与文件流对象关联。指明文件使用方式（读写，文本，二进制）
+关闭文件： 文件流对象 close 函数
+1. 流对象 open 成员函数
+ifstream iFile;
+iFile.open("file", ios::in);
+2. 流类的构造函数 
+ifstream iFile("file", ios::in);
+
+文本文件的读取和写入，类似 cin, cout
+
+二进制文件的读取和写入。ifstream, ofstream 对象的 read, write 成员函数
+
+文件流类 get put 读写文件，一次读写一个字节，get(char &c)
+
+移动和获取文件读写指针 
+读： seekg(int offset, int mode), int tellg()
+写: seekp(int offset, int mode), int tellp()
+istream & seekg (int offset, int mode);
+ostream & seekp (int offset, int mode);
+mode 参数取 ios::beg, ios::cur, ios::end
+
+文本模式和二进制模式打开文件的区别：
+unix/linux 无区别
+Windows 平台： 读取文本文件 \r\n 转换为 \n，写入时 \n 转换为 \r\n 写入
+
+
+STL 标准模板库
+容器 container 存放数据的模板。使用容器时，将容器类模板实例化为容器类，知名容器中存放的元素类型。STL 的算法(函数模板)对容器中的元素进行比较，因此被放入容器的对象所属类最好重载 ==, < 运算符。
+
+* 顺序容器(非排序，指定位置)： 可变长动态数组 vector, 双端队列 deque， 双向链表 list
+* 关联容器(排序，不能指定位置)： set, multiset, map, multimap
+* 容器适配器： stack, queue, priority_queue // 没有迭代器
+
+
+vector<int> 容器类名字， vector<int> a 容器对象
+所有容器都有的成员函数：int size(); bool empty();
+容器和关联容器还有的成员函数：
+begin() 返回指向第一个元素的迭代器
+end()
+rbegin()
+rend()
+erase() // 参数复杂
+clear() // 删除所有元素
+顺序容器成员函数：
+front()
+back()
+push_back()
+pop_back()
+insert()
+
+迭代器 iterator 迭代器是一个变量，相当于容器和操纵容器的算法之间的中介。
+按定义方式分类：
+1. 正向迭代器
+容器类名::iterator 迭代器名
+2. 常量正向迭代器
+容器类名::const_iterator 迭代器名
+3. 反向迭代器
+容器类名::reverse_iterator 迭代器名
+4. 常量反向迭代器
+容器类名::const_reverse_iterator 迭代器名
+
+迭代器用法示例： *迭代器名 表示迭代器指向的元素，通过非常量迭代器还可以修改元素的值
+迭代器可以进行 ++ 操作：
+正向 指向后一个元素
+反向 指向前一个元素
+
+vector<int> a;
+for (int i = 0;i < 5;i++)
+{
+    a.push_back(i);
+}
+vector<int>::iterator iter;
+for (iter = a.begin();iter < a.end();++iter)
+{	
+    cout << *iter << endl;
+    (*iter) += 1;
+}
+
+++iter 比 iter++ 速度要快
+原因：
+// 前置 ++
+CDemo CDemo::operator++()
+{
+    ++n;
+    return *this;
+}
+// 后置 ++
+CDemo CDemo::operator ++(int k)
+{
+    CDemo tmp(*this);
+    n++;
+    return tmp;
+}
+
+迭代器的分类： 输入，输出，正向，双向，随机访问
+1. 正向： ++p, p++, *p, 迭代器间赋值， == !=
+2. 双向：具有正向的全部功能，另外 --p, p--
+3. 随机访问迭代器：具有双向迭代器的全部功能。另外
+p += i; p -= i; p + i; p - i; p[i]; // i 为整型或常量
+不同容器的迭代器功能：
+vector 随机访问
+deque 随机访问
+list 双向
+set/multiset 双向
+map/multimap 双向
+stack 不支持迭代器
+queue 不支持迭代器
+priority_queue 不支持迭代器
+
+迭代器的辅助函数
+#include <algorithm>
+advance(p, n)
+distance(p, q)
+iter_swap(p, q)
+
+STL 算法
+有的算法会改变作用的容器 copy, remove, random_shuffle, fill
+有的不会改变： find, count_if
+常用算法：
+find:
+template<class lnlt, class T>
+lnlt find(lnlt first, lnlt last, const T& val); // 使用 == 运算符判读元素是否相等，如果容器存放对象，则应重载 == 运算符。找不到返回 T.end()
+
+vector<int> v;
+v.push_back(1);v.push_back(2);v.push_back(3);v.push_back(4);
+vector<int> v_it = find(v.begin(), v.end(), 1);
+if (v_it != v.end()) // found
+vector<int> v_it = find(v.begin(), v.end(), 5);
+if (v_it == v.end()) // not found
+
+int b[] = {1, 2, 3};
+int *p = find(b, b+4, 1);
+if (p != b+4) // found
+
+排序:
+template<class _Randlt>
+void sort(_Randlt first, _Randlt last);
+int a[] = {2, 1}
+sort(a, a+2);
+
+比较大小通过 < 
+以下三个说法等价：
+x 比 y 小。x<y 为真。y 比 x 大。
+
+y 比 x 大意味着 x < y 为真，但不意味 y > x 为真。
+
+x 与 y 相等往往不等价于 x == y 为真，与 x < y and y < x 为假等价
+
+vector:
+嵌套可变长数组
+vector<vector<int>> v[3];
+
+list 不支持根据下标随机访问，支持双向迭代器
+push_front, pop_front,
+sort // 成员函数，非算法中的 sort,因为算法中的 sort 需要随机访问迭代器, 而 list 不支持
+remove(const T &val), remove_if, 
+
+deque 双向队列，类似于 vector
+相比于 vector 的优点是，vector 在头部删除或添加元素的速度很慢，在尾部添加元素的性能较好，而 deque 在头尾增删元素都具有较好的性能
+push_front, pop_front
+
+函数对象，如果一个类重载了 () 运算符。
+class CAverage
+{
+public:
+	double operator() (double x, double y, double z)
+	{
+		return (x + y + z) / 3;
+	}
+};
+CAverage ca;
+cout << ca(1.0, 2.0, 3.0); // ca.operator(1.0, 2.0, 3.0);
+
+在 accumulate 算法中的应用
+numeric 中的实现:
+template<class T1, class T2, class OP>
+T2 accumulate_ <T1 first, T1 last, T2 init, OP op>
+{
+  for(;first!=last;++first)
+  {
+    init = op(init, *first);
+  }
+  return init;
+}
+
+int op(int x, int y)
+{
+  return x * y;
+}
+
+vector<int> v;
+v.push_back(1); v.push_back(2);
+cout << accumulate_(v.begin(), v.end(), 1, &op); // op 还可以是函数对象
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+class A
+{
+public:
+    int n;
+    A(int n_) :n(n_) {}
+
+};
+// << 重载
+ostream& operator<<(ostream & out, const A& a)
+{
+    out << a.n;
+    return out;
+}
+
+bool GreaterA(const A & a1, const A & a2)
+{
+    return a1.n > a2.n;
+}
+
+template<class T1>
+void PrintT1(T1 first, T1 last)
+{
+    for (; first<last;++first)
+    {
+        cout << *first << " ";
+    }
+    cout << endl;
+}
+
+int main(int argc, char* argv[])
+{
+    A a_array[] = { 2, -1, 100, 9 };
+    sort(a_array, a_array + 4, GreaterA);
+    PrintT1(a_array, a_array + 4);
+    return 0;
+}
+
+
+### 关联容器
+set 集合，不可有相同元素
+multiset 可以有相同元素
+map 每个元素包含关键字和值，不可有多个元素的关键字相同
+multimap 多个元素的关键字可以相同
+
+不可修改 set 或 multiset 元素的值，元素修改后，不能自动重新调整顺序，正确做法是先删除该元素，然后再添加元素。
+同理，不可修改 map， multimap 元素的关键字。
+关联容器元素或关键字比较大小可以用 < 运算符或者自定义的比较器，因为有序，所以查找速度快。
+
+关联容器还有以下成员函数：
+find, lower_bound, upper_bound, equal_range, count, insert
+
+pair 类模板：
+pair<int, double> p1(1, 2.0);
+pair<string, int> p2("hello", 2);
+pair<int, int> p3 = make_pair(1, 2); p3.first; p3.second;
+
+string 类:
+1. 构造函数
+2. 赋值， assign
+3. 长度， length, size 
+4. 拼接, +, +=, append
+5. 比较， < > == != <= >=, compare
+6. 子串， substr
+7. 交换， swap 
+8. 查找子串和字符
+9. 替换子串， replace
+10. 删除子串， erase
+11. 插入字符串, insert 
+
