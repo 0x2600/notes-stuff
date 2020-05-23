@@ -933,4 +933,56 @@ string 类:
 9. 替换子串， replace
 10. 删除子串， erase
 11. 插入字符串, insert 
+12. 将 string 对象作为流处理 istringstream, ostringstream
+包含头文件 sstream
+string src("test 1 2.0");
+string s1;
+int n1;
+double n2;
+istringstream istrstream(src);
+istrstream >> s1 >> n1 >> n2;
+
+ostringstream ostrstream;
+ostrstream << s1 << n1 << n2 << endl;
+cout << ostrstream.str();
+
+13. STL 算法操作 string 对象
+string 对象是顺序容器，支持随即访问迭代器
+string::iterator str_it;
+str_it = find(src.begin(), src.end(), '0');
+if (str_it != src.end()) // found
+sort(src.begin(), src.end());
+
+
+容器适配器：
+stack, queue, priority_queue 都是在顺序容器的基础上实现，突出一些功能， 屏蔽一些功能。
+都有一下三个成员函数：
+push, top, pop 
+
+stack: 先进后出
+#include <stack>
+访问和删除都只能对栈顶的元素进行操作
+成员函数：
+void pop();
+T & top();
+void push(T & x);
+
+例子： 十进制转二进制，除二取余，逆序排列
+n%k; n/=k;
+stack <int> stk;
+int n = 10;
+int k = 2;
+while(n)
+{
+    stk.push(n%k);
+    n /= k;
+}
+
+while(!stk.empty())
+{
+    cout << stk.top();
+    stk.pop();
+}
+
+queue, priority_queue
 
