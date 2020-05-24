@@ -1,0 +1,40 @@
+php 运算符：
++, -, *, /(实数除法), %, -x(取反), intdiv(x, y)
+++x, --x, x++, x--;
+==, ===, !=, !===, >, <, >=, <=, <=>
+and, or, &&, ||, !, xor
+(expr1)?(expr2):(expr3)
+. 字符串连接
+=， +=， -=， ×=， /=, .=, %=
+&, |, ^, ~, <<, >>
+
+
+变量：
+声明 $ 后跟变量名，接赋值。无须声明类型。
+命名规则同 C 语言。
+
+
+常量：只能是整型，浮点型，字符串，布尔型，数组
+1. 常量没有 $
+2. define(), const 定义
+3. 全局作用域
+4. 定义之后不可修改或者取消定义
+define("name", "php", false);
+const name = "php";
+
+if...else, elseif
+switch case break default 整型或者字符串
+
+while()
+{}
+
+do
+{}while();
+
+foreach 遍历数组或者对象
+$arrayz = [1, 2, 3];
+foreach($arrayz as $key => $value)
+{
+	echo $key.' '.$value;
+	echo "\n";
+}
