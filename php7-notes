@@ -38,3 +38,97 @@ foreach($arrayz as $key => $value)
 	echo $key.' '.$value;
 	echo "\n";
 }
+
+
+函数传参：按值，按引用
+
+有类型声明的形参：
+传递给函数的参数若不是期望的类型，默认会尝试转换。
+可以使用 declare(strict_types=1) 设置严格模式，不会进行转换。除了一种情况：期望浮点型，传入整型。
+
+可变参数，可变参数当作数组传递给函数。
+function foo(...$num)
+{
+	$sum = 0;
+	foreach($num as $i)
+	{
+		$sum += $i;
+	}
+	return $sum;
+}
+
+函数返回值，可以返回数组
+返回值类型声明：
+function sum($a, $b):float
+{
+	return $a + $b
+}
+返回值类型声明的严格模式，同形参类型声明
+
+可变函数示例：
+function test1()
+{
+	echo 1;
+}
+function test2()
+{
+	echo 2;
+}
+$funcname = "test1";
+$funcname(); // 1
+$funcname = "test2";
+$funcname(); // 2
+
+
+匿名函数，闭包函数
+1.
+$foo = function ($x)
+{
+	return $x;
+};
+echo $foo(2);
+
+2. 
+$arr = [1, 2, 3];
+$res = array_map(function ($a){return $a * $a;}, $arr);
+print_r($res);
+
+use 关键字：
+function demo()
+{
+	$a = 1;
+	$b = 2;
+	$foo = function () use ($a){
+		echo $a;
+	}
+	foo();
+}
+demo();
+匿名函数可以使用父级作用域的变量，但是不可以修改
+如果想要修改，需要使用 &，类似于按引用传参
+
+
+双引号会解析其中的变量，而单引号不会。双引号中的变量注意边界。空格或 {}
+$a=test;
+echo "{$a}a"; // testa
+
+bash:
+a=test
+echo "${a}a" // testa
+转义字符：
+单引号中定义的字符串只能转义单引号和转义符本身。而在双引号中的字符串中，可以转义更多的特殊字符。
+\n, \$, \r, \\, \v, \"
+
+单引号的解析速度要比双引号快。
+
+strtolower,
+strtoupper,
+mb_strtolower, mb_strtolower($str, 'UTF-8')
+mb_strtoupper,
+ucfirst,
+lcfirst,
+ucwords, 
+lcwords,
+mb_convert_case($str, $mode), mode MB_CASE_LOWER, MB_CASE_UPPER, MB_CASE_TITLE 需要 php7-mbstring 软件包支持
+
+
