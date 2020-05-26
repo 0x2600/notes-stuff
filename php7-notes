@@ -131,4 +131,62 @@ ucwords,
 lcwords,
 mb_convert_case($str, $mode), mode MB_CASE_LOWER, MB_CASE_UPPER, MB_CASE_TITLE 需要 php7-mbstring 软件包支持
 
+查找字符串：
+stripos, strpos, strripos, strrpos 
+
+str_ireplace, str_replace 
+substr_replace
+substr 
+
+trim, ltrim, rtrim
+strlen
+
+addslashes, stripslashes
+addslashes("I'm"); // "I\'m" 
+str_repeat
+str_shuffle
+explode 字符串转数组， 类似于 python 的 split
+implode 数组转字符串，类似于 python 的 join
+
+数组无需指明大小， 可以存储任何类型数据
+1. 直接赋值数组元素声明数组
+$arr[0] = 'a';
+var_dump, print_r 打印数组
+声明一个数组时，如果索引值是递增的，可以省略索引值，默认从 0 开始
+2. 使用 array() 函数声明数组
+$arr = array(0=>'a', 1=>'b');
+可以不指明下标，默认从 0 开始的索引数组
+$arr = array('a', 'b');
+
+
+二维数组：将数组中的一个或多个元素声明为一个数组。
+$arr[0]["name"] = "test1";
+$arr[1]["name"] = "test2";
+
+$arr = array(
+	array('a'),
+	array('b')
+);
+
+in_array 查找值，只会查找第一维。可以查找一个数组中是否包含另一个数组
+
+count 计算数组包含元素，mode 如果设置为1，或者为 COUNT_RECURSIVE 则递归统计数目。也可以统计对象的属性个数。
+current 返回数组内部指针指向的元素，该功能类似于 pos 函数
+next($arr);
+current($arr)
+还有 end, prev, reset, each 这些函数也可以操作数组内部指针
+key 返回当前元素的键
+array_key_exists 检查键是否存在
+array_keys 获取键，或者值对应的键
+array_values 获取值 
+array_search 搜索给定的值返回键
+array_pad 将某个值填充进数组，使得数组的长度为参数指定的长度
+array_fill 同上，有索引指定从哪里开始
+array_fill_keys(array $keys, mixed $value)
+array_rand 随机获取数组的键
+
+bool sort(array $arr [, int $sort_mode])
+mode:
+SORT_REGULAR, SORT_NUMERIC, SORT_STRING...
+
 
