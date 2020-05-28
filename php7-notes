@@ -188,5 +188,35 @@ array_rand 随机获取数组的键
 bool sort(array $arr [, int $sort_mode])
 mode:
 SORT_REGULAR, SORT_NUMERIC, SORT_STRING...
+asort 升序排序，并保持索引关系
+rsort 降序排序
+arsort 保持索引关系，降序排序
+shuffle 
 
+数组遍历：
+for
+foreach: foreach($array as $key=>value),不会改变数组元素的值，除非使用引用 foreach($arr as &$val)
+以上两个函数都不会改变数组内部的指针 php7 
+each 返回当前的键值并将数组内部数组指针移向下一位。必要时使用 reset 恢复数组指针
+$arr = array("1, ", "2, ");
+while(list($key, $val)=each($arr))
+{
+	echo $key."=>".$val."\n";
+}
+
+解压:
+list($var1, $var2) = $arr;
+array_chunk 分割数组，多维
+array_merge 合并数组
+array_unshift 数组开头插入元素
+array_shift 删除数组开头的元素
+array_push 在数组尾部插入一个或多个元素
+array_pop 删除数组末尾的元素
+array_slice 截取数组的一部分
+array_splice 删除数组的一部分元素
+array_splice($arr, int $start, int $len, mixed $replacement)
+is_array 
+array_sum
+array_product 计算数组元素累积
+array_flip 交换数组的键和值
 
