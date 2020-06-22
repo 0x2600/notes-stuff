@@ -1,0 +1,101 @@
+## Linux 编译器
+.c 源程序
+.h 头文件
+.i 预处理后的文件
+.s 汇编语言源文件
+.o 目标文件
+
+编译过程：
+预处理： 宏替换，文件包含等
+编译： 源代码编译成汇编代码
+汇编： 汇编代码汇编成目标文件
+链接： 目标代码和所需的库链接成可执行文件
+
+编译命令：
+gcc -E hello.c -o hello.i
+gcc -S hello.i -o hello.s 
+gcc -c hello.s -o hello.o
+gcc hello.o -o hello
+
+多文件处理：
+├── include
+│   └── show.h
+├── libshow.so
+├── main
+├── Makefile
+├── show.o
+└── source
+    ├── main.c
+    └── show.c
+show.h
+
+#ifndef _SHOW_H__
+#define _SHOW_H__
+typedef struct{
+        int no;
+        char name[64];
+        float height;
+}Student;
+
+void show(Student *);
+#endif // SHOW_H
+
+show.c
+
+#include "show.h"
+#include <stdio.h>
+
+void show(Student *stu)
+{
+        printf("%s id: %d, height: %f\n", stu->name, stu->no, stu->height);
+}
+
+
+main.c 
+
+#include "show.h"
+
+int main()
+{
+        Student stu = {11, "test", 12.1};
+        show(&stu);
+}
+
+编译：
+gcc -Iinclude -c source/show.c -o show.o // -I 指定头文件目录
+gcc -Iinclude -c source/main.c -o main.o
+
+Linking:
+gcc show.o main.o -o main
+./main
+
+使用函数库：
+静态库，动态库 .a, .so
+标准库文件命名方式 libtest.a, libtest.so, 这样就可以使用 -ltest 链接选项(优先采用动态链接库， -static 指定使用静态链接库)
+
+静态库生成：
+gcc -Iinclude -c source/show.c -o show.o
+ar -rc libshow.a show.o
+使用： 
+gcc -L./ main.o -lshow -o main
+./main
+
+动态库生成：
+编译加上 -fpic 选项：
+gcc -c source/show.c -Iinclude -o show.o -fpic
+gcc -shared show.o -o libshow.so
+gcc -o main -L./ main.o -lshow 
+将生成的 so 复制到 /lib 目录：
+sudo cp libshow.so /lib
+ldconfig
+./main 
+
+代码优化：
+优化选项 -On
+
+避免优化的场合：
+优化等级越高，消耗在编译上的时间越长。因此开发时不要优化，发行时适合优化
+一些优化选项会增加可执行代码的体积
+跟踪调试时不要优化，优化可能使得代码被删除或改写，或者重组，使得跟踪调试困难。
+
+

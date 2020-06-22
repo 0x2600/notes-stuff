@@ -1,0 +1,28 @@
+main.o:
+gcc -Iinclude -c source/main.c -o main.o
+
+show.a:
+gcc -Iinclude -c source/show.c -o show.o
+ar -rc show.a show.o
+
+main:
+gcc -o main main.o show.a
+
+ldd main 
+
+./main
+
+---------------------------------------
+
+show1.so:
+gcc -Iinclude -c source/show.c -fpic -o show1.o
+gcc -shared show1.o -o show1.so
+
+main1:
+gcc -o main1 main.o show1.so
+
+ldd main1
+
+sudo cp show1.so /lib64
+./main1
+
