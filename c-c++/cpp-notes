@@ -145,6 +145,53 @@ Demo::Demo(int b){
 函数内部创建的对象是局部对象，栈区，函数执行结束调用这些对象的析构函数。
 new 创建的对象位于堆区，delete 删除时调用析构函数。
 
+析构函数，复制构造函数
+
+#include <iostream>
+#include <cstring>
+
+class MyString{
+    char *Buf;
+public:
+    MyString(const char *InitInput)
+    {
+        if (InitInput)
+        {
+            Buf = new char[strlen(InitInput) + 1];
+            strcpy(Buf, InitInput);
+        }
+        else
+        {
+            Buf = NULL;
+        }
+        
+    }
+    ~MyString()
+    {
+        if (Buf)
+        {
+            delete[] Buf;
+            Buf = NULL;
+        }
+    }
+
+    const char *getBuf()
+    {
+        return Buf;
+    }
+
+};
+
+// 浅复制：
+// str.Buf_2, str1.Buf_2 指针两份，指向的缓冲区一份， main 中的 str1 析构函数调用 str1.Buf_2 非空 
+void UseMyString(MyString str){ }
+
+int main()
+{
+    MyString str1("hello");
+    UseMyString(str1);
+}
+
 2.11 this 指针
 const 指针(不可修改指针的指向，修饰指针)，指向当前对象，只能在类的内部使用。，可以访问 private, protected, public 成员。只有当对象被创建后 this 才有意义，因此不能在 static 函数中使用。(此时可能没有对象被创建)
 this 本质上可以当做是成员函数的隐式形参，属于函数的局部变量。
