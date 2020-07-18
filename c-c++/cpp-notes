@@ -1091,4 +1091,116 @@ void DetectFishType(Fish *pFish)
 缺点： 宏函数不支持任何形式的类型安全。
 如果要编写独立于类型的泛型函数，又要确保类型安全，可以使用函数模板。如果需要改善性能，可以将函数声明为内联。
 
+8. 模板函数调用无需指定数据类型，编译器可以自动推断。模板类需要显式指定数据类型
+
+9. 模板类
+template <typename T>
+class TemplateClass
+{
+private:
+    T Age;
+};
+
+// 具体化模板类
+TemplateClass <long> tc1;
+TemplateClass <int> tc2;
+
+模板类的静态成员：
+在 typename 参数相同的类实例之间共享
+template<typename T>
+class Class1
+{
+public:
+    Class1()
+    {
+        static_assert(sizeof(T) != sizeof(int), "No int please"); // 禁止 int 类型具体化。float 误伤
+    }
+    static int Value;
+};
+template<typename T> int Class1<T>::Value = 1; // 静态成员必须初始化
+int main()
+{
+    Class1<int> obj1;
+    Class1<int> obj2;
+    obj1.Value = 2;
+    
+    Class1<float> obj3;
+    Class1<float> obj4;
+    obj3.Value = 100;
+    cout << obj2.Value << " " << obj3.Value << " " << obj4.Value << endl;
+}
+
+static_assert 禁止针对特定类型实例化。
+
+10. STL, 算法
+
+11. STL string 类
+std::string 使用模板类 std::basic_string<T> 针对 char 和 wchar_t 具体化
+
+构造函数,
+string strPartialCopy(constCStyleString, 5); 前 5 个字符
+string strRepeatChars(10, 'a');
+
+访问字符串的字符内容，下标操作，或者迭代器
+
+拼接字符串， +=， 或者 append 方法， append 接受 string 对象或者 C 风格字符串 
+
+查找， string::npos 值为 -1，没有找到需要查找的元素
+
+截短， erase 
+
+反转， std::reverse 
+reverse(str.begin(), str.end());
+
+大小写转换：
+transform
+
+12. vector 
+1. 特点： 在末尾添加，删除元素的时间固定。
+在中间添加，删除元素的时间与该元素后面元素个数成正比
+个数动态，该类负责管理内存
+
+2. 实例化：
+std::vector<int> obj1;
+std::vector<Tuna> obj2;
+迭代器： std::vector<int>::const_iterator it; // 不同 it 修改元素的迭代器
+** 指定大小。大小和初始值。另一个类型相同的 vector。 迭代器
+3. push_back() 末尾插入元素
+
+静态数组风格初始化： vector<int> IntVect {1, 2, 3};
+vector<int> IntVect = {1, 2, 3};
+
+4. insert() 指定位置插入
+IntVect.insert(IntVect.begin(), 2, 3) // 开始位置插入 2 个 3
+IntVect.insert(IntVect.begin() + 1, AnotherVect.begin(), AnotherVect.end());
+
+5. 访问 vector 元素，下标或者 at(), 或者迭代器
+下标使用方式，类似于静态数组，读写元素
+IntVect.at(2); // 运行阶段检查容器大小，越界将引发异常
+迭代器，类似于指针的语法访问元素。
+
+6. 删除 vector 中的元素
+pop_back 删除最后一个元素
+
+13. deque 
+与 vector 相比， 可以 push_front, pop_front
+
+14. list, forward_list 
+list 是双向链表， forward_list 是单向链表，因此只能沿一个方向迭代
+中间插入元素时间固定
+
+iterator insert(iterator pos, const T& x);
+insert(iterator pos, size_type n, const T& x);
+insert(iterator, InputIterator, InputIterator);
+
+erase 删除元素。输入为迭代器指向的元素。或者两个迭代器之间的元素（不包括末尾迭代器指向的元素）。
+
+
+list::reverse() 成员函数，翻转 list, 之前的迭代器指向依然有效
+list::sort 成员函数，排序 list, 一个无参数，另一个可以指定排序谓词。
+remove 可以指定相等的谓词 == 重载 == 运算符
+对于 list 存储对象的容器，提供 < 和 == 运算符，以提供默认的排序和删除谓词
+
+forward_list 单向链表， 有 push_front 函数， 无 push_back 函数
+不支持双向迭代，迭代器可以 ++， 不可以 --
 
