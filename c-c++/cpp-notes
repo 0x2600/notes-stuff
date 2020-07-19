@@ -1204,3 +1204,110 @@ remove 可以指定相等的谓词 == 重载 == 运算符
 forward_list 单向链表， 有 push_front 函数， 无 push_back 函数
 不支持双向迭代，迭代器可以 ++， 不可以 --
 
+15. set, multiset
+对于 set, multiset 存储对象的容器，提供 < 和 == 运算符，以提供默认的排序谓词以及用于 find 等函数
+查找复杂度为对数复杂度，插入要进行排序有开销
+插入时进行排序，默认的排序谓词是 std::less
+如果需要自定义排序谓词，需要在类中提供 bool operator()(const T&, const T&) 实现
+template <typename T>
+struct Mysort
+{
+    bool operator()(const T&obj1, const T&obj2)
+    {
+        return (obj1 > obj2);
+    }
+};
+    set<int, Mysort<int> > setInt;
+    setInt.insert(1);
+    setInt.insert(2);
+    Display(setInt); // 2 1
+
+成员函数：
+insert， 形参为元素的值，或者两个迭代器
+count(element)
+find 
+erase(key), erase(itLowBound, itUpperBound), erase(it);
+
+
+散列集合实现： unordered_set, unordered_multiset
+头文件 unordered_set
+
+16. map, multi_map, unordered_map, unordered_multimap
+具体化：
+map<int, string> map_obj;
+插入：
+mapobj.insert(make_pair(1, "1"));
+mapobj.insert(pair<int, string>(2, "2"));
+mapobj[3] = "3"
+输出：
+it->first; it->second;
+
+multimap 中查找元素。count() 计算有多少个键相同的，然后递增迭代器
+删除： erase
+自定义排序谓词：实现 operator() 的类或者结构体
+map, multimap 的查找复杂度为对数复杂度
+
+unordered_map, unordered_multimap insert, find 时间固定
+
+
+17. 函数对象
+一元函数，形参一个，如果返回 bool， 称为一元谓词
+二元函数同上
+
+template<typename T>
+void testFunction(const T& obj)
+{
+    cout << obj << endl;
+}
+// 计数状态
+template<typename T>
+class testClass
+{
+public:
+    int Count;
+    testClass(int Count_): Count(Count_){}
+    testClass(): Count(0){}
+    void operator()(const T& obj){
+        Count++;
+        cout << obj << endl;
+    }
+
+};
+
+使用: 
+testFunction("test");
+
+testClass<string> obj;
+obj("test2");
+
+string s("hello world");
+testClass<char> obj = for_each(s.begin(), s.end(), testClass<char>());
+testClass<char> obj2 = for_each(s.begin(), s.end(), testClass<char>(0));
+cout << obj.Count << endl; // 11
+
+一元谓词：
+template<class T>
+struct isMu
+{
+    int d;
+    isMu(int d_)
+    {
+        d = d_;
+    }
+    bool operator()(const T& obj) const{
+        return (obj%d == 0);
+    }
+};
+// 找出所有被某个数字整除的， find_if
+vector<int> intVect {23, 24, 25, 26, 30};
+auto it = find_if(intVect.cbegin(), intVect.cend(), isMu<int>(6));
+// auto it = find_if(intVect.cbegin(), intVect.cend(), [](const int& obj)->bool{return (obj%6==0);}); 等效的 lambda
+while (it != intVect.end())
+{
+    cout << *it << endl;
+    it = find_if(it + 1, intVect.cend(), isMu<int>(6));
+}
+
+
+
+
