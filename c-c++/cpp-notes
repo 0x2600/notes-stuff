@@ -1308,6 +1308,18 @@ while (it != intVect.end())
     it = find_if(it + 1, intVect.cend(), isMu<int>(6));
 }
 
+18. lambda 
+捕获列表接受状态量的 lambda 表达式
+int d = 2;
+[d](d_){return (d/d_ == 0);}
 
+19. STL 算法 
+变序算法与非变序算法
+find, find_if
+auto it = find(vectInt.cbegin(), vectInt.cend(), NumToFind);
+auto it = find_if(vectInt.cbegin(), vectInt.cend(), [](int ele){return (ele%2==0);});
+// check it and vectInt.cend()
+
+count, count_if
 
 
