@@ -1321,5 +1321,22 @@ auto it = find_if(vectInt.cbegin(), vectInt.cend(), [](int ele){return (ele%2==0
 // check it and vectInt.cend()
 
 count, count_if
+search, search_n
+fill, fill_n
+generate, generate_n
+for_each 对指定范围内的每个元素应用指定的一元函数对象
+transform
+copy, copy_if, copy_backward // copy(vect1.begin(), vect1.end(), vect2.begin())
+// copy_backward(vect1.begin(), vect1.end(), vect2.end())
+** remove, remove_if
+replace, replace_if 
+sort, unique, binary_search // 有序容器查找
+partition, stable_partition
+lower_bound, upper_bound
 
+QA:
+变序算法不要用于关联容器 set
+使用 list.sort, 而不是 std::sort 导致现有迭代器失效
+
+20. 自适应容器，栈和队列
 
