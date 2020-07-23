@@ -1339,4 +1339,41 @@ QA:
 使用 list.sort, 而不是 std::sort 导致现有迭代器失效
 
 20. 自适应容器，栈和队列
+实例化 stack
+stack<int> stackInt; // 默认 deque 作底层容器
+stack<int, vector<int>> stackVectorInt; // 可以使用 vector, list 作底层容器
+公有成员函数：
+push, pop, empty, size, top
+
+queue:
+queue<int> quInt; // 默认 deque
+queue<int, list<int> > quListInt; // list, vector
+公有成员函数：
+push, pop, front, back, empty, size
+
+priority_queue 优先级队列，最大值的元素位于队首(或者二元谓词认为是最大值的元素)，只能在队首执行操作
+成语函数：
+push, pop, top, empty, size
+
+21. STL 位标志
+#include <bitset>
+bitset<4> fourBits; // 0000 默认构造函数初始化为 0
+bitset<3> threeBits("010");
+<< 
+>>
+& ^ ! |
+>>=, <<=, []
+set, set(offset, value), reset, reset(offset), flip, size, count
+
+vector<bool> vectBool(10, true);
+有成员函数 flip
+
+22. 智能指针
+智能指针类重载 *, -> 运算符
+智能指针类型，根据其对内存资源管理的策略
+1. 深复制
+2. 写时复制
+3. 引用计数
+4. 引用链接
+4. 破坏性复制
 
