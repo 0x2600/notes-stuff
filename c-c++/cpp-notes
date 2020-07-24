@@ -1043,30 +1043,130 @@ HEAP 段： 动态内存空间，使用 malloc, new 申请的内存
 未使用的内存
 STACK 局部变量，参数，返回值。函数调用时会参数入栈，局部变量入栈，调用结束一次出栈
 
-
-1. 双目运算符 +， - 返回一个临时对象比较好
-+=， -= 修改使用的对象比较好
-
-operator const char *()
+1. 移动复制构造函数：
+MyString(MyString &&MoveSource)
 {
-    //
+    Buf = MoveSource.Buf;
+    MoveSource.Buf = NULL;
 }
 
-如果类管理着动态分配的资源，除了构造函数和析构函数外，还需要实现复制构造函数，复制赋值运算符
+2. 不允许复制的类：
+private:
+    MyClass(const MyClass &obj);
+    MyClass &operator=(const MyClass &obj);
+
+函数调用时，对该类对象的拷贝，复制都将导致编译失败。只需声明，无需实现这两个方法的代码
+
+3. 单例类：
+默认构造函数，赋值运算符，拷贝构造函数都是私有的，有一个获取对象的静态方法。
+class Stu
+{
+    string m_sName;
+    Stu();
+    Stu(const Stu &stu);
+    Stu& operator=(const Stu& stu);
+
+public:
+    static Stu& getInstance()
+    {
+        static Stu onlyStu;
+        return onlyStu;
+    }
+};
+
+4. 禁止在栈空间实例化的类：
+将析构函数声明为私有。还需要添加一个静态的销毁对象的方法。
+
+5. sizeof 作用于类
+作用于类和对象时结果相同
+
+6. 友元函数声明在类体中声明，可以访问类中的私有成员
+友元类在类体中声明，该友元类的所有方法都可以访问类的私有成员
+
+7. 复制构造函数的形参必须是引用类型，否则将没完没了地调用复制构造函数
+
+8. protected 继承，允许派生类和友元类访问。
+
+9. 重写： 返回值和特征标相同
+
+10. 派生类调用父类的方法 tuna.Fish::Swim();
+
+11. 切除问题
+避免切除问题，函数的形参设置为指向基类的指针或者 const 引用
+
+12. 公有继承表示 is-a 关系，私有和保护继承表示 has-a 关系
+
+13. 多态： 将派生类对象视为基类对象，并调用派生类重写的方法
+
+14. 虚析构函数
+void Destroy(Fish *pfish)
+{
+  delete pfish; // 如果 Fish 的析构函数不是虚函数，那么只有 Fish 对象被析构，派生类不会被析构。避免 delete 作用于 Base 指针时，派生类的析构函数没有调用问题
+}
+
+15. 抽象基类和纯虚函数
+virtual void DoSomething() = 0;
+声明了纯虚函数的基类称为抽象基类。派生类必须实现该函数。
+虽然不能实例化抽象基类，但可将指针或者引用的类型指定为抽象基类
+也可以定义其他非纯虚函数的成员函数和成员属性
+
+16. 虚继承
+继承从同一个类派生而来的基类时，如果这些基类没有采用虚继承，将导致二义性，这被称为菱形问题
+
+17. 运算符重载
+单目运算符：
+全局函数或者静态成员函数的实现：
+return_type operator operator_type (param_type);
+类成员函数的实现：
+return_type operator operator_type(); 
+前缀 ++
+Date 类： int day, month, year
+实现为类成员函数：
+Date &operator++()
+{
+    ++day;
+    return *this;
+}
+后缀 ++
+Date operator++(int)
+{
+    Date Copy(day, month, year);
+    ++day;
+    return Copy;
+} // 会创建一个临时拷贝
+
+其他的运算符：
+operator const char *();
+operator int();
+
+双目运算符：
+全局函数或者静态成员函数的实现：
+return_type operator_type (param1, param2);
+类成员函数的实现：
+return_type operator_type(param); 
+
+双目运算符 +， - 返回一个临时对象比较好
++=， -= 修改使用的对象比较好
+
+18. set, multiset
+插入时会对元素进行排序。默认排序谓词 std::less
+自定义排序谓词：类中定义 bool operator()(const T&. const T&);
+
+19. 如果类管理着动态分配的资源，除了构造函数和析构函数外，还需要实现复制构造函数，复制赋值运算符
 如果不允许复制对象，将复制构造函数和复制赋值运算符声明为私有即可
 
-2. 下标运算符
+20. 下标运算符
 return_type& operator [](int Index)
 
-3. 函数运算符 operator () 
+21. 函数运算符 operator () 
 void operator ()(string str)
 {
     cout << str;
 }
 
-** 4. 移动构造函数，移动赋值运算符
+** 22. 移动构造函数，移动赋值运算符
 
-5. 类型转换运算符
+23. 类型转换运算符
 static_cast 用于向下, 向上转型（相关类型转换）。隐式转换转换为显式转换
 用于指针时，实现基本的编译阶段检查
 double pi = 3.14;
@@ -1084,16 +1184,16 @@ void DetectFishType(Fish *pFish)
     }
 }
 
-6. 使用宏定义定义常量，不如使用 const 和数据类型
+24. 使用宏定义定义常量，不如使用 const 和数据类型
 宏定义最有用的功能之一， 避免多次包含
 
-7. 宏函数可用于不同的变量类型，相比函数，减少代码量。而且性能优于函数调用。
+25. 宏函数可用于不同的变量类型，相比函数，减少代码量。而且性能优于函数调用。
 缺点： 宏函数不支持任何形式的类型安全。
 如果要编写独立于类型的泛型函数，又要确保类型安全，可以使用函数模板。如果需要改善性能，可以将函数声明为内联。
 
-8. 模板函数调用无需指定数据类型，编译器可以自动推断。模板类需要显式指定数据类型
+26. 模板函数调用无需指定数据类型，编译器可以自动推断。模板类需要显式指定数据类型
 
-9. 模板类
+27. 模板类
 template <typename T>
 class TemplateClass
 {
@@ -1132,9 +1232,9 @@ int main()
 
 static_assert 禁止针对特定类型实例化。
 
-10. STL, 算法
+28. STL, 算法
 
-11. STL string 类
+29. STL string 类
 std::string 使用模板类 std::basic_string<T> 针对 char 和 wchar_t 具体化
 
 构造函数,
@@ -1155,7 +1255,7 @@ reverse(str.begin(), str.end());
 大小写转换：
 transform
 
-12. vector 
+30. vector 
 1. 特点： 在末尾添加，删除元素的时间固定。
 在中间添加，删除元素的时间与该元素后面元素个数成正比
 个数动态，该类负责管理内存
@@ -1182,10 +1282,10 @@ IntVect.at(2); // 运行阶段检查容器大小，越界将引发异常
 6. 删除 vector 中的元素
 pop_back 删除最后一个元素
 
-13. deque 
+31. deque 
 与 vector 相比， 可以 push_front, pop_front
 
-14. list, forward_list 
+32. list, forward_list 
 list 是双向链表， forward_list 是单向链表，因此只能沿一个方向迭代
 中间插入元素时间固定
 
@@ -1204,7 +1304,7 @@ remove 可以指定相等的谓词 == 重载 == 运算符
 forward_list 单向链表， 有 push_front 函数， 无 push_back 函数
 不支持双向迭代，迭代器可以 ++， 不可以 --
 
-15. set, multiset
+33. set, multiset
 对于 set, multiset 存储对象的容器，提供 < 和 == 运算符，以提供默认的排序谓词以及用于 find 等函数
 查找复杂度为对数复杂度，插入要进行排序有开销
 插入时进行排序，默认的排序谓词是 std::less
@@ -1232,7 +1332,7 @@ erase(key), erase(itLowBound, itUpperBound), erase(it);
 散列集合实现： unordered_set, unordered_multiset
 头文件 unordered_set
 
-16. map, multi_map, unordered_map, unordered_multimap
+34. map, multi_map, unordered_map, unordered_multimap
 具体化：
 map<int, string> map_obj;
 插入：
@@ -1250,7 +1350,7 @@ map, multimap 的查找复杂度为对数复杂度
 unordered_map, unordered_multimap insert, find 时间固定
 
 
-17. 函数对象
+35. 函数对象
 一元函数，形参一个，如果返回 bool， 称为一元谓词
 二元函数同上
 
@@ -1308,12 +1408,12 @@ while (it != intVect.end())
     it = find_if(it + 1, intVect.cend(), isMu<int>(6));
 }
 
-18. lambda 
+36. lambda 
 捕获列表接受状态量的 lambda 表达式
 int d = 2;
 [d](d_){return (d/d_ == 0);}
 
-19. STL 算法 
+37. STL 算法 
 变序算法与非变序算法
 find, find_if
 auto it = find(vectInt.cbegin(), vectInt.cend(), NumToFind);
@@ -1338,7 +1438,7 @@ QA:
 变序算法不要用于关联容器 set
 使用 list.sort, 而不是 std::sort 导致现有迭代器失效
 
-20. 自适应容器，栈和队列
+38. 自适应容器，栈和队列
 实例化 stack
 stack<int> stackInt; // 默认 deque 作底层容器
 stack<int, vector<int>> stackVectorInt; // 可以使用 vector, list 作底层容器
@@ -1368,7 +1468,7 @@ set, set(offset, value), reset, reset(offset), flip, size, count
 vector<bool> vectBool(10, true);
 有成员函数 flip
 
-22. 智能指针
+** 39. 智能指针
 智能指针类重载 *, -> 运算符
 智能指针类型，根据其对内存资源管理的策略
 1. 深复制
@@ -1377,3 +1477,76 @@ vector<bool> vectBool(10, true);
 4. 引用链接
 4. 破坏性复制
 
+unique_ptr
+#include <memory>
+
+
+40. 流概述：
+重要的流类和流对象：
+cout, cin, cerr, fstream, ofstream, ifstream, stringstream
+```
+char Buf[10] = {0};
+cin >> Buf; // 危险使用，输入超长会崩溃, cin.get(Buf, 9);
+```
+string Input;
+cin >> Input; // 输入字符串，遇到空白结束插入到 Input
+getline(cin, Input); // 输入一行，遇到 newline 结束插入到 Input
+
+fstream 处理文件：
+#include <fstream>
+fstream MyFile("test", ios_base::out);
+fstream FileReader;
+FileReader.open("test1", ios_base::in|ios_base::binary);
+string FileContent;
+getline(FileReader, FileContent);
+if (MyFile.is_open())
+{
+	MyFile << "first line\n"; // << 写入文件
+	//
+}
+
+读写模式：
+ios_base::app, ate(切换到文件末尾，但可在文件的任何地方写入数据), trunc(覆盖现有文件，默认设置), binary, in, out
+读写二进制文件：
+write, read 函数
+
+stringstream:
+#include <sstream>
+
+
+41. 异常处理: 
+try
+{
+
+}
+cathc(std::bad_alloc &exp)
+{
+	cout << exp.what() << endl;
+}
+catch(...)
+{
+	
+}
+
+std::exception 异常基类
+#include <exception>
+bad_alloc, bad_cast, ios_base::failure
+虚方法 what()
+catch(const exception &exp) 捕获将 exception 作为基类的异常
+继承 exception 的自定义异常：
+实现方法：
+virtual const char * what() const throw()
+{
+	// 以 throw() 结尾，这个函数本身不会引发异常
+}
+
+不要在 catch 中包含实现逻辑或者分配资源的代码，以免在处理异常的同时导致异常
+构造函数没有返回值，因此指出问题的唯一途径是引发异常
+析构函数不要引发异常
+
+
+
+42. 多线程技术：
+磁盘清理应用，一个 UI 响应用户操作，开始，取消。工作线程，执行磁盘清理工作
+共享信息： 工作线程提供清理进度， UI 线程提供是否取消操作的信息
+一个线程创建信息，另一个线程使用信息。
