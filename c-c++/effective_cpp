@@ -1,0 +1,28 @@
+1. 引用与指针。引用必须初始化，并且指向一个非空的对象。因此使用引用时无需检查有效性。
+引用总是指向初始化时指向的对象，不可以修改。因为修改总是修改被引用的对象，而不是引用本身。
+重载操作符，使用引用，如 []
+2. const_cast 用于转换掉对象的 const 属性。
+dynamic_cast 基类的指针或者引用转换成指向派生类的指针或者引用，检查指针是否为空，或者抛出异常(引用)
+注意一定要有虚函数的类继承
+```
+int foo()
+{
+    return 1;
+}
+
+void (*pFunc)() = (void (*)())&foo;
+int res = pFunc(); // error
+```
+void foo()
+{
+    cout << "Something\n";
+}
+
+int (*pFunc)() = (int (*)())&foo;
+cout << pFunc(); // 返回的 int 是垃圾值
+
+简单模拟类型转换：
+#define static_cast(TYPE,EXPR) ((TYPE)(EXPR))
+dynamic_cast 模拟不会知道转换是否失败
+
+
