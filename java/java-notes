@@ -818,3 +818,51 @@ wait(), notifyAll()
 
 线程默认不是守护线程，称为用户线程。一个线程可以在运行之前设置自己是否是守护线程 setDaemon(boolean on) 所有用户线程结束之后，即使守护线程中还有要执行的语句，守护线程也将立即结束执行。
 
+### java 泛型
+class Cone<E>
+{
+	E bottom;
+	double height;
+	
+	public Cone(E obj)
+	{
+		bottom = obj;
+	}
+	
+	public void setHeight(double h_)
+	{
+		height = h_;
+	}
+	
+	public double area()
+	{
+		return Double.parseDouble(bottom.toString()) * height / 3;
+	}
+}
+
+class Circle
+{
+	double r;
+	public Circle(double r_)
+	{
+		r = r_;
+	}
+	public String toString()
+	{
+		return "" + Math.PI * r * r;
+	}
+}
+
+public class ConeTest
+{
+	public static void main(String[] args)
+	{
+		Cone<Circle> MyCone = new Cone<Circle>(new Circle(10))
+		MyCone.setHeight(100);
+		System.out.println(MyCone.area());
+	}
+}
+
+链表：
+LinkedList<String> MyStrList = new LinkedList<String>(); // 空链表
+ArrayList
