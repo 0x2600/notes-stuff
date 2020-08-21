@@ -866,3 +866,36 @@ public class ConeTest
 链表：
 LinkedList<String> MyStrList = new LinkedList<String>(); // 空链表
 ArrayList
+
+引用类型转换：
+上转型方法的调用：
+实例方法，调用实际指向对象的方法
+类方法，调用上转型对象本身的类方法
+class Foo
+{
+    public void m1()
+    {
+        //
+    }
+
+    public static void m2
+    {
+        //
+    }
+}
+class Bar extends Foo
+{
+    public void m1()
+    {
+        //
+    }
+
+    public static void m2
+    {
+        //
+    }
+}
+
+Foo foo = new Bar();
+foo.m1(); // Bar
+foo.m2(); // Foo
