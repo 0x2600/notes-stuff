@@ -435,7 +435,7 @@ MMM DD YYYY HH:MM:SS string
 预处理器运算符
 宏延续运算符 \
 #define message_for(a, b) \
-	printf(#a " and " #b ": We love you!\n)
+	printf(#a " and " #b ": We love you!\n")
 字符串常量化运算符 #
 标记粘贴运算符 ##
 #define tokenpaster(n) printf("token " #n "= %d", token##n)
