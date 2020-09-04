@@ -1519,7 +1519,7 @@ try
 {
 
 }
-cathc(std::bad_alloc &exp)
+catch(std::bad_alloc &exp)
 {
 	cout << exp.what() << endl;
 }
