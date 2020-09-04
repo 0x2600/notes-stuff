@@ -758,7 +758,7 @@ int const a;
 const int a; // 两种形式
 
 const int *p;
-int const *p;
+int const *p; // 这两种意思是指针指向不可变数据，指针可改变指向别的数据。数据的可变无否于此无关。只是说通过该指针访问，就不可以改变数据。
 int * const p; // 指针不可变
 
 3.5 作用域
