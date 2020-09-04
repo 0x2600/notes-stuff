@@ -1,0 +1,98 @@
+1. 枚举类型
+不可以定义在方法中。定义在类中或者命名空间下。(同结构体类型)
+public enum Option: int
+{
+  opt1 = 1,
+  opt2 = 2
+}
+
+Console.WriteLine((int)Option.op1);
+
+2. 结构体类型
+结构体成员：
+属性，方法，事件
+也可以有构造器：必须有参数，且为结构体中的字段赋初值。
+
+3. 数组
+初始化：
+int[] a = new int[3];
+int[] a = new int[] {1, 2};
+
+多维数组：
+int[2, 2] a = {{1, 2}, {3, 4}};
+a[1, 1] = 100;
+
+锯齿形多维数组：
+int[][] a = new int[2][];
+a[0] = new int[] {1, 2};
+a[1] = new int[] {1};
+a[1][0] = 100;
+
+4. Object 类
+所有类的祖先类。四个方法
+Equals(object obj1, object obj2); // 静态方法，还有一个实例方法
+GetHashCode // 实例方法
+GetType // 返回 System.Type 类型，是实例方法
+ToString
+
+5. 继承
+public classA: classB
+{
+
+}
+调用基类隐藏的方法:
+base.func();
+子类中如果有意隐藏基类的方法，使用关键字 new: 
+public new void func()
+{}
+
+6. 多态
+virtual, new, override 
+
+7. 抽象 abstract
+抽象方法必须定义在抽象类中，抽象类包含抽象方法，也可以包含非抽象方法。
+抽象方法定义时无须实现，尤其子类实现。
+
+8. sealed 密封类和密封方法
+密封方法不能被重写，密封类不能被继承
+public abstract class AreaAbstract
+{
+    public abstract double Total();
+}
+
+public class Rect : AreaAbstract
+{
+    public double Width { get; set; }
+    public double Length { get; set; }
+    public sealed override double Total() // 不能被重写
+    {
+        return Width * Length;
+    }
+}
+
+public sealed class Circle : AreaAbstract // 不能被继承
+{
+    public double R{get; set;}
+    public override double Total()
+    {
+        return 3.14 * R * R;
+    }
+}
+
+9. 继承关系中构造器
+子类默认调用父类的无参构造器，也可以显式调用父类构造器
+public ClassA(int a_, int b_):base(a_)
+{
+  b = b_;
+}
+
+10. 接口，一个类可以实现多个接口
+interface ICompute
+{
+  double R{get;set;}
+  double Area();
+}
+接口成员不能使用 public, private, protected, internal, static, virtual, abstract, sealed 修饰
+接口的实现：
+1. 实现所有的成员
+2. 定义抽象类，实现部分成员，未实现成员以抽象方式实现
