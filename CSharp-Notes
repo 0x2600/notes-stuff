@@ -152,3 +152,47 @@ foreach(DictionaryEntry d in hash_)
 }
 
 SortedList
+
+12. 泛型 System.Collections.Generic
+可空类型：值类型可空
+System.Nullable<int> a = null;
+int? a = null;
+if(!a.HasValue)
+{
+	// null
+}
+
+泛型方法：
+public void Add<T> (T a, T b)
+{
+	double sum = double.Parse(a.ToString()) + double.Parse(b.ToString());
+    Console.WriteLine(sum);
+}
+
+```c++
+template<typename T>
+void Add(T a, T b)
+{
+	double sum = (double)a + (double)b;
+	std::cout << sum << "\n";
+}
+```
+
+泛型类：
+class GeTest<T>
+{
+	T m_field;
+}
+
+GeTest<int> ge_ = new GeTest<int>();
+
+泛型集合：
+非泛型集合 ArrayList, Hashtable
+对应泛型集合： List<T>, Dictionary<K, V>
+
+比较器实现 IComparer<T> 接口，重写 int Compare(T o1, T o2);
+集合的排序调用: List.Sort(new IComparerImpl());
+其中比较器实现的类： IComparerImpl: IComparer<Student>
+
+ 或者自定义的类实现 IComparable<Student> 接口，实现 int CompareTo(Student t) 方法
+ List.Sort();
