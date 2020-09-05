@@ -93,6 +93,62 @@ interface ICompute
   double Area();
 }
 接口成员不能使用 public, private, protected, internal, static, virtual, abstract, sealed 修饰
+
 接口的实现：
 1. 实现所有的成员
 2. 定义抽象类，实现部分成员，未实现成员以抽象方式实现
+实现接口的成员：
+1. 隐式实现，
+interface ICompute
+{
+	int Id{set; get;}
+	void Greet();
+}
+
+class ComputeTest : ICompute
+{
+	public int Id{set; get;}
+	public void Greet()
+	{
+		Console.WriteLine("Hello");
+	}
+}
+
+// call
+ICompute com = new ComputeTest();
+com.Greet();
+
+2. 显式实现
+class ComputeTest: ICompute
+{
+	int ICompute.Id{set;get;}
+	void ICompute.Greet()
+	{
+		;
+	}
+}
+
+
+11. 集合
+Queue:
+Enqueue(object o);
+Dequeue();
+ToArray();
+IEnumerator it = queue.GetEnumerator();
+while(it.MoveNext())
+{
+	it.Current();
+}
+
+Stack:
+Push(object o); Pop()
+GetEnumerator();
+
+Hashtable:
+foreach(DictionaryEntry d in hash_)
+{
+	// d.Key
+	// d.Value
+}
+
+SortedList
