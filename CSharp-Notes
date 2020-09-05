@@ -196,3 +196,16 @@ GeTest<int> ge_ = new GeTest<int>();
 
  或者自定义的类实现 IComparable<Student> 接口，实现 int CompareTo(Student t) 方法
  List.Sort();
+
+13. 文件 System.IO
+1. DriveInfo 磁盘信息相关
+2. DirectoryInfo
+3. Directory 静态类
+4. FileInfo
+5. File 静态类
+6. Path 用于文件路径的静态类
+8. StreamReader
+9. StreamWriter
+10. FileStream
+11. BinaryReader(Stream input);
+12. BinaryWriter(Stream output);
