@@ -209,3 +209,66 @@ GeTest<int> ge_ = new GeTest<int>();
 10. FileStream
 11. BinaryReader(Stream input);
 12. BinaryWriter(Stream output);
+
+14. 委托和事件
+14.1 命名方法委托
+1. 类中定义委托
+class Program
+{
+	public delegate void MyDelegate();
+
+	static void Main(string[] args)
+	{
+		//
+		MyDelegate dele_ = new MyDelegate(Foo.foo);
+		dele_();
+
+		MyDelegate dele__ = new MyDelegate(new Foo().bar);
+		dele__();
+	}
+}
+
+class Foo
+{
+	public static void foo()
+	{
+		Console.Write("static\n");
+	}
+
+	public void bar()
+	{
+		Console.Write("instance method\n");
+	}
+}
+
+
+类似于1. 函数指针定义 typedef
+2. 函数指针赋值
+3. 函数指针调用
+
+14.2 多播委托
+public delegate void MyDelegate();
+
+MyDelegate dele_ = new MyDelegate(Foo.foo);
+dele_ += new Foo().bar;
+dele_ -= Foo.foo;
+
+dele_();
+
+注： 不同实例有不同的实例方法
+
+14.3 匿名委托
+public delegate void MyDelegate();
+MyDelegate dele___ = delegate
+{
+	Console.WriteLine("Anonymous delegate");
+};
+
+dele___();
+
+事件：
+public event MyDelegate MyEvent;
+MyEvent = new MyDelegate(ClassA.StaticMethod);
+instance_.TriggerEvent();
+事件的定义和调用如果不在同一个类中， +=， -= 操作
+
