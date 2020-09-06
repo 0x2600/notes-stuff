@@ -304,3 +304,39 @@ if(dr == DialogResult.OK)
 OpenFileDialog
 SaveFileDialog
 RichTextBox.LoadFile, SaveFile
+
+16. 异常与调试
+try
+{
+	int a = int.Parse(Console.ReadLine());
+}
+catch (Exception ex)
+{
+	Console.WriteLine(ex.Message);
+}
+finaly
+{
+	Console.WriteLine("Always execute");
+}
+
+自定义异常：
+class MyException : Exception
+{
+	public MyException(string name):base(name)
+	{}
+}
+try
+{
+	int a = int.Parse(textBox1.Text);
+	if (a < 10)
+	{
+		throw new MyException("year not valid");
+	}
+}
+catch(MyException myex_)
+{
+	MessageBox.Show(myex_.Message);
+}
+
+Debug.WriteLine() debug 下输出
+Trace.WriteLine() debug, release 下输出
