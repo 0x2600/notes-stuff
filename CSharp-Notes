@@ -340,3 +340,15 @@ catch(MyException myex_)
 
 Debug.WriteLine() debug 下输出
 Trace.WriteLine() debug, release 下输出
+
+17. Process, Thread
+
+ThreadStart ts = new ThreadStart(func);
+Thread t = Thread(ts);
+t.Start();
+
+void func(object n);
+ParameterizedStart pts = new ParameterizedStart(func);
+Thread t = new Thread(pts);
+t.Start(100);
+
