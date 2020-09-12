@@ -281,7 +281,7 @@ CheckBox
 CheckedListBox
 ListBox
 ComboBox
-PictureBox
+PictureBox: Image, SizeMode 属性
 Timer, Start, Stop
 DateTimePicker
 MonthCalendar
