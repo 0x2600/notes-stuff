@@ -273,6 +273,7 @@ instance_.TriggerEvent();
 事件的定义和调用如果不在同一个类中， +=， -= 操作
 
 15. WinForm
+TreeView, SelectedNode, HideSelection, ExpandAll, Remove 删除节点, CheckBoxs 节点的 Checked 属性指示是否选中
 Label
 TextBox
 Button
@@ -280,7 +281,7 @@ RadioButton
 CheckBox
 CheckedListBox
 ListBox
-ComboBox
+ComboBox: SelectedIndex, DropDownStyle, Items.Add, Iterms.Clear, SelectedIndexChanged
 PictureBox: Image, SizeMode 属性
 Timer, Start, Stop
 DateTimePicker
