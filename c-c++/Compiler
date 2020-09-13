@@ -98,4 +98,28 @@ ldconfig
 一些优化选项会增加可执行代码的体积
 跟踪调试时不要优化，优化可能使得代码被删除或改写，或者重组，使得跟踪调试困难。
 
+----------
+一些 Visual Studio C++ 的知识：
+1. 关于动态链接库 https://docs.microsoft.com/zh-cn/cpp/build/walkthrough-creating-and-using-a-dynamic-link-library-cpp?view=vs-2019
+1.1 选择模板， dll 工程，工程属性中定义导出宏，这里是 MATHLIBRARY_EXPORTS
+需要导出的函数前加 MATHLIBRARY_API，例如 extern "C" MATHLIBRARY_API void fibonacci_init(
+    const unsigned long long a, const unsigned long long b);
+然后添加实现代码。
+#ifdef MATHLIBRARY_EXPORTS
+#define MATHLIBRARY_API __declspec(dllexport)
+#else
+#define MATHLIBRARY_API __declspec(dllimport)
+#endif
 
+1.2 使用 dll 的客户程序
+新建工程，属性中添加附加包含目录(指定客户代码中包含的 dll 文件路径)，添加附加库目录(指定导入 dll 工程生成的目标 .lib 文件路径，这是不属于标准 C++ 编译模型的额外信息，否则链接无法通过)，指定
+链接器输入 .lib 文件名
+运行时还需要将 dll 放在客户程序运行目录
+
+2. 静态库 https://docs.microsoft.com/zh-cn/cpp/build/walkthrough-creating-and-using-a-static-library-cpp?view=vs-2019
+2.1 使用桌面向导，新建空项目，取消预编译头，选择静态库 .lib
+添加头文件，实现，无需定义 dllexport (本来这里就不是 dll)
+2.2 客户程序
+引用，添加静态库工程的引用
+然后指定静态库头文件目录，添加客户代码
+运行时无需静态库的 .lib 文件
