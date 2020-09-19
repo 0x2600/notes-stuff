@@ -25,4 +25,12 @@ cout << pFunc(); // 返回的 int 是垃圾值
 #define static_cast(TYPE,EXPR) ((TYPE)(EXPR))
 dynamic_cast 模拟不会知道转换是否失败
 
+3. 不要对数组使用多态。
+指针偏移，对象大小
+void Delete(Base array[])
+{
+    delete[] array;
+}
+
+
 
