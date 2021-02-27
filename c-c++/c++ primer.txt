@@ -1,0 +1,87 @@
+1. 位操作时建议使用无符号数
+2. 数组的引用 void putValue(int (&arr)[10]); 函数只接受10个元素的数组
+void putValue(int matrix[][10], int rowSize) int (*matrix)[10] 必须指明非第一维度的所有维度的长度
+int *matrix[10] 指针数组 char *names[10]
+
+int (*testCases[10])();// 函数指针数组
+// 下面的定义更加清晰
+typedef int (*PFV)();
+PFV testCases[10];
+
+
+返回函数指针的函数
+int (*ff(int))(int *, int);
+
+等同于一下定义
+typedef int (*PF)(int *, int);
+PF ff(int);
+
+
+// FC 表示一个 C 函数类型
+// 有一个 int 参数和 void 返回值
+extern "C" typedef void FC( int );
+// f2() 是一个带有一个参数的 C++函数
+// 参数是一个 C 函数指针
+void f2( FC *pfParm );
+
+extern "C" void f1( void(*pfParm)(int) ); // f1, pfParm 都是 C函数
+
+定位 new 表达式：
+new (buf) type;
+int *pi = new (buf) int(10);
+
+局部函数将隐藏而不是重载一个全局余种声明的函数
+#include <string>
+void print( const string & );
+void print( double ); // overloads print()
+void fooBar( int ival )
+{
+// 独立的域隐藏print()的两个实例
+extern void print( int );
+// 错误: print( const string & )在这个域中被隐藏
+print( "Value : " );
+print( ival ); // ok: print( int ) 可见
+}
+
+
+
+void f() {}
+void f(int) {}
+void test_overload()
+{
+    void f(int);
+    f(); // 错误， 同名 f() 被隐藏	
+}
+
+
+异常规范
+void func() throw(std::string, int); // 抛出指定之外的异常，调用 unexpected() 
+void func() throw(); // 保证不抛出异常
+
+1.
+try{
+
+    throw 1;
+}
+catch(const int &i)
+{
+
+}
+catch(...)
+{
+
+}
+
+2.
+try{}
+catch(...)
+{
+    throw; // rethrow 向上层函数调用者抛出相同的异常对象
+}
+
+被抛出的异常类型与异常规范中指定的类型不允许类型转换
+void fun() throw(std::string) {
+    throw "help"; // should be // throw std::string("help");
+}
+
+异常规范与函数指针。右值应该更严格，即抛出的类型更少
