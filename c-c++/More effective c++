@@ -1,0 +1,80 @@
+proxy class
+class Array
+{
+
+    public:
+    class ArraySize{
+        public:
+        ArraySize(int s):_s(s){}
+        private:
+        int _s;
+        
+
+    };
+    Array(ArraySize size);
+};
+
+19. 临时对象的产生
+函数参数是 常量对象的引用。函数返回值。注意，非常量引用不会隐式建立临时对象。
+void CountChar(const string&str);
+char szBuf[] = "123";
+CountChar(szBuf);
+20. 返回值优化，编译器优化。优化函数返回未命名对象
+inline const MyObj operator*(const MyObj&lhs, const MyObj&rhs)
+{
+    return MyObj(lhs.f1 * rhs.f1);
+}
+
+21. 重载避免隐式类型转换。重载 operator 必须有一个用户自定义类型参数，否则会改变内置类型的预定义行为。
+
+22. += 赋值形式代替单独形式 +。单独形式使用赋值形式实现。
+
+25. 构造函数，拷贝构造函数虚拟化， clone() 方法。非成员函数虚拟化，即调用虚拟的成员函数
+
+26. 限制某个类所能产生的对象数量。函数中的静态对象，只有调用时才会构造该对象，不过每次调用时都要检查是否需要构造对象。类中的静态对象，总是被构造和析构。函数方式不可以内联（可能导致函数的局部静态对象有多个）
+避免从具体类派生具体类，考虑组合。
+将类的构造函数修饰为 private 可以阻止被派生。
+static const 成员在类定义中初始化是可以的。
+
+27. 要求在堆中建立对象。
+将析构函数修饰为 private，同时实现伪析构函数(调用private 的析构函数)。原因栈中对象必须有public 的析构函数。 编译器生成的构造函数都是public 的。 
+上述方法会禁止继承和包含。
+对于继承，将析构函数修饰为 protected。对于包含，对象可以包含该类对象的指针，这样就可以调用伪析构函数。
+
+判断对象是否在堆上。1.
+class HeapTracked {
+public:
+	class MissingAddress {};
+	virtual ~HeapTracked() = 0 {}
+	static void* operator new (size_t size)
+	{
+		auto ptr = ::operator new(size);
+		_list.push_front(ptr);
+		return ptr;
+	}
+	static void operator delete(void* ptr) {
+		auto it = std::find(_list.begin(), _list.end(), ptr);
+		if (it != _list.end())
+		{
+			::operator delete(ptr);
+		}
+		else {
+			throw MissingAddress();
+		}
+	}
+	bool isOnHeap() const{
+		const void* ptr = dynamic_cast<const void*>(this);
+		auto it = std::find(_list.begin(), _list.end(), ptr);
+		return it != _list.end();
+	}
+private:
+	static std::list<const void*> _list;
+};
+std::list<const void*> HeapTracked::_list;
+
+
+class Asset :public HeapTracked {
+
+};
+以上方法不可用于基本类型，基本类型不从任何类派生。
+2. 不可移植方法，栈的地址向低地址方向生长，位于高地址。堆向高地址生长，位于低地址。
