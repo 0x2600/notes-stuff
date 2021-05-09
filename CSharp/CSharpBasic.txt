@@ -1,0 +1,462 @@
+格式化语法 {index, alignment:format} 如果需要表示的字符数比对齐说明符指定的字符数少，空格填充，否则忽略对齐说明符。冒号后面必须紧跟格式说明符。只有 index 是必填的。
+
+预定义的16种类型
+sbyte byte short ushort int uint long ulong
+deciaml float double
+bool char 
+object string dynamic
+用户定义类型
+class struct array enum delegate interface
+
+值类型和引用类型
+C# 值类型只需要一段内存，存放实际的数据，数据存放在栈中
+引用类型，实际数据(数据成员无论值类型还是引用类型都)存放在堆中，引用存放在栈中
+注意: struct, enum 是值类型
+object string dynamic class interface delegate array 是引用类型
+
+MyClass mc; // 声明引用变量
+mc = new MyClass(); // 在堆中分配内存并将引用赋值给引用变量
+
+本地常量类型前有 const 可以是预定义简单类型或者 null 引用，不能是某对象的引用，因为本地常量的值必须在编译器决定，对象的引用是在运行时决定
+
+函数参数，值参数 值类型拷贝，引用类型拷贝引用，指向同一个堆中的对象。引用参数，ref 修饰，不会为形参在栈中分配内存，形参作为实参的别名，指向同一个堆中对象。
+注意：引用类型作为值参数和引用参数在方法内指向新生成的对象时的区别。
+
+输出参数，在方法内读取之前必须被赋值，所有方法外方法调用之前无需赋值。方法内任何一个返回路径之前，必须给所有的输出参数赋值。
+
+和 c++ 一样方法重写规则不检查返回值，返回值不同，其他相同时，编译器报错
+
+函数参数顺序，必填参数，可选参数，params 参数
+
+类成员声明组织：[特性] [修饰符] 核心声明
+
+C# 类的成员常量表现的像静态值，没有类的实例可以访问。不可以将成员常量声明为 static 
+
+属性是一个函数成员。set 访问器和 get 访问器。
+set 访问器，拥有一个隐式的实参 value (值参)，类型与属性的类型相同，返回值 void 
+get 访问器，没有参数，返回值类型与属性相同
+自动实现属性：同时提供读写访问器。
+class C1
+{
+    public int MyValue
+    {
+        set; get;
+    }
+}
+属性也可以声明为 static，从类的外部访问时，必须使用类名而不能时实例名
+
+构造函数和c++类似，默认生成构造函数，用户定义了构造函数则不生成构造函数。
+静态构造函数，初始化类的静态字段。只有一个，没有参数，不能有访问修饰符。不可以显式调用，系统自动调用。在类的任何实例创建之前。类的任何静态成员被引用之前。
+对象初始化语句 两种形式，一种无参构造函数，括号可以省略，第二种有参构造函数 SomeClass sc = new SomeClass {m1 = 1, m2 = 2}; 对象初始化语句在构造函数之后调用。
+
+readonly 修饰符对比 const:
+const 字段在声明语句中初始化，readonly 可以在字段声明语句，可以在构造函数(非构造函数不可以)， 如果是 static 字段，则在静态构造函数中完成。const 的值在编译器决定，而 readonly 在运行时决定，因此可以在不同的构造函数中设置不同的值。const 的行为是静态的，readonly 字段可以是实例字段，也可以是静态字段。
+
+索引器总是实例成员，不能声明为 static。索引器可以重载
+class SomeClass
+{
+    int iA;
+    int iB;
+    public int this [int index]
+    {
+        set{
+            index == 0? iA = value : iB = value;
+        }
+        get{
+            return index == 0 ? iA : iB;
+        }
+    }
+}
+
+访问器的访问修饰符
+public int MyValue{get; private set;}
+get set 访问器都有， 只能有一个有访问修饰符，访问修饰符必须比属性的访问修饰符更加严格。
+
+分部类和分部方法
+
+屏蔽继承的基类数据成员，函数成员，静态成员使用 new 修饰符显式告诉编译器，类似于c++的隐藏。如何访问基类被隐藏的成员，例如使用 base.Field1 
+class SomeClass
+{
+    public string Field1;
+}
+
+class OtherClass : SomeClass
+{
+    new public string Field1;
+}
+
+虚方法和覆写方法，基类中使用 virtual 派生类使用 override
+方法访问性相同。不能覆写 static 方法或者非虚方法
+方法，属性，索引器，事件都可以被声明为 virtual 或者 override
+
+多层继承中的虚方法和重写方法
+class BaseClass
+{
+    virtual public void Print()
+    {
+        Console.WriteLine("base class");
+    }
+}
+class FirstClass : BaseClass
+{
+    public override void Print()
+    {
+        Console.WriteLine("First");
+    }
+}
+class SecClass : FirstClass
+{
+    public new void Print()
+    {
+        Console.WriteLine("sec");
+    }
+}
+class SecClass2 : FirstClass
+{
+    public override void Print()
+    {
+        Console.WriteLine("sec2");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        BaseClass b = new SecClass();
+        b.Print(); // first
+        BaseClass c = new SecClass2();
+        c.Print(); // sec2
+        Console.ReadKey();
+    }
+}
+
+构造函数初始化语句可以使用基类的构造函数，或者当前类的其他构造函数。
+class MyClass: BaseClass
+{
+    public MyClass(string s) : base(s)
+    {
+        ...
+    }
+    private MyClass(int i)
+    {
+        ...
+    }
+    public MyClass(int i, float f) : this(i)
+    {
+        ...
+    }
+}
+
+类的访问修饰符，public 和 internal (只对本程序集可见)
+程序集间的继承：添加引用，可选使用 using 免于使用完全限定名称。
+
+成员访问修饰符：
+protected internal 二者并集
+
+抽象成员，只能是函数成员，只能在抽象类中声明，不可以有实现。不可以有 virtual 修饰。派生类抽象成员的实现必须用 override 修饰。可以被声明为抽象的成员有
+方法 属性 事件 索引
+
+抽象类不能实例化，使用 abstract 修饰。可以包含非抽象成员。派生自抽象类的类如果不是抽象类，必须使用 override 实现该类所有的抽象成员。
+
+密封类，不可以被继承，只能被用作独立的类，使用 sealed 修饰 
+
+静态类，被 static 修饰，所有成员必须是静态的，可以有一个静态构造函数，不能有实例构造函数，不能创建该类的实例，静态类是隐式密封的，所以不可以被继承。
+
+扩展方法：
+假设有一个类
+class SomeClass
+{
+    int iA, iB
+    public SomeClass(int i, int j)
+    {
+        iA = i;
+        iB = j;
+    }
+    public int Sum()
+    {
+        return iA + iB;
+    }
+}
+
+想要为该类扩展一个 Avg 方法
+只要该类不是密封类可以使用继承，或者在另外一个类中使用该类的公有方法实现该需求
+例如
+static class SomeClassEx
+{
+    public static double Avg(SomeClass sc)
+    {
+        return (double)sc.Sum() / 2;
+    }
+}
+
+调用 
+SomeClass sc = new SomeClass(1, 2);
+SomeClassEx.Avg(sc);
+扩展方法使得可以这样调用 sc.Avg();
+static class SomeClassEx
+{
+    public static double Avg(this SomeClass sc)
+    {
+        return (double)sc.Sum() / 2;
+    }
+}
+扩展方法所在的类必须是静态类，方法必须是 public static， 形参必须是 this SomeClass 开头
+
+字符串字面量，逐字字符串字面量相邻的双引号组被解释为单个双引号字符
+
+求余运算可用于实数
+
+引用类型比较，引用相等，即指向内存中相同的对象，即为相等，浅比较
+string 深比较
+
+条件逻辑 && || (短路) !
+
+用户定义的类型转换 public static 是必须的
+隐式，显式 
+
+public static implicit(explicit) operator int (SomeClass sc)
+{
+    ...
+}
+
+运算符重载，用于类和结构。必须 public static 修饰，是类或者结构的函数成员。
+不是所有的运算符都可被重载。递增，递减的前置和后置重载版本没有区别。
+
+switch 包括default 分支必须有 break，但是可以
+case 1:
+case 2:
+    foo();
+    break;
+default:
+    break;
+
+标签语句不能从声明它的块的外部进行访问。
+goto case 1;
+goto default;
+
+
+using 指令对资源的处置。using (获取资源) 使用资源。可以嵌套，获取资源可以获取多个相同类型的资源。
+1. 
+using (ResType res = new ResType())
+{
+    ...
+}
+// 这里资源无法访问
+2. 
+ResType res = new ResType();
+using (res)
+{
+    ...
+}
+// 这里如果再次使用资源将导致异常
+
+结构。类是引用类型，而结构是值类型结构是隐式密封的，即不能被派生。
+结构可以有实例构造函数和静态构造函数，但是不可以有析构函数。
+结构的无参构造函数不可以删除或者重载，成员值类型初始化为值类型的默认值，引用类型初始化为 null。
+结构不是从堆中分配内存，也是使用 new 运算符。如果一个结构没有使用 new 运算符构造，必须显式设置数据成员，才可以使用它们的值，对所有数据成员赋值之后才可以调用函数成员。
+静态构造函数和类的静态构造函数一样。
+在结构字段初始化语句是不允许的，如
+struct Simple
+{
+    public int x = 0;
+}
+结构不可以被派生，不可以有 protected, abstract, virtual, internal 修饰
+但是可以有 new, override，继承自 System.ValueType 
+当把结构作为引用类型对象时，必须创建装箱的副本。
+预定义的简单类型 int short 等被实现为结构。结构可以声明为分部结构，结构可以实现接口。
+
+枚举
+[Flags]
+enum Light:uint
+{
+    Green = 1,
+    Red = 2
+}
+Light li = Light.Red | Light.Green;
+li.HasFlag(Light.Red);
+两个不同的枚举类型，即使成员值大小相同，也不可以直接比较
+Enum 类型包括一些静态方法 GetName, GetNames
+
+数组是引用类型，声明时指定维度，无需指定每一维度的长度
+int[,] arr = new int[2, 3];
+int[] arr = {1, 2};
+int[] arr = new int[] {1, 2}; 显示初始化一维数组
+int[,] arr = new int[,] {{1, 2}, {3, 4}}; 显式初始化矩形数组
+var arr = new [] {1, 2}; // 隐式初始化，依然需要秩说明符
+var arr = new [,] {{1,2}, {3, 4}};
+
+交错数组，声明时只可以初始化顶层数组
+int[][] arr = new int[3][];
+int[][,] arr = new int[3][,]
+
+foreach 迭代变量是只读的，因此，如果数组是值类型，迭代变量无法改变数组元素，但是引用类型可以通过数组元素的引用改变元素。可以处理矩形数组，交错数组需要单独处理每一个维度
+
+数组协变，把派生类型对象赋值给基类数组的元素。
+
+数组从 System.Array 继承
+数组的 Clone 是浅拷贝，返回 object 需要转换为数组类型。
+
+委托可以理解为C++中面向对象，类型安全的函数指针
+定义委托类型，声明委托变量，创建委托的实例，调用委托对象。委托的方法列表称为调用列表。其中的方法可以是实例方法也可以是静态方法。
+委托声明是类型声明，不需要在类内部声明。
+
+组合委托
+MyDel delA = SClass.m1;
+MyDel delB = SClass.m2;
+MyDel delC = delA + delB;
+
+为委托添加方法
+delA = SClass.m1;
+delA += SClass.m2; // 创建新的委托
+使用 -= 从委托移除方法，删除不存在的方法没有效果，调用空委托会抛出异常，可以判断委托是否是 null 来判断调用列表是否是空。
+
+事件
+    class PublishEventArgs : EventArgs
+    {
+        public int Count { get; set; }
+    }
+    //public delegate void MyDel();
+    class Publish
+    {
+        public event EventHandler<PublishEventArgs> MyEvent;
+        public void DoCount()
+        {
+            PublishEventArgs args = new PublishEventArgs();
+
+            if (MyEvent != null)
+            {
+                args.Count = 10;
+                MyEvent(this, args);
+            }
+
+        }
+    }
+
+    class Subsc
+    {
+        public void MyHandle(object o, PublishEventArgs ea)
+        {
+            Console.WriteLine($"handle exe, count {ea.Count} in {o.ToString()}");
+        }
+        public void MyHandle2(object o, PublishEventArgs ea)
+        {
+            Console.WriteLine($"handle2 exe, count {ea.Count} in {o.ToString()}");
+        }
+        public Subsc(Publish pub)
+        {
+            pub.MyEvent += MyHandle;
+            pub.MyEvent += MyHandle2;
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Publish pub = new Publish();
+            Subsc sc = new Subsc(pub);
+            pub.DoCount();
+            pub.MyEvent -= sc.MyHandle2;
+            pub.DoCount();
+        }
+    }
+
+接口，一组函数成员，不实现的引用类型，只能是类和结构来实现接口
+接口声明，不可以包含数据成员，静态成员。抽象类可以有。只可以包含如下非静态函数成员：
+方法，属性，事件，索引器
+接口可以用 public protected internal private 修饰。接口成员隐式 public 且不可以使用修饰符
+声明类，基类在前，接口在后
+as 运算符，将类转换为接口的引用，不会抛出异常，没有实现接口，转换结果为 null 
+类实现多个接口，接口中有重复的函数成员声明，可以一个实现，满足多个接口的实现需求，也可以显示接口函数成员实现，使用限定接口名称 void IMyInterface.Print(){...}
+基类中继承成的函数成员也可以实现接口
+
+转换
+unchecked checked 检查转换是否溢出
+byte sb; ushort sh = 2000; sb = checked ((byte)sh);
+装箱是创建副本，是值类型到引用类型的隐式转换
+用户定义转换语法： public static 是必须的
+public static implicit (explicit) operator int (SomeClass sc)
+{
+    ...
+}
+
+is 运算符，只能用于引用转换，装箱，拆箱，不能用于用户定义的转换，用来检查是否可以成功转换
+if (DClass is BaseClass)
+{
+    ...
+}
+
+as 只能用于引用转换，装箱，不能用于用户定义的转换。运算符和强制转换符类似，只是不抛出异常，转换失败，返回 null
+Expr as TragetType(必须是引用类型) 所以不能用于到值类型的转换。
+
+扩展方法和泛型类
+泛型类的扩展方法，必须是 static 修饰，是静态类的成员，所属静态能不能是泛型类-> 非泛型静态类
+    static class HoderEx
+    {
+        public static void Print<T>(this Hoder<T> h)
+        {
+            foreach (var i in h.GetValuse())
+            {
+                Console.WriteLine($"{i}");
+            }
+        }
+    }
+    class Hoder<T>
+    {
+        T[] _arr = new T[3];
+        public Hoder(T t1, T t2, T t3)
+        {
+            _arr[0] = t1;
+            _arr[1] = t2;
+            _arr[2] = t3;
+        }
+        public T[] GetValuse()
+        {
+            return _arr;
+        }
+    }
+
+泛型委托
+delegate void Print<T> (T v);
+
+泛型接口
+interface IMyInterface<T>
+{
+    T foo(T v);
+}
+非泛型类可以实现泛型接口，实现须指定实现的具体类型参数的接口
+非泛型接口的名字不会和泛型接口冲突
+
+
+类实现 IEnumeratable 的 IEnumerator GetEnumerator();方法
+IEnumerator 需要实现 MoveNext, Current, Reset 属性或者方法
+可以用于 foreach 迭代
+泛型枚举接口
+
+class MyColor
+{
+  public IEnumerator<string> GetEnumerator()
+  {
+    return itFunc();
+    // or return it().GetEnumerator();
+  }
+  public IEnumerator<string> itFunc()
+  {
+    yield return "black";
+    yield return "white";
+  }
+  
+  public IEnumerable<string> it()
+  {
+    yield return "black";
+    yield return "white";
+  }
+}
+
+foreach(var i in new MyColor())
+{
+  ...
+}
+
+
+
