@@ -1,0 +1,248 @@
+2.1 保持与C99兼容
+__func__
+_Pragma("once") 实验发现是 __pragma("once")
+__VA_ARGS__,如 #define PR(...) printf(__VA_ARGS__)
+
+#define LOG(...){\
+fprintf(stderr, "%s: line %d:\t",__FILE__, __LINE__);\
+fprintf(stderr, __VA_ARGS__);\
+fprintf(stderr, "\n");\
+}
+
+断言是运行时执行，有时需要编译期间判断断言是否成功（同样参数必须是编译期间可以计算）
+c++11 可以使用 static_assert(expr: bool, str: string);
+可以利用编译器除0警告
+#define my_assert_static(e){\
+	do{\
+		enum {ret = 1 / (e)};\
+	} while(0);\
+}
+
+之前的异常声明规格 void func() throw(); // throw(int, double) 
+现在，不抛出异常 noexcept; 如果实际抛出异常，会调用 std::terminate(),阻止异常的传播
+void Throw() { throw 1; }
+void NoBlockThrow() throw() { Throw(); }
+void BlockThrow() noexcept { Throw(); }
+int main()
+{
+	try {
+		Throw();
+	}
+	catch (...)
+	{
+
+	}
+	try {
+		NoBlockThrow();
+	}
+	catch (...)
+	{
+
+	}
+	try {
+		BlockThrow();
+	}
+	catch (...)
+	{
+
+	}
+	return 0;
+}
+上是noexcept 修饰符的一种形式
+另一种接受一个常量表达式，noexcept(true) 表示不会抛出异常，false 表示可能抛出异常
+noexcept() 操作符，常用于模板
+template<class T>
+void func() noexcept(noexcept(T())) {}
+
+C++98 只允许静态常量成员在类声明中就地初始化，而且常量必须是整数，或者枚举值
+对于非常量的静态成员，依然是实现文件中定义。
+
+非静态成员的sizeof 
+struct test{
+	int a;
+	static int b;
+}
+sizeof(test::a); C++11 支持，98不支持
+
+struct st :public base{
+	void fun() final; // 假设这是一个虚函数，阻止虚函数被重写
+}
+
+override 虚函数描述符。该函数必须重载其基类中同名函数。否则因为函数名称错误，参数错误，常量性不一致，或者不是虚函数，都会导致无法通过编译。
+
+函数模板默认模板参数
+template <typename T = int> void func() {}
+对于模板类的默认参数，不管是类型参数还是非类型参数，必须是从右到左规则指定。而模板函数则没有这些限制。
+
+显示实例化和外部模板声明
+类似于外部变量声明。
+函数在实现文件中多次重复定义可以通过编译，链接时去除重复。
+
+之前，局部类型和匿名类型不能作为模板类的实参。
+
+继承构造函数
+class Derive:public Base{
+public:
+		using Base::Base;
+}
+基类的构造函数被声明为私有或者派生类从基类虚继承，那么派生类不可以声明继承构造函数。
+
+委派构造函数
+class CClass
+{
+public:
+	CClass(){} // 这是目标构造函数
+	CClass(int i): CClass(){_i = i;} // 这是委派构造函数，不可以和成员初始化列表一起出现
+private:
+	int _i;
+};
+
+std::move 将左值转换为右值
+static_cast<T&&>(lvalue); 帮助使用移动构造函数。
+move_if_noexcept 可能抛出异常时使用拷贝构造函数，不抛出异常时使用移动构造函数。
+
+列表，集合初始化可以防止类型收窄
+char a = {1024}
+
+POD: plain old data
+使用 pod 的好处：
+字节赋值。memcpy memset
+与c内存布局兼容
+
+联合体：c++98 标准只允许pod数据类型
+c++11 中可以是任何非引用类型。静态成员变量除外。非受限联合体
+union un {
+	string s;
+	int _y;
+public:
+	un() { new (&s)string(); }
+	~un() { s.~basic_string(); }
+};
+如果有非pod成员，该成员的构造函数被删除。需要自己提供联合体的构造函数
+
+用户自定义字面量
+整数：unsigned long long, const char *;
+浮点数：long double, const char *;
+字符串： const char *, size_t
+字符: char
+int operator"" _w(unsigned long long v)
+{
+	return int(v);
+}
+int wa = 123_w; // 123
+
+using 取代 typedef 
+
+#define max(a,b) ((a) > (b)?(a):(b)) // a, b 是表达式的话，其中一个会计算两次
+
+auto 不能推到类型的情况
+1. 函数形参
+2. 结构体的非静态成员变量
+3. 数组
+int a[3];
+auto b = a; // correct
+auto c[3] = a;// error
+4. 模板参数
+
+decltype 与 using typedef 结合
+using size_t = decltype(sizeof(0));
+
+decltype 用于匿名枚举类型，匿名联合体，匿名结构体
+enum class{
+Red,
+Blue} annno_e;
+
+union{
+int id;
+decltype(annno_e) key;
+}anno_u;
+
+struct{
+decltype(anno_u) as;
+}ann_s;
+
+decltype 只能接受表达式，函数名不可以
+int hash(char*);
+map<char*, decltype(hash(nullptr))> dic;
+
+decltype 推导可以带走cv修饰符，成员不会继承cv修饰符
+
+template<class T1, class T2>
+auto sum_(T1& t1, T2& t2) -> decltype(t1 + t2) {
+	return t1 + t2;
+}
+追踪返回
+
+for(auto &e: arr)
+{
+
+}
+
+强类型枚举。解决枚举可以转换为整型，占用存储空间和符号不确定性。
+enum class Type{}
+enum struct Type{}
+
+const 运行时数据不可更改行
+常量表达式， 编译时期的常量性。栈中数组，枚举值，switch case
+1. 函数体只有单一的return
+2. 函数必须有返回值
+3. 使用前必须定义
+4. 返回语句中不能使用非常量表达式的函数，全局数据。
+
+const int i = 0;
+constexpr int j = 0;
+可以理解为没有什么区别
+可以声明常量表达式浮点数，标准要求精度至少等于运行时精度
+不可以修饰自定义类型的定义。正确做法时定义自定义常量构造函数。构造函数约束，函数体为空，初始化列表只能由常量表达式来赋值。
+
+变长模板，太复杂了
+
+terminate, abort
+exit atexit
+quick_exit, at_quick_exit
+
+nullptr 右值，不可取地址
+
+nullptr_t my_null; // &my_null 合法
+
+禁止拷贝构造
+修饰为private，并且不提供实现
+
+=delete 删除缺省版本。重载也是非法的
+
+explicit 不要和 = delete 混用
+
+显式删除自定义类型的operator new 可以做到避免在堆上分配该对象。删除析构函数，限制自定义类型在栈上或者静态构造。
+
+lambda 语法
+[capture](param) mutable -> return_type{statement}
+(param) 无的话可以和()一起省略
+->return_type 没有返回值可以省略
+
+mutable 修饰捕获的变量，防函数 operator()() const {} 原理
+
+for_each, transfrom 一个不会写回结果
+
+alignof, 自定义类型，内置类型，变量
+alignas 常量表达式或者类型
+alignas(double) char c;
+== alignas(alignof(double)) char c;
+对齐复杂
+
+原生字符串字面量
+cout << R"(\n\t)";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
