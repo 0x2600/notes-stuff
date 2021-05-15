@@ -1,12 +1,11 @@
-﻿// server.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
+// server.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 
 #include <iostream>
 #include <WinSock2.h>
 #pragma comment(lib, "ws2_32.lib")
 
-
-int main()
+int tcp()
 {
     WSADATA wsaData;
     bool needClean = 0 == WSAStartup(MAKEWORD(2, 2), &wsaData) ? true : false;
@@ -58,6 +57,47 @@ int main()
         WSACleanup();
     }
     return 0;
+}
+void udp()
+{
+    WSADATA wsaData;
+    WSAStartup(MAKEWORD(2, 2), &wsaData);
 
+    SOCKET sock = socket(PF_INET, SOCK_DGRAM, 0);
+
+    sockaddr_in sockAddr;
+    memset(&sockAddr, 0, sizeof(sockAddr));
+    sockAddr.sin_family = PF_INET;
+    sockAddr.sin_port = htons(1234);
+    sockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    bind(sock, (sockaddr*)&sockAddr, sizeof(sockaddr));
+
+    sockaddr clntAddr;
+    int clntSize = sizeof(clntAddr);
+    char buf[1024] = { 0 };
+    FILE* pFile = _fsopen("recved.txt", "wt", _SH_DENYNO);
+    while (true)
+    {
+        int len = recvfrom(sock, buf, sizeof(buf), NULL, &clntAddr, &clntSize);
+        sockaddr_in* pAddr = (sockaddr_in*)&clntAddr;
+        fprintf(pFile, "%s, client port: %d\n", buf, ntohs(pAddr->sin_port));
+        fflush(pFile);
+        sendto(sock, buf, sizeof(buf), NULL, &clntAddr, clntSize);
+        if (!strcmp(buf, "quit"))
+        {
+            printf("quit...\n");
+            break;
+        }
+        memset(buf, 0, sizeof(buf));
+    }
+    fclose(pFile);
+    closesocket(sock);
+
+    WSACleanup();
+}
+int main()
+{
+    
+    udp();
 }
 
