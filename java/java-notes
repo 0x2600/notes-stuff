@@ -745,6 +745,9 @@ public void write(byte[], int, int) throws java.io.IOException;
 
 文件字符输入输出流 FileReader, FileWriter 类
 
+文件输入输出
+Scanner in = new Scanner(Path.of("file.txt"), StandardCharsets.UTF-8);
+PrintWriter
 
 ## java 多线程机制
 线程的状态与生命周期
